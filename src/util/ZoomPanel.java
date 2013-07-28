@@ -1,9 +1,11 @@
 package util;
 
 import java.awt.*;
+
 import javax.swing.JPanel;
 
 
+@SuppressWarnings("serial")
 public class ZoomPanel extends JPanel {
 
     private final Image image;

@@ -1,16 +1,21 @@
 package util;
 
 import gui.*;
+
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
+
 import javax.swing.*;
+
 import components.Pin;
+
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
+@SuppressWarnings("serial")
 public class DrawSignalsNew extends JFrame implements ClipboardOwner {
 
     private GuiScheme guiScheme;
