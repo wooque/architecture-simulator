@@ -1,0 +1,9 @@
+ISTO:
+- memorija (2 slike)
+- exec3
+- exec2(prilicno)
+- exec4(prilicno)
+- fetch2
+- fetch3
+- intr1 (prilicno)
+- intr2
