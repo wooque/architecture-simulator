@@ -184,6 +184,34 @@ public class Configurator {
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);
 						}
+					} else if(compName.equals("or")) {
+						
+						if(compArgs.length == 1) {
+							logComp = new OR(Integer.parseInt(compArgs[0]));
+						} else {
+							throw new BadArgs(schemeName, comp.name, compName);
+						}
+					} else if(compName.equals("and")) {
+						
+						if(compArgs.length == 1) {
+							logComp = new AND(Integer.parseInt(compArgs[0]));
+						} else {
+							throw new BadArgs(schemeName, comp.name, compName);
+						}
+					} else if(compName.equals("not")) {
+						
+						if(compArgs.length == 0) {
+							logComp = new NOT();
+						} else {
+							throw new BadArgs(schemeName, comp.name, compName);
+						}
+					} else if(compName.equals("tsb")) {
+						
+						if(compArgs.length == 0) {
+							logComp = new TSB();
+						} else {
+							throw new BadArgs(schemeName, comp.name, compName);
+						}
 					} else {
 						
 						System.out.println(compName + " does not exist");
