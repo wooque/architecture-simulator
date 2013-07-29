@@ -177,10 +177,91 @@ public class Configurator {
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);
 						}
+					} else if(compName.equals("dummypin")) {
+						
+						if(compArgs.length == 1) {
+							logComp = new DummyPin(Boolean.parseBoolean(compArgs[0]));
+						} else {
+							throw new BadArgs(schemeName, comp.name, compName);
+						}
+					} else {
+						
+						System.out.println(compName + " does not exist");
 					}
 					
 					if(logComp != null) {
 						components.put(schemeName+"."+comp.name, logComp);
+					}
+				}
+			}
+			
+			// Connecting components
+			
+			for(Map.Entry<String, ArrayList<ComponentInfo>> entry: componentInfos.entrySet()) {
+				
+				String schemeName = entry.getKey();
+				ArrayList<ComponentInfo> schemeComponents = entry.getValue();
+				
+				for (ComponentInfo comp : schemeComponents) {
+					
+					ArrayList<ComponentPins> allPins = comp.pins;
+					LogicalComponent logComp = components.get(schemeName+"."+comp.name);
+					
+					for(ComponentPins pins: allPins) {
+							
+						for(int i = 0; i < pins.names.length; i++) {
+							
+							String pinName = pins.names[i];
+							LogicalComponent parentComp = null;
+							
+							if(!pins.type.equals("init")) {
+								if(pins.names[i].indexOf(".") == -1){
+									pinName = schemeName + "." + pinName;
+								}
+							
+								parentComp = components.get(pinName);
+							}
+							
+							if((parentComp != null) || pins.type.equals("init")) {
+								
+								try {
+									if(pins.type.equals("in")){
+										logComp.setInputPin(i, parentComp.getOut(0));
+										
+									} else if(pins.type.equals("ld")) {
+										((REG)logComp).setPinLd(parentComp.getOut(0));
+										
+									} else if(pins.type.equals("inc")) {
+										((REG)logComp).setPinInc(parentComp.getOut(0));
+										
+									} else if(pins.type.equals("dec")) {
+										((REG)logComp).setPinDec(parentComp.getOut(0));
+									
+									} else if (pins.type.equals("ctrl")) {
+										((MP)logComp).setCtrl(i, parentComp.getOut(0));
+										
+									} else if (pins.type.equals("init")) {
+										((REG)logComp).initVal(Integer.parseInt(pinName));
+										
+									} else if (pins.type.equals("addr")) {
+										((GPR)logComp).setAdressPin(parentComp.getOut(0));
+										
+									} else if (pins.type.equals("wr")) {
+										((GPR)logComp).setWrite(parentComp.getOut(0));
+									
+									} else if (pins.type.equals("rd")) {
+										((GPR)logComp).setRead(parentComp.getOut(0));
+										
+									} else {
+										System.out.println("Non existent atribute for component: "+schemeName+"."+comp.name);
+									}
+								} catch (ClassCastException cce) {
+									System.out.println("Non existent atribute for component: "+schemeName+"."+comp.name);
+								}
+							} else {
+								System.out.println(pins.names[i]+" does not exist");
+							}
+						}
 					}
 				}
 			}
