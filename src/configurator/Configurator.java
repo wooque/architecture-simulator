@@ -120,7 +120,7 @@ public class Configurator {
 					String compName = comp.type.name;
 					String[] compArgs = comp.type.args;
 					
-					if(compName.equals("inttoint")) {
+					if(compName.equals("int_to_int")) {
 						
 						if(compArgs.length == 2) {
 							logComp = new IntToInt(Integer.parseInt(compArgs[0]), Integer.parseInt(compArgs[1]));
@@ -207,7 +207,7 @@ public class Configurator {
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);
 						}
-					} else if(compName.equals("inttobool")) {
+					} else if(compName.equals("int_to_bool")) {
 						
 						if(compArgs.length == 1) {
 							logComp = new IntToBools(1, Integer.parseInt(compArgs[0]));
@@ -235,7 +235,7 @@ public class Configurator {
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);
 						}
-					} else if(compName.equals("booltoint")) {
+					} else if(compName.equals("bool_to_int")) {
 						
 						if(compArgs.length == 1) {
 							logComp = new BoolsToInt(Integer.parseInt(compArgs[0]), Integer.parseInt(compArgs[0]));
@@ -262,7 +262,14 @@ public class Configurator {
 							}
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);
-						}	
+						}
+					} else if(compName.equals("cmp")) {
+						
+						if(compArgs.length == 1) {
+							logComp = new CMP(Integer.parseInt(compArgs[0]));
+						} else {
+							throw new BadArgs(schemeName, comp.name, compName);
+						}
 					} else {
 						
 						System.out.println(compName + " does not exist");
@@ -398,6 +405,12 @@ public class Configurator {
 										
 										} else if (pins.type.equals("e")) {
 											((DC) logComp).setE(parentComp.getOut(0));
+										
+										} else if (pins.type.equals("a")) {
+											((CMP) logComp).setPinA(i, parentComp.getOut(0));
+										
+										} else if (pins.type.equals("b")) {
+											((CMP) logComp).setPinB(i, parentComp.getOut(0));
 											
 										} else {
 											System.out.println("Non existent atribute for component: "+schemeName+"."+comp.name);
