@@ -2,15 +2,17 @@ package components;
 
 public class DummyPin extends LogicalComponent {
 	
-	private boolean value;
+	public DummyPin() {
+		super(1, 1, false);
+	}
 	
-	public DummyPin(boolean value) {
-		super(0, 1, false);
-		this.value = value;
+	public DummyPin(Pin in) {
+		super(1, 1, false);
+		setInputPin(0, in);
 	}
 
 	public void func() {
-		out[0].setBoolVal(value);
+		out[0].setBoolVal(in[0].getBoolVal());
 	}
 
 }

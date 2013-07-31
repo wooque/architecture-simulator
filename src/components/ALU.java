@@ -4,8 +4,8 @@ public class ALU extends LogicalComponent {
 	// private Pin asr;
 	private Pin add;
 	private Pin and;
-	// private Pin inc;
-	// private Pin dec;
+	private Pin inc;
+	private Pin dec;
 	private Pin sub;
 	private Pin xor;
 	private Pin not;
@@ -29,10 +29,10 @@ public class ALU extends LogicalComponent {
 			akc++;
 		if ((and != null) && (and.getBoolVal()))
 			akc++;
-		// if ((inc!=null) && (inc.getBoolVal()))
-		// akc++;
-		// if ((dec!=null) && (dec.getBoolVal()))
-		// akc++;
+		 if ((inc!=null) && (inc.getBoolVal()))
+		 akc++;
+		 if ((dec!=null) && (dec.getBoolVal()))
+		 akc++;
 		// if ((transferX!=null) && (transferX.getBoolVal()))
 		// akc++;
 		if ((sub != null) && (sub.getBoolVal()))
@@ -112,32 +112,32 @@ public class ALU extends LogicalComponent {
 				C8.setBoolVal(c16);
 			return;
 		}
-		// if ((dec!=null) && (dec.getBoolVal())) {
-		// int iz = A - 1;
-		// int max = (int) (Math.pow(2.0D, out[0].getNumOfLines()) - 1.0D);
-		// boolean c16 = false;
-		// if (iz > max) {
-		// iz -= max + 1;
-		// c16 = true;
-		// }
-		// out[0].setIntVal(iz);
-		// if(C16!=null)
-		// C16.setBoolVal(c16);
-		// return;
-		// }
-		// if ((inc!=null) && (inc.getBoolVal())) {
-		// int iz = A + 1;
-		// int max = (int) (Math.pow(2.0D, out[0].getNumOfLines()) - 1.0D);
-		// boolean c16 = false;
-		// if (iz == -1) {
-		// iz = max;
-		// c16 = true;
-		// }
-		// out[0].setIntVal(iz);
-		// if(C16!=null)
-		// C16.setBoolVal(c16);
-		// return;
-		// }
+		if ((dec != null) && (dec.getBoolVal())) {
+			int iz = A - 1;
+			int max = (int) (Math.pow(2.0D, out[0].getNumOfLines()) - 1.0D);
+			boolean c8 = false;
+			if (iz > max) {
+				iz -= max + 1;
+				c8 = true;
+			}
+			out[0].setIntVal(iz);
+			if (C8 != null)
+				C8.setBoolVal(c8);
+			return;
+		}
+		if ((inc != null) && (inc.getBoolVal())) {
+			int iz = A + 1;
+			int max = (int) (Math.pow(2.0D, out[0].getNumOfLines()) - 1.0D);
+			boolean c8 = false;
+			if (iz == -1) {
+				iz = max;
+				c8 = true;
+			}
+			out[0].setIntVal(iz);
+			if (C8 != null)
+				C8.setBoolVal(c8);
+			return;
+		}
 		if ((and != null) && (and.getBoolVal())) {
 			int iz = A & B;
 			iz=iz & 0xff;
@@ -184,20 +184,20 @@ public class ALU extends LogicalComponent {
 	//	c0.addChild(this);
 	//}
 
-	// public void setPinDec(Pin dec) {
-	// this.dec = dec;
-	// dec.addChild(this);
-	// }
+	public void setPinDec(Pin dec) {
+		this.dec = dec;
+		dec.addChild(this);
+	}
 
-	// public void setPinInc(Pin inc) {
-	// this.inc = inc;
-	// inc.addChild(this);
-	// }
+	public void setPinInc(Pin inc) {
+		this.inc = inc;
+		inc.addChild(this);
+	}
 
-	// public void setPinTransferX(Pin transferX) {
-	// this.transferX = transferX;
-	// transferX.addChild(this);
-	// }
+//	public void setPinTransferX(Pin transferX) {
+//		this.transferX = transferX;
+//		transferX.addChild(this);
+//	}
 
 	public void setPinSub(Pin sub) {
 		this.sub = sub;
