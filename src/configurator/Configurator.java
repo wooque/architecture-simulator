@@ -218,11 +218,18 @@ public class Configurator {
 						
 						if(compArgs.length == 1) {
 							logComp = new CD(Integer.parseInt(compArgs[0]));
+							boolean outExist = false;
 							for(ComponentPins pins: comp.pins) {
 								if(pins.type.equals("out")){
+									outExist = true;
 									for(int i = 0; i < pins.names.length; i++){
 										components.put(schemeName+"."+pins.names[i], new DummyPin(logComp.getOut(i)));
 									}
+								}
+							}
+							if(!outExist) {
+								for(int i = 0; i < logComp.getOut().length; i++){
+									components.put(schemeName+"."+comp.name+i, new DummyPin(logComp.getOut(i)));
 								}
 							}
 						} else {
@@ -274,6 +281,13 @@ public class Configurator {
 						
 						if(compArgs.length == 1) {
 							logComp = new CMP(Integer.parseInt(compArgs[0]));
+						} else {
+							throw new BadArgs(schemeName, comp.name, compName);
+						}
+					} else if(compName.equals("km")) {
+						
+						if(compArgs.length == 1) {
+							logComp = new KM(compArgs[0]);
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);
 						}
