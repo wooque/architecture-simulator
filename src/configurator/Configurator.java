@@ -38,10 +38,10 @@ public class Configurator {
 		}
 	}
 
-	public Configurator() {
+	public Configurator(String filename) {
 		BufferedReader reader;
 		try {
-			reader = new BufferedReader(new FileReader("dvov.conf"));
+			reader = new BufferedReader(new FileReader(filename));
 			begin = System.currentTimeMillis();
 			String line = reader.readLine();
 
@@ -253,11 +253,18 @@ public class Configurator {
 						
 						if(compArgs.length == 1) {
 							logComp = new DC(Integer.parseInt(compArgs[0]));
+							boolean outExist = false;
 							for(ComponentPins pins: comp.pins) {
 								if(pins.type.equals("out")){
+									outExist = true;
 									for(int i = 0; i < pins.names.length; i++){
 										components.put(schemeName+"."+pins.names[i], new DummyPin(logComp.getOut(i)));
 									}
+								}
+							}
+							if(!outExist) {
+								for(int i = 0; i < logComp.getOut().length; i++){
+									components.put(schemeName+"."+comp.name+i, new DummyPin(logComp.getOut(i)));
 								}
 							}
 						} else {
@@ -442,6 +449,6 @@ public class Configurator {
 	}
 
 	public static void main(String[] args) {
-		new Configurator();
+		new Configurator("schemes.conf");
 	}
 }
