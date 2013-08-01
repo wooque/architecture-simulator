@@ -258,21 +258,29 @@ public class Configurator {
 						}
 					} else if(compName.equals("dc")) {
 						
-						if(compArgs.length == 1) {
+						if(compArgs.length == 1 || compArgs.length == 2) {
 							logComp = new DC(Integer.parseInt(compArgs[0]));
-							boolean outExist = false;
-							for(ComponentPins pins: comp.pins) {
-								if(pins.type.equals("out")){
-									outExist = true;
-									for(int i = 0; i < pins.names.length; i++){
-										components.put(schemeName+"."+pins.names[i], new DummyPin(logComp.getOut(i)));
+							if(compArgs.length == 1) {
+								boolean outExist = false;
+								for(ComponentPins pins: comp.pins) {
+									if(pins.type.equals("out")){
+										outExist = true;
+										for(int i = 0; i < pins.names.length; i++){
+											components.put(schemeName+"."+pins.names[i], new DummyPin(logComp.getOut(i)));
+										}
 									}
 								}
-							}
-							if(!outExist) {
-								for(int i = 0; i < logComp.getOut().length; i++){
-									components.put(schemeName+"."+comp.name+i, new DummyPin(logComp.getOut(i)));
+								if(!outExist) {
+									for(int i = 0; i < logComp.getOut().length; i++){
+										components.put(schemeName+"."+comp.name+i, new DummyPin(logComp.getOut(i)));
+									}
 								}
+							} else if (compArgs[1].equals("hex")){
+								for(int i = 0; i < logComp.getOut().length; i++){
+									components.put(schemeName+"."+comp.name+Integer.toHexString(i).toUpperCase(), new DummyPin(logComp.getOut(i)));
+								}
+							} else {
+								throw new BadArgs(schemeName, comp.name, compName);
 							}
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);
@@ -362,13 +370,31 @@ public class Configurator {
 											((REG) logComp).setPinLd(parentComp.getOut(0));
 
 										} else if (pins.type.equals("inc")) {
-											((REG) logComp).setPinInc(parentComp.getOut(0));
+											if(logComp instanceof REG) {
+												((REG) logComp).setPinInc(parentComp.getOut(0));
+											} else if(logComp instanceof ALU) {
+												((ALU) logComp).setPinInc(parentComp.getOut(0));
+											} else {
+												System.out.println("Non existent atribute inc for component: "+schemeName+"."+comp.name);
+											}
 
 										} else if (pins.type.equals("dec")) {
-											((REG) logComp).setPinDec(parentComp.getOut(0));
+											if(logComp instanceof REG) {
+												((REG) logComp).setPinDec(parentComp.getOut(0));
+											} else if(logComp instanceof ALU) {
+												((ALU) logComp).setPinDec(parentComp.getOut(0));
+											} else {
+												System.out.println("Non existent atribute inc for component: "+schemeName+"."+comp.name);
+											}
 
 										} else if (pins.type.equals("ctrl")) {
-											((MP) logComp).setCtrl(i, parentComp.getOut(0));
+											if(logComp instanceof MP) {
+												((MP) logComp).setCtrl(i, parentComp.getOut(0));
+											} else if(logComp instanceof TSB) {
+												((TSB) logComp).setCtrl(parentComp.getOut(0));
+											} else {
+												System.out.println("Non existent atribute ctrl for component: "+schemeName+"."+comp.name);
+											}
 
 										} else if (pins.type.equals("init")) {
 											if (logComp instanceof REG) {
@@ -376,7 +402,7 @@ public class Configurator {
 											} else if (logComp instanceof RSFF) {
 												((RSFF) logComp).setInit(Boolean.parseBoolean(pinName));
 											} else {
-												System.out.println("Non existent atribute for component: "+schemeName+"."+comp.name);
+												System.out.println("Non existent atribute init for component: "+schemeName+"."+comp.name);
 											}
 
 										} else if (pins.type.equals("addr")) {
@@ -434,10 +460,10 @@ public class Configurator {
 											((CMP) logComp).setPinB(i, parentComp.getOut(0));
 											
 										} else {
-											System.out.println("Non existent atribute for component: "+schemeName+"."+comp.name);
+											System.out.println("Non existent atribute "+pins.type+" for component: "+schemeName+"."+comp.name);
 										}
 									} catch (ClassCastException cce) {
-										System.out.println("Non existent atribute for component: "+schemeName+"."+comp.name);
+										System.out.println("Non existent atribute "+pins.type+" for component: "+schemeName+"."+comp.name);
 									}
 								} else {
 									System.out.println(pins.names[i]+" does not exist");
