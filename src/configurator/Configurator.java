@@ -299,6 +299,27 @@ public class Configurator {
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);
 						}
+					} else if(compName.equals("agg")) {
+						
+						if(compArgs.length == 2) {
+							logComp = new Aggregator(Integer.parseInt(compArgs[0]), Integer.parseInt(compArgs[1]));
+						} else {
+							throw new BadArgs(schemeName, comp.name, compName);
+						}
+					} else if(compName.equals("split")) {
+						
+						if(compArgs.length == 2) {
+							logComp = new Spliter(Integer.parseInt(compArgs[0]), Integer.parseInt(compArgs[1]));
+						} else {
+							throw new BadArgs(schemeName, comp.name, compName);
+						}
+					} else if(compName.equals("bus")) {
+						
+						if(compArgs.length == 2) {
+							logComp = new BUS(Integer.parseInt(compArgs[0]), Integer.parseInt(compArgs[1]), comp.name);
+						} else {
+							throw new BadArgs(schemeName, comp.name, compName);
+						}
 					} else {
 						
 						System.out.println(compName + " does not exist");
