@@ -49,12 +49,15 @@ public class MEM extends LogicalComponent {
 		this.write = write;
 		write.addChild(this);
 	}
+	
 	public void write(int adress,int data){
 		memory.set(adress, Integer.toString(data));
 	}
+	
 	public int read(int adress){
 		return Integer.parseInt(memory.get(adress));
 	}
+	
 	public void init(){
 		if(initMemory)
 			for (int i = 0; i < size; i++)

@@ -140,6 +140,15 @@ public class Configurator {
 						}
 					} else if(compName.equals("mp")) {
 						
+						if(compArgs.length == 2) {
+							logComp = new MP(Integer.parseInt(compArgs[0]));
+							logComp.getOut(0).setIsInt();
+							logComp.getOut(0).setNumOfLines(Integer.parseInt(compArgs[1]));
+						} else {
+							throw new BadArgs(schemeName, comp.name, compName);
+						}
+					} else if(compName.equals("mp_bool")) {
+						
 						if(compArgs.length == 1) {
 							logComp = new MP(Integer.parseInt(compArgs[0]));
 						} else {
@@ -194,8 +203,9 @@ public class Configurator {
 						}
 					} else if(compName.equals("tsb")) {
 						
-						if(compArgs.length == 0) {
+						if(compArgs.length == 1) {
 							logComp = new TSB();
+							logComp.getOut(0).setNumOfLines(Integer.parseInt(compArgs[0]));
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);
 						}
@@ -318,8 +328,9 @@ public class Configurator {
 						}
 					} else if(compName.equals("km")) {
 						
-						if(compArgs.length == 1) {
+						if(compArgs.length == 2) {
 							logComp = new KM(compArgs[0]);
+							logComp.getOut(0).setNumOfLines(Integer.parseInt(compArgs[1]));
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);
 						}
@@ -341,6 +352,15 @@ public class Configurator {
 						
 						if(compArgs.length == 2) {
 							logComp = new BUS(Integer.parseInt(compArgs[0]), Integer.parseInt(compArgs[1]), comp.name);
+						} else {
+							throw new BadArgs(schemeName, comp.name, compName);
+						}
+					} else if(compName.equals("mem")) {
+						
+						if(compArgs.length == 2) {
+							logComp = new MEM(Integer.parseInt(compArgs[0]));
+							logComp.getOut(0).setIsInt();
+							logComp.getOut(0).setNumOfLines(Integer.parseInt(compArgs[1]));
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);
 						}
@@ -457,10 +477,22 @@ public class Configurator {
 											((GPR) logComp).setAdressPin(parentComp.getOut(0));
 
 										} else if (pins.type.equals("wr")) {
-											((GPR) logComp).setWrite(parentComp.getOut(0));
+											if(logComp instanceof GPR) {
+												((GPR) logComp).setWrite(parentComp.getOut(0));
+											} else if(logComp instanceof MEM) {
+												((MEM) logComp).setWrite(parentComp.getOut(0));
+											} else {
+												System.out.println("Non existent atribute wr for component: "+schemeName+"."+comp.name);
+											}
 
 										} else if (pins.type.equals("rd")) {
-											((GPR) logComp).setRead(parentComp.getOut(0));
+											if(logComp instanceof GPR) {
+												((GPR) logComp).setRead(parentComp.getOut(0));
+											} else if(logComp instanceof MEM) {
+												((MEM) logComp).setRead(parentComp.getOut(0));
+											} else {
+												System.out.println("Non existent atribute rd for component: "+schemeName+"."+comp.name);
+											}
 
 										} else if (pins.type.equals("not")) {
 											((ALU) logComp).setPinNot(parentComp.getOut(0));

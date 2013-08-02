@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
-import shemes.*;
+
 
 public class Asembler {
 
@@ -46,7 +46,7 @@ public class Asembler {
 		code = new int[1000];
 		firstPass();
 		secondPass();
-		loadInMemory();
+		//loadInMemory();
 	}
 
 	public int getLength() {
@@ -479,10 +479,10 @@ public class Asembler {
 				
 		}
 	}
-	private void loadInMemory(){
-		for(int i=0;i<length;i++){
-			Mem11.writeMEM(startOfCode+i, code[i]);
-		}
-		Fetch1.PC.initVal(startOfCode);
-	}
+//	private void loadInMemory(){
+//		for(int i=0;i<length;i++){
+//			Mem11.writeMEM(startOfCode+i, code[i]);
+//		}
+//		Fetch1.PC.initVal(startOfCode);
+//	}
 }
