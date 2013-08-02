@@ -20,6 +20,7 @@ public class Debuger {
 		}
 		
 		components = config.getComponents();
+		pastValues = new HashMap<String, Object>();
 		
 		for(Map.Entry<String, LogicalComponent> entry: components.entrySet()){
 			

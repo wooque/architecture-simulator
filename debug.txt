@@ -1,0 +1,11 @@
+CLK = 0
+bus.mar_out = highZ
+bus.notfcbus = highZ
+bus.onerdbus = highZ
+mem_oper.notrdbus = highZ
+mem_oper.mem_out = highZ
+bus.onewrbus = highZ
+bus.mdr_out = highZ
+mem_oper.fcbus_one = highZ
+mem_oper.notwrbus = highZ
+--------------------------------
