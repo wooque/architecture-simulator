@@ -1,16 +1,12 @@
 package sim;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.StringTokenizer;
-
-
+import java.util.*;
 
 public class Asembler {
 
 	//structure for one unpacked line of source code
-	private class unpackedLine {
+	private class UnpackedLine {
 
 		int jumpOrOther; // 0 - jump, 1 - other
 		int typeOfInstruction; // for jump: 0-conditional, 1 -unconditional
@@ -29,20 +25,20 @@ public class Asembler {
 	
 	private BufferedReader read;
 	private HashMap<String, Integer> labels;	//all labels with their location in code
-	private ArrayList<unpackedLine> unpackedSource;	//all unpacked lines of source code
+	private ArrayList<UnpackedLine> unpackedSource;	//all unpacked lines of source code
 	private int[] code;	//code
-	private int length=0;
-	private int startOfCode=256;
+	private int length = 0;
+	private int startOfCode = 256;
 
 	//method for assembling, argument is filename of file with assembly code
 	//return array of int of coded instruction
 	public void asembly(String asmcode) {
 		
-		length=0;
-		StringReader strread=new StringReader(asmcode);
-		read=new BufferedReader(strread);
-		unpackedSource=new ArrayList<unpackedLine>();
-		labels=new HashMap<String, Integer>();
+		length = 0;
+		StringReader strread = new StringReader(asmcode);
+		read = new BufferedReader(strread);
+		unpackedSource = new ArrayList<UnpackedLine>();
+		labels = new HashMap<String, Integer>();
 		code = new int[1000];
 		firstPass();
 		secondPass();
@@ -64,7 +60,7 @@ public class Asembler {
 
 				StringTokenizer tokenizer = new StringTokenizer(lineOfCode);
 				String token = tokenizer.nextToken();	//one token
-				unpackedLine unpacked = new unpackedLine();	//one line of unpacked source
+				UnpackedLine unpacked = new UnpackedLine();	//one line of unpacked source
 				
 				//if token is label, for example "lab:"
 				if (token.indexOf(':') != -1) {
@@ -432,7 +428,7 @@ public class Asembler {
 	}
 	//second pass
 	private void secondPass() {
-		for (unpackedLine line : unpackedSource) {
+		for (UnpackedLine line : unpackedSource) {
 			int first = 0;	//first byte of instruction
 			first |= (line.jumpOrOther & 0x1) << 7;
 			first |= (line.typeOfInstruction & 0x1) << 6;
