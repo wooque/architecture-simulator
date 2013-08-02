@@ -732,30 +732,6 @@ public class Main extends JFrame {
 		Uprav1.init();
 		Uprav2.init();
 
-		// GUI
-		Adr.gui();
-		Arbitary.gui();
-		Bus1.gui();
-		Bus2.gui();
-		Bus3.gui();
-		Counter.gui();
-		Exec1.gui();
-		Exec2.gui();
-		Exec3.gui();
-		Exec4.gui();
-		Fetch1.gui();
-		Fetch2.gui();
-		Fetch3.gui();
-		Intr1.gui();
-		Intr2.gui();
-		Intr3.gui();
-		Mem11.gui();
-		Mem12.gui();
-		Oper1.gui();
-		Oper2.gui();
-		Uprav2.gui();
-		Uprav1.gui();
-
 		Adr.connect();
 		Arbitary.connect();
 		Bus1.connect();

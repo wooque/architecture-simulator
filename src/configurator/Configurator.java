@@ -289,6 +289,30 @@ public class Configurator {
 						
 						if(compArgs.length == 1) {
 							logComp = new CMP(Integer.parseInt(compArgs[0]));
+							boolean eqlExist = false, grtExist = false, lesExist = false;
+							for(ComponentPins pins: comp.pins) {
+								if(pins.type.equals("grt")){
+									grtExist = true;
+									components.put(schemeName+"."+pins.names[0], new DummyPin(logComp.getOut(0)));
+								}
+								if(pins.type.equals("eql")){
+									eqlExist = true;
+									components.put(schemeName+"."+pins.names[0], new DummyPin(logComp.getOut(1)));
+								}
+								if(pins.type.equals("les")){
+									lesExist = true;
+									components.put(schemeName+"."+pins.names[0], new DummyPin(logComp.getOut(2)));
+								}
+							}
+							if(!grtExist) {
+								components.put(schemeName+"."+comp.name+"_grt", new DummyPin(logComp.getOut(0)));
+							}
+							if(!eqlExist) {
+								components.put(schemeName+"."+comp.name+"_eql", new DummyPin(logComp.getOut(1)));
+							}
+							if(!lesExist) {
+								components.put(schemeName+"."+comp.name+"_les", new DummyPin(logComp.getOut(2)));
+							}
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);
 						}
@@ -346,7 +370,7 @@ public class Configurator {
 					
 					for(ComponentPins pins: allPins) {
 							
-						if (!pins.type.equals("out")) {
+						if (!pins.type.equals("out") && !pins.type.equals("eql") && !pins.type.equals("grt") && !pins.type.equals("les")) {
 							for (int i = 0; i < pins.names.length; i++) {
 
 								String pinName = pins.names[i];
@@ -389,6 +413,9 @@ public class Configurator {
 
 										} else if (pins.type.equals("ld")) {
 											((REG) logComp).setPinLd(parentComp.getOut(0));
+											
+										} else if (pins.type.equals("cl")) {
+											((REG) logComp).setPinCL(parentComp.getOut(0));
 
 										} else if (pins.type.equals("inc")) {
 											if(logComp instanceof REG) {
