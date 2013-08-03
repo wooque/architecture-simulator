@@ -6,7 +6,7 @@ public class Test {
 
 	public static void main(String[] args) {
 		Configurator config = new Configurator("test.conf");
-		Debuger debug = new Debuger(config, "debug.txt");
+		Debugger debug = new Debugger(config, "debug.txt");
 		LogicalComponent.initialise();
 		debug.debug();
 		LogicalComponent.CLK();

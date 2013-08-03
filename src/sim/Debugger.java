@@ -6,13 +6,13 @@ import java.util.Map;
 
 import sim.components.LogicalComponent;
 
-public class Debuger {
+public class Debugger {
 
 	private PrintWriter pw;
 	private HashMap<String, LogicalComponent> components;
 	private HashMap<String, Object> pastValues;
 
-	public Debuger(Configurator config, String filename){
+	public Debugger(Configurator config, String filename){
 		try {
 			pw=new PrintWriter(new FileWriter(filename),true);
 		} catch (IOException e) {

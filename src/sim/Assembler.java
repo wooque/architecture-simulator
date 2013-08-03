@@ -3,7 +3,7 @@ package sim;
 import java.io.*;
 import java.util.*;
 
-public class Asembler {
+public class Assembler {
 
 	//structure for one unpacked line of source code
 	private class UnpackedLine {
@@ -74,116 +74,67 @@ public class Asembler {
 					lineOfCode=read.readLine();
 					continue;
 				}
-				if (token.equalsIgnoreCase("RTS")) {
+				if (token.equalsIgnoreCase("NOP")) {
 					unpacked.jumpOrOther = 1;
 					unpacked.typeOfInstruction = 0;
 					unpacked.opcode = 0;
 				}
-				if (token.equalsIgnoreCase("RTI")) {
+				if (token.equalsIgnoreCase("HALT")) {
 					unpacked.jumpOrOther = 1;
 					unpacked.typeOfInstruction = 0;
 					unpacked.opcode = 1;
 				}
-				if (token.equalsIgnoreCase("ASR")) {
-					unpacked.jumpOrOther = 1;
-					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 2;
-				}
-				if (token.equalsIgnoreCase("LSR")) {
-					unpacked.jumpOrOther = 1;
-					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 3;
-				}
-				if (token.equalsIgnoreCase("ROR")) {
+				if (token.equalsIgnoreCase("INTD")) {
 					unpacked.jumpOrOther = 1;
 					unpacked.typeOfInstruction = 0;
 					unpacked.opcode = 4;
-
-				}
-				if (token.equalsIgnoreCase("RORC")) {
-					unpacked.jumpOrOther = 1;
-					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 5;
-
-				}
-				if (token.equalsIgnoreCase("ASL")) {
-					unpacked.jumpOrOther = 1;
-					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 6;
-
-				}
-				if (token.equalsIgnoreCase("LSL")) {
-					unpacked.jumpOrOther = 1;
-					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 7;
-
-				}
-				if (token.equalsIgnoreCase("ROL")) {
-					unpacked.jumpOrOther = 1;
-					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 8;
-
-				}
-				if (token.equalsIgnoreCase("ROLC")) {
-					unpacked.jumpOrOther = 1;
-					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 9;
-
 				}
 				if (token.equalsIgnoreCase("INTE")) {
 					unpacked.jumpOrOther = 1;
 					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 10;
-
-				}
-				if (token.equalsIgnoreCase("INTD")) {
-					unpacked.jumpOrOther = 1;
-					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 11;
-
-				}
-				if (token.equalsIgnoreCase("TRPE")) {
-					unpacked.jumpOrOther = 1;
-					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 12;
-
+					unpacked.opcode = 5;
 				}
 				if (token.equalsIgnoreCase("TRPD")) {
 					unpacked.jumpOrOther = 1;
 					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 13;
-
+					unpacked.opcode = 6;
 				}
-				if (token.equalsIgnoreCase("STIVTP")) {
+				if (token.equalsIgnoreCase("TRPE")) {
 					unpacked.jumpOrOther = 1;
 					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 14;
-
+					unpacked.opcode = 7;
 				}
-				if (token.equalsIgnoreCase("STSP")) {
+				if (token.equalsIgnoreCase("JMP")) {
+					unpacked.jumpOrOther = 0;
+					unpacked.typeOfInstruction = 1;
+					unpacked.opcode = 1;
+				}
+				if (token.equalsIgnoreCase("JSR")) {
+					unpacked.jumpOrOther = 0;
+					unpacked.typeOfInstruction = 1;
+					unpacked.opcode = 2;
+				}
+				if (token.equalsIgnoreCase("RTS")) {
 					unpacked.jumpOrOther = 1;
 					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 15;
-
+					unpacked.opcode = 3;
 				}
-				if (token.equalsIgnoreCase("NOP")) {
+				if (token.equalsIgnoreCase("INT")) {
+					unpacked.jumpOrOther = 0;
+					unpacked.typeOfInstruction = 1;
+					unpacked.opcode = 4;
+				}
+				if (token.equalsIgnoreCase("RTI")) {
 					unpacked.jumpOrOther = 1;
 					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 16;
-
-				}
-				if (token.equalsIgnoreCase("HALT")) {
-					unpacked.jumpOrOther = 1;
-					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 17;
-
+					unpacked.opcode = 5;
 				}
 				if (token.equalsIgnoreCase("BEQL")) {
 					unpacked.jumpOrOther = 0;
 					unpacked.typeOfInstruction = 0;
 					unpacked.opcode = 0;
 				}
-				if (token.equalsIgnoreCase("BNEQ")) {
+				if (token.equalsIgnoreCase("BNEQL")) {
 					unpacked.jumpOrOther = 0;
 					unpacked.typeOfInstruction = 0;
 					unpacked.opcode = 1;
@@ -193,7 +144,7 @@ public class Asembler {
 					unpacked.typeOfInstruction = 0;
 					unpacked.opcode = 2;
 				}
-				if (token.equalsIgnoreCase("BNNG")) {
+				if (token.equalsIgnoreCase("BNNEG")) {
 					unpacked.jumpOrOther = 0;
 					unpacked.typeOfInstruction = 0;
 					unpacked.opcode = 3;
@@ -203,17 +154,17 @@ public class Asembler {
 					unpacked.typeOfInstruction = 0;
 					unpacked.opcode = 4;
 				}
-				if (token.equalsIgnoreCase("BNVF")) {
+				if (token.equalsIgnoreCase("BNOVF")) {
 					unpacked.jumpOrOther = 0;
 					unpacked.typeOfInstruction = 0;
 					unpacked.opcode = 5;
 				}
-				if (token.equalsIgnoreCase("BCR")) {
+				if (token.equalsIgnoreCase("BCAR")) {
 					unpacked.jumpOrOther = 0;
 					unpacked.typeOfInstruction = 0;
 					unpacked.opcode = 6;
 				}
-				if (token.equalsIgnoreCase("BNCR")) {
+				if (token.equalsIgnoreCase("BNCAR")) {
 					unpacked.jumpOrOther = 0;
 					unpacked.typeOfInstruction = 0;
 					unpacked.opcode = 7;
@@ -221,59 +172,75 @@ public class Asembler {
 				if (token.equalsIgnoreCase("BGRT")) {
 					unpacked.jumpOrOther = 0;
 					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 8;
+					unpacked.opcode = 0;
 				}
-				if (token.equalsIgnoreCase("BGRE")) {
+				if (token.equalsIgnoreCase("BGRTE")) {
 					unpacked.jumpOrOther = 0;
 					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 9;
+					unpacked.opcode = 1;
 				}
 				if (token.equalsIgnoreCase("BLSS")) {
 					unpacked.jumpOrOther = 0;
 					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 10;
+					unpacked.opcode = 2;
 				}
-				if (token.equalsIgnoreCase("BLEQ")) {
+				if (token.equalsIgnoreCase("BLSSE")) {
 					unpacked.jumpOrOther = 0;
 					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 11;
+					unpacked.opcode = 3;
 				}
 				if (token.equalsIgnoreCase("BGTRU")) {
 					unpacked.jumpOrOther = 0;
 					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 12;
+					unpacked.opcode = 4;
 				}
-				if (token.equalsIgnoreCase("BGREU")) {
+				if (token.equalsIgnoreCase("BGRTEU")) {
 					unpacked.jumpOrOther = 0;
 					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 13;
+					unpacked.opcode = 5;
 				}
 				if (token.equalsIgnoreCase("BLSSU")) {
 					unpacked.jumpOrOther = 0;
 					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 14;
+					unpacked.opcode = 6;
 				}
-				if (token.equalsIgnoreCase("BLEQU")) {
+				if (token.equalsIgnoreCase("BLSSEU")) {
 					unpacked.jumpOrOther = 0;
 					unpacked.typeOfInstruction = 0;
-					unpacked.opcode = 15;
+					unpacked.opcode = 7;
 				}
-				if (token.equalsIgnoreCase("JMP")) {
-					unpacked.jumpOrOther = 0;
-					unpacked.typeOfInstruction = 1;
+				if (token.equalsIgnoreCase("LDIVTP")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 0;
 					unpacked.opcode = 0;
 				}
-				if (token.equalsIgnoreCase("JSR")) {
-					unpacked.jumpOrOther = 0;
-					unpacked.typeOfInstruction = 1;
+				if (token.equalsIgnoreCase("STIVTP")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 0;
 					unpacked.opcode = 1;
 				}
-				if (token.equalsIgnoreCase("INT")) {
-					unpacked.jumpOrOther = 0;
-					unpacked.typeOfInstruction = 1;
+				if (token.equalsIgnoreCase("LDIMR")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 0;
 					unpacked.opcode = 2;
 				}
-				if (token.equalsIgnoreCase("LD")) {
+				if (token.equalsIgnoreCase("STIMR")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 0;
+					unpacked.opcode = 3;
+				}
+				if (token.equalsIgnoreCase("LDSP")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 0;
+					unpacked.opcode = 4;
+				}
+				if (token.equalsIgnoreCase("STSP")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 0;
+					unpacked.opcode = 5;
+				}
+				
+				if (token.equalsIgnoreCase("LDB")) {
 					unpacked.jumpOrOther = 1;
 					unpacked.typeOfInstruction = 1;
 					unpacked.opcode = 0;
@@ -283,7 +250,7 @@ public class Asembler {
 					unpacked.typeOfInstruction = 1;
 					unpacked.opcode = 1;
 				}
-				if (token.equalsIgnoreCase("ST")) {
+				if (token.equalsIgnoreCase("STB")) {
 					unpacked.jumpOrOther = 1;
 					unpacked.typeOfInstruction = 1;
 					unpacked.opcode = 2;
@@ -293,35 +260,105 @@ public class Asembler {
 					unpacked.typeOfInstruction = 1;
 					unpacked.opcode = 3;
 				}
-				if (token.equalsIgnoreCase("ADD")) {
+				if (token.equalsIgnoreCase("POPB")) {
 					unpacked.jumpOrOther = 1;
 					unpacked.typeOfInstruction = 1;
 					unpacked.opcode = 4;
 				}
-				if (token.equalsIgnoreCase("SUB")) {
+				if (token.equalsIgnoreCase("POPW")) {
 					unpacked.jumpOrOther = 1;
 					unpacked.typeOfInstruction = 1;
 					unpacked.opcode = 5;
 				}
-				if (token.equalsIgnoreCase("AND")) {
+				if (token.equalsIgnoreCase("PUSHB")) {
 					unpacked.jumpOrOther = 1;
 					unpacked.typeOfInstruction = 1;
 					unpacked.opcode = 6;
 				}
-				if (token.equalsIgnoreCase("OR")) {
+				if (token.equalsIgnoreCase("PUSHW")) {
 					unpacked.jumpOrOther = 1;
 					unpacked.typeOfInstruction = 1;
 					unpacked.opcode = 7;
 				}
+				if (token.equalsIgnoreCase("ADD")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 1;
+					unpacked.opcode = 0;
+				}
+				if (token.equalsIgnoreCase("SUB")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 1;
+					unpacked.opcode = 1;
+				}
+				if (token.equalsIgnoreCase("INC")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 1;
+					unpacked.opcode = 2;
+				}
+				if (token.equalsIgnoreCase("DEC")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 1;
+					unpacked.opcode = 3;
+				}
+				if (token.equalsIgnoreCase("AND")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 1;
+					unpacked.opcode = 4;
+				}
+				if (token.equalsIgnoreCase("OR")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 1;
+					unpacked.opcode = 5;
+				}
 				if (token.equalsIgnoreCase("XOR")) {
 					unpacked.jumpOrOther = 1;
 					unpacked.typeOfInstruction = 1;
-					unpacked.opcode = 8;
+					unpacked.opcode = 6;
 				}
 				if (token.equalsIgnoreCase("NOT")) {
 					unpacked.jumpOrOther = 1;
 					unpacked.typeOfInstruction = 1;
-					unpacked.opcode = 9;
+					unpacked.opcode = 7;
+				}
+				if (token.equalsIgnoreCase("ASR")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 0;
+					unpacked.opcode = 0;
+				}
+				if (token.equalsIgnoreCase("LSR")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 0;
+					unpacked.opcode = 1;
+				}
+				if (token.equalsIgnoreCase("ROR")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 0;
+					unpacked.opcode = 2;
+				}
+				if (token.equalsIgnoreCase("RORC")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 0;
+					unpacked.opcode = 3;
+				}
+				if (token.equalsIgnoreCase("ASL")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 0;
+					unpacked.opcode = 4;
+				}
+				if (token.equalsIgnoreCase("LSL")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 0;
+					unpacked.opcode = 5;
+				}
+				if (token.equalsIgnoreCase("ROL")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 0;
+					unpacked.opcode = 6;
+				}
+				if (token.equalsIgnoreCase("ROLC")) {
+					unpacked.jumpOrOther = 1;
+					unpacked.typeOfInstruction = 0;
+					unpacked.opcode = 7;
 				}
 				//none addressing instructions
 				if ((unpacked.jumpOrOther == 1)&& (unpacked.typeOfInstruction == 0)) {
