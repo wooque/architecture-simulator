@@ -50,18 +50,20 @@ public class Debuger {
 				if(component.getOut(0).isBool()) {
 					
 					boolean value = (Boolean) pastValue;
-					if(value != component.getOut(0).getBoolVal()){
+					boolean currValue = component.getOut(0).getBoolVal();
+					if(value != currValue){
 						
-						pastValues.put(componentName, value);
-						pw.println(componentName+" = "+value);
+						pastValues.put(componentName, currValue);
+						pw.println(componentName+" = "+currValue);
 					}
 				} else {
 					
 					int value = (Integer) pastValue;
-					if(value != component.getOut(0).getIntVal()){
+					int currValue = component.getOut(0).getIntVal();
+					if(value != currValue){
 						
-						pastValues.put(componentName, value);
-						pw.println(componentName+" = "+value);
+						pastValues.put(componentName, currValue);
+						pw.println(componentName+" = "+currValue);
 					}
 				}
 			}

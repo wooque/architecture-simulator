@@ -427,7 +427,7 @@ public class Configurator {
 											if (logComp instanceof IntToBools) {
 
 												for (int k = 0; k < logComp.getOut().length; k++) {
-													components .put(pinName + k, new DummyPin(logComp.getOut(i)));
+													components.put(pinName + k, new DummyPin(logComp.getOut(k)));
 												}
 											}
 
@@ -572,9 +572,4 @@ public class Configurator {
 		return components;
 	}
 
-	public static void main(String[] args) {
-		Configurator config = new Configurator("schemes.conf");
-		Debuger debug = new Debuger(config, "debug.txt");
-		debug.debug();
-	}
 }
