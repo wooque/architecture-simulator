@@ -175,8 +175,6 @@ public class Configurator {
 						
 						if(compArgs.length == 0) {
 							logComp = new DummyPin();
-						} else if(compArgs.length == 1) {
-							logComp = new DummyPin(new Pin(Boolean.parseBoolean(compArgs[0])));
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);
 						}
@@ -420,13 +418,18 @@ public class Configurator {
 										pinName = pinName.substring(1);
 										anonimousNOT = true;
 									}
-
-									if (pinName.indexOf(".") == -1) {
-										pinName = schemeName + "." + pinName;
+									
+									if (pinName.equals("true")) {
+										parentComp = DummyPin.TRUE;
+									} else if (pinName.equals("false")) {
+										parentComp = DummyPin.FALSE;
+									} else {
+										if (pinName.indexOf(".") == -1) {
+											pinName = schemeName + "." + pinName;
+										}
+										parentComp = components.get(pinName);
 									}
-
-									parentComp = components.get(pinName);
-
+									
 									if (anonimousNOT && parentComp != null) {
 										LogicalComponent tempComp = new NOT();
 										components.put(schemeName+".NOT"+notID, tempComp);

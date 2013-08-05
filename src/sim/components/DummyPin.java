@@ -2,6 +2,14 @@ package sim.components;
 
 public class DummyPin extends LogicalComponent {
 	
+	public static final DummyPin TRUE = new DummyPin();
+	public static final DummyPin FALSE = new DummyPin();
+	
+	static {
+		TRUE.setOutputPin(0, Pin.TRUE);
+		FALSE.setOutputPin(0, Pin.FALSE);
+	}
+	
 	public DummyPin() {
 		super(1, 1, false);
 	}

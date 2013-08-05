@@ -5,6 +5,8 @@ import java.util.ArrayList;
 public class Pin { // Izmene:prvi konstruktor Pin ne prima argumente jer to
 					// ostalo od ranije
 					// signalAll->stavljeno not(isSeq)
+	public static final Pin TRUE = new Pin(true);
+	public static final Pin FALSE = new Pin(false);
 	private int intVal;
 	private boolean boolVal;
 	private int tempIntVal;
