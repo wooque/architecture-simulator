@@ -153,7 +153,7 @@ public class Assembler {
 
 		while (lineOfCode != null) {
 
-			String[] tokens = lineOfCode.split("( )*( |\\[|\\]|\\(|\\))( )*");
+			String[] tokens = lineOfCode.split("( )+");
 			int currToken = 0;
 			UnpackedLine unpacked = new UnpackedLine();
 			String token = tokens[currToken++];
@@ -227,16 +227,16 @@ public class Assembler {
 				if (token.charAt(0) == '#') {
 					
 					int temp = Integer.parseInt(token.substring(1));
-					unpacked.low = temp >> 8;
-					unpacked.high = temp & 0xFF;
+					unpacked.high = temp >> 8;
+					unpacked.low = temp & 0xFF;
 					
 				// label, displacement needs calculating
 				} else {
 					
 					if (labels.containsKey(token)) {
 						int temp = labels.get(token);
-						unpacked.low = temp >> 8;
-						unpacked.high = temp & 0xFF;
+						unpacked.high = temp >> 8;
+						unpacked.low = temp & 0xFF;
 					} else {
 						unpacked.low = 0;
 						unpacked.label = token;
@@ -277,8 +277,8 @@ public class Assembler {
 					unpacked.typeOfAddressing = 7;
 					if (ins.group == 4 && ins.opcode == 1) {
 						int temp = Integer.parseInt(token.substring(1));
-						unpacked.low = temp >> 8;
-						unpacked.high = temp & 0xFF;
+						unpacked.high = temp >> 8;
+						unpacked.low = temp & 0xFF;
 						location += 4;
 					} else {
 						unpacked.high = Integer.parseInt(token.substring(1));
@@ -304,10 +304,11 @@ public class Assembler {
 						
 						// indirect register addressing with displacement (for example: ADD (R4)4)
 						if (limit <= token.length()) {
+							unpacked.typeOfAddressing = 4;
 							int temp = Integer.parseInt(token.substring(limit + 1));
-							unpacked.low = temp >> 8;
-							unpacked.high = temp & 0xFF;
-							location += 4;
+							unpacked.high = temp >> 8;
+							unpacked.low = temp & 0xFF;
+							location += 2;
 						}
 						
 					// PC relative addressing with displacement (for example: ADD (PC)4)	
@@ -327,8 +328,8 @@ public class Assembler {
 							token = token.substring(0, hloc);
 						}
 						int temp = Integer.parseInt(token);
-						unpacked.low = temp >> 8;
-						unpacked.high = temp & 0xFF;
+						unpacked.high = temp >> 8;
+						unpacked.low = temp & 0xFF;
 						location += 4;
 					} else {
 						throw new BadInstruction(line);
@@ -343,8 +344,8 @@ public class Assembler {
 						token = token.substring(0, hloc);
 					}
 					int temp = Integer.parseInt(token);
-					unpacked.low = temp >> 8;
-					unpacked.high = temp & 0xFF;
+					unpacked.high = temp >> 8;
+					unpacked.low = temp & 0xFF;
 					location += 4;
 					
 				// base-index addressing with displacement
@@ -354,8 +355,8 @@ public class Assembler {
 					int limit = token.indexOf(")");
 					unpacked.register = Integer.parseInt(token.substring(2, limit));
 					int temp = Integer.parseInt(token.substring(limit + 1));
-					unpacked.low = temp >> 8;
-					unpacked.high = temp & 0xFF;
+					unpacked.high = temp >> 8;
+					unpacked.low = temp & 0xFF;
 					location += 4;
 				} else {
 					throw new BadInstruction(line);
@@ -380,19 +381,19 @@ public class Assembler {
 				int temp = labels.get(line.label);
 				
 				// branch conditional instructions
-				if (ins.group == 2 && ins.group == 3) {
+				if (ins.group == 2 || ins.group == 3) {
 					line.low += temp;
 				}
 				
 				// branch unconditional instructions
 				if (ins.group == 1 && (ins.opcode == 1 || ins.opcode == 2)) {
-					line.low = temp >> 8;
-					line.high = temp & 0xFF;
+					line.high = temp >> 8;
+					line.low = temp & 0xFF;
 				}
 			}
 			
 			// branch conditional instructions
-			if (ins.group == 2 && ins.group == 3) {
+			if (ins.group == 2 || ins.group == 3) {
 				code.add(line.low);
 			}
 			
@@ -412,8 +413,9 @@ public class Assembler {
 				code.add(second);
 				if (line.typeOfAddressing != 0 && line.typeOfAddressing != 1) {
 					code.add(line.high);
-					if (line.typeOfAddressing != 7 && ins.group != 4 && ins.opcode != 1 )
+					if (line.typeOfAddressing != 7 || (line.typeOfAddressing == 7 && ins.group == 4 && ins.opcode == 1)) {
 						code.add(line.low);
+					}
 				}
 			}
 		}
