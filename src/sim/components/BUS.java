@@ -22,7 +22,7 @@ public class BUS extends LogicalComponent{
 			}
 		}
 		if(numOfInputActive>1){
-			System.out.println("Warning!!! You burned bus..."+name);
+			System.out.println("Warning!!! You burned "+name+" in clock "+LogicalComponent.globalClock);
 			return;
 		}
 		if(numOfInputActive==0){

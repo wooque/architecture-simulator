@@ -17,6 +17,7 @@ public class Test {
 		}
 		REG pc = ((REG)config.getComponents().get("fetch1.pc"));
 		pc.initVal(start);
+		LogicalComponent.initMemory = false;
 		LogicalComponent.initialise();
 		for(int i = 0; i < 1000; i++) {
 			debug.debug();
