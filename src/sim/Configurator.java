@@ -209,6 +209,14 @@ public class Configurator {
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);
 						}
+					} else if(compName.equals("tsb_bool")) {
+						
+						if(compArgs.length == 0) {
+							logComp = new TSB();
+							logComp.getOut(0).setIsBool();
+						} else {
+							throw new BadArgs(schemeName, comp.name, compName);
+						}
 					} else if(compName.equals("alu")) {
 						
 						if(compArgs.length == 0) {
@@ -351,7 +359,16 @@ public class Configurator {
 					} else if(compName.equals("bus")) {
 						
 						if(compArgs.length == 2) {
-							logComp = new BUS(Integer.parseInt(compArgs[0]), Integer.parseInt(compArgs[1]), comp.name);
+							logComp = new BUS(Integer.parseInt(compArgs[0]), 1, comp.name);
+							logComp.getOut(0).setNumOfLines(Integer.parseInt(compArgs[1]));
+						} else {
+							throw new BadArgs(schemeName, comp.name, compName);
+						}
+					} else if(compName.equals("bus_bool")) {
+						
+						if(compArgs.length == 1) {
+							logComp = new BUS(Integer.parseInt(compArgs[0]), 1, comp.name);
+							logComp.getOut(0).setIsBool();
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);
 						}

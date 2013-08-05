@@ -75,7 +75,8 @@ public class REG extends LogicalComponent {
 		if ((inc != null) && (inc.getBoolVal())) {
 			if (out[0].isBool()) {
 				value += 1;
-				if (value % (int) Math.pow(2.0D, in.length) == 0) {
+				// in->out
+				if (value % (int) Math.pow(2.0D, out.length) == 0) {
 					value = 0;
 					if (carry != null)
 						carry.setBoolVal(true, false);
@@ -85,7 +86,8 @@ public class REG extends LogicalComponent {
 				}
 			} else {
 				value += 1;
-				if (value % (int) Math.pow(2.0D, in[0].getNumOfLines()) == 0) {
+				// in->out
+				if (value % (int) Math.pow(2.0D, out[0].getNumOfLines()) == 0) {
 					value = 0;
 					if (carry != null)
 						carry.setBoolVal(true, false);
@@ -104,7 +106,8 @@ public class REG extends LogicalComponent {
 				if (carry != null)
 					carry.setBoolVal(false, false);
 			} else {
-				value = (int) Math.pow(2.0D, in.length);
+				//in->out
+				value = (int) Math.pow(2.0D, out.length);
 				if (carry != null)
 					carry.setBoolVal(true, false);
 			}
