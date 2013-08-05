@@ -41,8 +41,7 @@ public class Assembler {
 	private int line;
 	private ArrayList<UnpackedLine> unpackedSource;
 	private HashMap<String, Integer> labels;
-	private int[] code;
-	private int length;
+	private ArrayList<Integer> code;
 	private int startOfCode = 256;
 
 	public Assembler(String asmcode) {
@@ -50,8 +49,7 @@ public class Assembler {
 			read = new BufferedReader(new FileReader(asmcode));
 			unpackedSource = new ArrayList<UnpackedLine>();
 			labels = new HashMap<String, Integer>();
-			length = 0;
-			code = new int[1000];
+			code = new ArrayList<Integer>();
 			try {
 				firstPass();
 				secondPass();
@@ -62,24 +60,20 @@ public class Assembler {
 			System.out.println("Assembly file not found!");
 		}
 	}
-
-	public int getLength() {
-		return length;
-	}
 	
-	public int[] getCode() {
-		return code;
+	public Object[] getCode() {
+		return code.toArray();
 	}
 	
 	private static void addInstruction(String name, int group, int opcode) {
 		Instruction ins = new Instruction(group, opcode);
 		instructions.put(name, ins);
-		if(name.charAt(0) > 'A' && name.charAt(0) < 'Z') {
+		if(name.charAt(0) >= 'A' && name.charAt(0) <= 'Z') {
 			instructions.put(name.toLowerCase(), ins);
-		} else if(name.charAt(0) > 'a' && name.charAt(0) < 'z'){
+		} else if(name.charAt(0) >= 'a' && name.charAt(0) <= 'z'){
 			instructions.put(name.toUpperCase(), ins);
 		} else {
-			System.out.println("Bad instruction!");
+			System.out.println("Bad instruction: "+name);
 		}
 	}
 
@@ -226,7 +220,7 @@ public class Assembler {
 			}
 			
 			// branch unconditional instructions
-			if (ins.group == 0 && (ins.opcode == 1 || ins.opcode == 2)) {
+			if (ins.group == 1 && (ins.opcode == 1 || ins.opcode == 2)) {
 				token = tokens[currToken++];
 				
 				// immediate displacement (for example: #3)
@@ -328,6 +322,10 @@ public class Assembler {
 					} else if (token.charAt(1) >= '0' && token.charAt(1) <= '9') {
 						
 						unpacked.typeOfAddressing = 3;
+						int hloc = token.indexOf('h');
+						if (hloc != -1) {
+							token = token.substring(0, hloc);
+						}
 						int temp = Integer.parseInt(token);
 						unpacked.low = temp >> 8;
 						unpacked.high = temp & 0xFF;
@@ -340,6 +338,10 @@ public class Assembler {
 				} else if (token.charAt(1) >= '0' && token.charAt(1) <= '9') {
 					
 					unpacked.typeOfAddressing = 2;
+					int hloc = token.indexOf('h');
+					if (hloc != -1) {
+						token = token.substring(0, hloc);
+					}
 					int temp = Integer.parseInt(token);
 					unpacked.low = temp >> 8;
 					unpacked.high = temp & 0xFF;
@@ -371,7 +373,7 @@ public class Assembler {
 			int first = 0;
 			first |= (ins.group & 0x7) << 3;
 			first |= (ins.opcode & 0x7);
-			code[length++] = first;
+			code.add(first);
 			
 			// patching unpacked line if needed
 			if (line.needPatching) {
@@ -391,13 +393,13 @@ public class Assembler {
 			
 			// branch conditional instructions
 			if (ins.group == 2 && ins.group == 3) {
-				code[length++] = line.low;
+				code.add(line.low);
 			}
 			
 			// branch unconditional instructions
 			if (ins.group == 1 && (ins.opcode == 1 || ins.opcode == 2)) {
-				code[length++] = line.high;
-				code[length++] = line.low;
+				code.add(line.high);
+				code.add(line.low);
 			}
 			
 			// addressing instructions
@@ -407,11 +409,11 @@ public class Assembler {
 				int second = 0;
 				second |= (line.typeOfAddressing & 0x7) << 5;
 				second |= (line.register & 0x1F);
-				code[length++] = second;
+				code.add(second);
 				if (line.typeOfAddressing != 0 && line.typeOfAddressing != 1) {
-					code[length++] = line.high;
+					code.add(line.high);
 					if (line.typeOfAddressing != 7 && ins.group != 4 && ins.opcode != 1 )
-						code[length++] = line.low;
+						code.add(line.low);
 				}
 			}
 		}
