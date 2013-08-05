@@ -5,6 +5,7 @@ import sim.components.*;
 public class Test {
 
 	public static void main(String[] args) {
+		long begin = System.currentTimeMillis();
 		Configurator config = new Configurator("schemes.conf");
 		Debugger debug = new Debugger(config, "debug.txt");
 		
@@ -23,5 +24,7 @@ public class Test {
 			debug.debug();
 			LogicalComponent.CLK();
 		}
+		long end = System.currentTimeMillis();
+		System.out.println("Test took "+(end - begin)+" ms");
 	}
 }

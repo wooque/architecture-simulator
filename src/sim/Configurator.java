@@ -386,6 +386,8 @@ public class Configurator {
 					
 					if (logComp != null) {
 						components.put(schemeName+"."+comp.name, logComp);
+						// debugging purpose
+						logComp.name = schemeName+"."+comp.name;
 					}
 				}
 			}
@@ -443,11 +445,15 @@ public class Configurator {
 
 									try {
 										if (pins.type.equals("in")) {
-											logComp.setInputPin(i, parentComp.getOut(0));
-											if (logComp instanceof IntToBools) {
-
-												for (int k = 0; k < logComp.getOut().length; k++) {
-													components.put(pinName + k, new DummyPin(logComp.getOut(k)));
+											if (logComp instanceof GPR) {
+												((GPR) logComp).setInputDataPin(parentComp.getOut(0));
+											} else {
+												logComp.setInputPin(i, parentComp.getOut(0));
+												if (logComp instanceof IntToBools) {
+	
+													for (int k = 0; k < logComp.getOut().length; k++) {
+														components.put(pinName + k, new DummyPin(logComp.getOut(k)));
+													}
 												}
 											}
 
@@ -576,7 +582,7 @@ public class Configurator {
 			
 			end = System.currentTimeMillis();
 			System.out.println("-----------------------------");
-			System.out.println("| Initializing time: "+(end - begin)/1000.0+" s |");
+			System.out.println("| Initializing time: "+(end - begin)+" ms |");
 			System.out.println("-----------------------------");
 
 		} catch (FileNotFoundException ignored) {

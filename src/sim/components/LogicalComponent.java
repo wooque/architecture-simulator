@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 public abstract class LogicalComponent {
 
+	// debugging purpose
+	public String name;
 	protected Pin[] in;
 	protected Pin[] out;
 	protected boolean isSeq;

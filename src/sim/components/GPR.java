@@ -7,7 +7,7 @@ public class GPR extends LogicalComponent {
 	private ArrayList<AND> ands;
 	private DC dekoder;// mora jer se registri ubacuju u sekvencijalnu listu i
 						// da bi se znalo
-	private IntToBools adressBits;// u koji se upisuje
+	private IntToBools addressBits;// u koji se upisuje
 	private MP mx;
 
 	private Pin read;
@@ -17,25 +17,32 @@ public class GPR extends LogicalComponent {
 	public GPR(int size) {
 		super(2, 1, false);
 		this.size = size;
-		adressBits = new IntToBools(6, 6);
+		int address = (int)(Math.log(size)/Math.log(2));
+		addressBits = new IntToBools(address, address);
 		out[0].setIsInt();
 		out[0].setNumOfLines(16);
-		dekoder = new DC(6);
+		dekoder = new DC(address);
 		dekoder.setE(new Pin(true));
-		dekoder.setInputPin(0, adressBits.getOut(0));
-		dekoder.setInputPin(1, adressBits.getOut(1));
-		dekoder.setInputPin(2, adressBits.getOut(2));
-		dekoder.setInputPin(3, adressBits.getOut(3));
-		dekoder.setInputPin(4, adressBits.getOut(4));
-		dekoder.setInputPin(5, adressBits.getOut(5));
-		mx = new MP(64);
+		for(int i = 0; i < address; i++) {
+			dekoder.setInputPin(i, addressBits.getOut(i));;
+		}
+//		dekoder.setInputPin(0, adressBits.getOut(0));
+//		dekoder.setInputPin(1, adressBits.getOut(1));
+//		dekoder.setInputPin(2, adressBits.getOut(2));
+//		dekoder.setInputPin(3, adressBits.getOut(3));
+//		dekoder.setInputPin(4, adressBits.getOut(4));
+//		dekoder.setInputPin(5, adressBits.getOut(5));
+		mx = new MP(size);
 		mx.setOutputPin(0, this.out[0]);
-		mx.setCtrl(0, adressBits.getOut(0));
-		mx.setCtrl(1, adressBits.getOut(1));
-		mx.setCtrl(2, adressBits.getOut(2));
-		mx.setCtrl(3, adressBits.getOut(3));
-		mx.setCtrl(4, adressBits.getOut(4));
-		mx.setCtrl(5, adressBits.getOut(5));
+		for(int i = 0; i < address; i++) {
+			mx.setCtrl(i, addressBits.getOut(i));;
+		}
+//		mx.setCtrl(0, adressBits.getOut(0));
+//		mx.setCtrl(1, adressBits.getOut(1));
+//		mx.setCtrl(2, adressBits.getOut(2));
+//		mx.setCtrl(3, adressBits.getOut(3));
+//		mx.setCtrl(4, adressBits.getOut(4));
+//		mx.setCtrl(5, adressBits.getOut(5));
 
 		regs = new ArrayList<REG>(size);
 		ands = new ArrayList<AND>(size);
@@ -102,10 +109,10 @@ public class GPR extends LogicalComponent {
 
 	public void setAdressPin(Pin adress) {
 		in[0] = adress;
-		adressBits.setInputPin(0, adress);
+		addressBits.setInputPin(0, adress);
 		adress.addChild(this);// da bi se uradila FUNC na promenu adrese,mada
 								// mozda i ne mora
-		adress.addChild(adressBits);// Bools To INT
+		adress.addChild(addressBits);// Bools To INT
 
 	}
 
