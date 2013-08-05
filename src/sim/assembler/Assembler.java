@@ -1,4 +1,4 @@
-package sim;
+package sim.assembler;
 
 import java.io.*;
 import java.util.*;

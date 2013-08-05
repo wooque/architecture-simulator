@@ -1,4 +1,4 @@
-package sim.util;
+package sim.gui.util;
 
 import java.awt.*;
 

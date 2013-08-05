@@ -335,7 +335,7 @@ public class Configurator {
 					} else if(compName.equals("km")) {
 						
 						if(compArgs.length == 2) {
-							logComp = new KM(compArgs[0]);
+							logComp = new KM("conf/"+compArgs[0]);
 							logComp.getOut(0).setNumOfLines(Integer.parseInt(compArgs[1]));
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);

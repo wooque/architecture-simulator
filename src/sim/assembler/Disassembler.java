@@ -1,4 +1,4 @@
-package sim;
+package sim.assembler;
 
 public class Disassembler {
 	
