@@ -8,7 +8,7 @@ public class Test {
 	public static void main(String[] args) {
 		long begin = System.currentTimeMillis();
 		Configurator config = new Configurator("conf/schemes.conf");
-		Debugger debug = new Debugger(config, "debug.txt");
+		Debugger debug = new Debugger(config, "log/debug.log");
 		
 		Assembler asm = new Assembler("asm/test.asm");
 		Object[] code = asm.getCode();
