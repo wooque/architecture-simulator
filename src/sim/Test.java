@@ -1,19 +1,26 @@
 package sim;
 
-import sim.components.LogicalComponent;
+import sim.components.*;
 
 public class Test {
 
 	public static void main(String[] args) {
-		Configurator config = new Configurator("test.conf");
+		Configurator config = new Configurator("schemes.conf");
 		Debugger debug = new Debugger(config, "debug.txt");
+		
+		Assembler asm = new Assembler("test.txt");
+		Object[] code = asm.getCode();
+		int start = asm.getStartOfCode();
+		MEM mem = ((MEM)config.getComponents().get("mem_oper.mem"));
+		for(int i = 0; i < code.length; i++) {
+			mem.write(start + i, (Integer)code[i]);
+		}
+		REG pc = ((REG)config.getComponents().get("fetch1.pc"));
+		pc.initVal(start);
 		LogicalComponent.initialise();
-		debug.debug();
-		LogicalComponent.CLK();
-		debug.debug();
-		LogicalComponent.CLK();
-		debug.debug();
-		LogicalComponent.CLK();
-		debug.debug();
+		for(int i = 0; i < 1000; i++) {
+			debug.debug();
+			LogicalComponent.CLK();
+		}
 	}
 }

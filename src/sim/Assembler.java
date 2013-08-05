@@ -65,6 +65,10 @@ public class Assembler {
 		return code.toArray();
 	}
 	
+	public int getStartOfCode() {
+		return startOfCode;
+	}
+	
 	private static void addInstruction(String name, int group, int opcode) {
 		Instruction ins = new Instruction(group, opcode);
 		instructions.put(name, ins);
