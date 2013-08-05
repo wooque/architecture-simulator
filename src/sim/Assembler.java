@@ -152,7 +152,7 @@ public class Assembler {
 	}
 	
 	private void firstPass() throws BadInstruction {
-		int location = 0;
+		int location = 256;
 		String lineOfCode = readSourceLine();
 
 		while (lineOfCode != null) {

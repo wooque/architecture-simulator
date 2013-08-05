@@ -8,11 +8,17 @@ public class Spliter extends LogicalComponent {
 		super(1, 1, false);
 		out[0].setIsInt();
 		out[0].setNumOfLines(end - begin);
-		this.begin = begin / (end - begin);
-		this.end = end / (end - begin);
+		this.begin = begin;
+		this.end = end;
 	}
 
 	public void func() {
+		if (begin >= in[0].getNumOfLines()) {
+			begin %= in[0].getNumOfLines();
+		}
+		if (end >= in[0].getNumOfLines()) {
+			end %= in[0].getNumOfLines();
+		}
 		int value = in[0].getIntVal();
 		value >>= begin;
 		int mask = 0;
@@ -25,10 +31,10 @@ public class Spliter extends LogicalComponent {
 	}
 
 	public static void main(String[] args) {
-		Spliter split = new Spliter(2, 3);
-		split.setInputPin(0, new Pin(10, 8));
+		Spliter split = new Spliter(0, 7);
+		split.setInputPin(0, new Pin(14, 16));
 		split.func();
-		System.out.printf("%x\n", split.getOut(0).getIntVal()); //2 expected
+		System.out.printf("%x\n", split.getOut(0).getIntVal());
 	}
 
 }

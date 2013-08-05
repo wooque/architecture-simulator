@@ -13,12 +13,12 @@ public class Disassembler {
 		{"asr",		"lsr",		"ror",		"rorc",		"asl",		"lsl",		"rol",		"rolc"}
 		};
 	
-	public Disassembler(Object[] code) {
+	public Disassembler(Object[] code, int startOfCode) {
 		for (int i = 0; i < code.length; ) {
 			int ins = (Integer)code[i++];
 			int group = (ins & 0x38)>>3;
 			int opcode = ins & 0x7;
-			System.out.print((i - 1)+": "+instructions[group][opcode]+" ");
+			System.out.print((startOfCode + i - 1)+": "+instructions[group][opcode]+" ");
 			
 			if (group == 0
 				|| group == 1 && (opcode == 3 || opcode == 5)

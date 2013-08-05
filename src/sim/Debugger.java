@@ -27,7 +27,9 @@ public class Debugger {
 			String componentName = entry.getKey();
 			LogicalComponent component = entry.getValue();
 			
-			if(component.getOut(0).isBool()) {
+			if(component.getOut(0).isHighZ()) {
+				pastValues.put(componentName, "HighZ");
+			} else if(component.getOut(0).isBool()) {
 				pastValues.put(componentName, component.getOut(0).getBoolVal());
 			} else {
 				pastValues.put(componentName, component.getOut(0).getIntVal());
@@ -45,21 +47,36 @@ public class Debugger {
 			Object pastValue = pastValues.get(componentName);
 			
 			if(component.getOut(0).isHighZ()) {
-				pw.println(componentName+" = highZ");
-			} else {
-				if(component.getOut(0).isBool()) {
+				
+				if(!(pastValue instanceof String)){
 					
+					pastValues.put(componentName, "highZ");
+					pw.println(componentName+" = highZ");
+				}
+			} else if(component.getOut(0).isBool()) {
+					
+				boolean currValue = component.getOut(0).getBoolVal();
+				if (pastValue instanceof String) {
+					
+					pastValues.put(componentName, currValue);
+					pw.println(componentName+" = "+currValue);
+				} else {
 					boolean value = (Boolean) pastValue;
-					boolean currValue = component.getOut(0).getBoolVal();
 					if(value != currValue){
 						
 						pastValues.put(componentName, currValue);
 						pw.println(componentName+" = "+currValue);
 					}
-				} else {
+				}
+			} else {
+				
+				int currValue = component.getOut(0).getIntVal();
+				if (pastValue instanceof String) {
 					
+					pastValues.put(componentName, currValue);
+					pw.println(componentName+" = "+currValue);
+				} else {
 					int value = (Integer) pastValue;
-					int currValue = component.getOut(0).getIntVal();
 					if(value != currValue){
 						
 						pastValues.put(componentName, currValue);
@@ -70,7 +87,5 @@ public class Debugger {
 		}
 		
 		pw.println("--------------------------------");
-		
 	}
-
 }
