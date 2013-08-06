@@ -163,11 +163,10 @@ public class Configurator {
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);
 						}
-					} else if(compName.equals("gpr")) {
+					} else if(compName.equals("regs")) {
 						
 						if(compArgs.length == 2) {
-							logComp = new GPR(Integer.parseInt(compArgs[0]));
-							logComp.getOut(0).setNumOfLines(Integer.parseInt(compArgs[1]));
+							logComp = new Registers(Integer.parseInt(compArgs[0]), Integer.parseInt(compArgs[1]));
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);
 						}
@@ -445,15 +444,11 @@ public class Configurator {
 
 									try {
 										if (pins.type.equals("in")) {
-											if (logComp instanceof GPR) {
-												((GPR) logComp).setInputDataPin(parentComp.getOut(0));
-											} else {
-												logComp.setInputPin(i, parentComp.getOut(0));
-												if (logComp instanceof IntToBools) {
-	
-													for (int k = 0; k < logComp.getOut().length; k++) {
-														components.put(pinName + k, new DummyPin(logComp.getOut(k)));
-													}
+											logComp.setInputPin(i, parentComp.getOut(0));
+											if (logComp instanceof IntToBools) {
+
+												for (int k = 0; k < logComp.getOut().length; k++) {
+													components.put(pinName + k, new DummyPin(logComp.getOut(k)));
 												}
 											}
 
@@ -499,12 +494,9 @@ public class Configurator {
 												System.out.println("Non existent atribute init for component: "+schemeName+"."+comp.name);
 											}
 
-										} else if (pins.type.equals("addr")) {
-											((GPR) logComp).setAdressPin(parentComp.getOut(0));
-
 										} else if (pins.type.equals("wr")) {
-											if(logComp instanceof GPR) {
-												((GPR) logComp).setWrite(parentComp.getOut(0));
+											if(logComp instanceof Registers) {
+												((Registers) logComp).setWrite(parentComp.getOut(0));
 											} else if(logComp instanceof MEM) {
 												((MEM) logComp).setWrite(parentComp.getOut(0));
 											} else {
@@ -512,8 +504,8 @@ public class Configurator {
 											}
 
 										} else if (pins.type.equals("rd")) {
-											if(logComp instanceof GPR) {
-												((GPR) logComp).setRead(parentComp.getOut(0));
+											if(logComp instanceof Registers) {
+												((Registers) logComp).setRead(parentComp.getOut(0));
 											} else if(logComp instanceof MEM) {
 												((MEM) logComp).setRead(parentComp.getOut(0));
 											} else {
