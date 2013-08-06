@@ -31,8 +31,8 @@ public class Spliter extends LogicalComponent {
 	}
 
 	public static void main(String[] args) {
-		Spliter split = new Spliter(0, 7);
-		split.setInputPin(0, new Pin(14, 16));
+		Spliter split = new Spliter(0, 4);
+		split.setInputPin(0, new Pin(224, 8));
 		split.func();
 		System.out.printf("%x\n", split.getOut(0).getIntVal());
 	}

@@ -77,11 +77,11 @@ public class IntToInt extends LogicalComponent {	//@Darko
 		return flag;
 	}
 	public static void main(String[] args){
-		IntToInt iti=new IntToInt(16,8);
+		IntToInt iti=new IntToInt(8,5);
 		Pin p=new Pin();
-		p.setNumOfLines(16);
+		p.setNumOfLines(8);
 		p.setIsInt();
-		p.setIntVal(3);
+		p.setIntVal(224);
 		iti.setInputPin(0, p);
 		iti.func();
 		System.out.println("Izlaz je "+iti.getOut(0).getIntVal());
