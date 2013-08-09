@@ -29,10 +29,10 @@ public class ALU extends LogicalComponent {
 			akc++;
 		if ((and != null) && (and.getBoolVal()))
 			akc++;
-		 if ((inc!=null) && (inc.getBoolVal()))
-		 akc++;
-		 if ((dec!=null) && (dec.getBoolVal()))
-		 akc++;
+		if ((inc != null) && (inc.getBoolVal()))
+			akc++;
+		if ((dec != null) && (dec.getBoolVal()))
+			akc++;
 		// if ((transferX!=null) && (transferX.getBoolVal()))
 		// akc++;
 		if ((sub != null) && (sub.getBoolVal()))
@@ -48,7 +48,7 @@ public class ALU extends LogicalComponent {
 			return;
 		}
 
-		if (akc == 0){
+		if (akc == 0) {
 			out[0].setIntVal(0);
 			C8.setBoolVal(false);
 			return;

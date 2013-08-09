@@ -158,6 +158,10 @@ public class Assembler {
 		while (lineOfCode != null) {
 
 			String[] tokens = lineOfCode.split("( )+");
+			if(tokens[0].equals("") || tokens[0].substring(0,2).equals("//")) {
+				lineOfCode = readSourceLine();
+				continue;
+			}
 			int currToken = 0;
 			UnpackedLine unpacked = new UnpackedLine();
 			String token = tokens[currToken++];
@@ -307,7 +311,7 @@ public class Assembler {
 						location += 2;
 						
 						// indirect register addressing with displacement (for example: ADD (R4)4)
-						if (limit <= token.length()) {
+						if (limit < token.length() - 1) {
 							unpacked.typeOfAddressing = 4;
 							int temp = Integer.parseInt(token.substring(limit + 1));
 							unpacked.high = temp >> 8;
