@@ -10,7 +10,7 @@ public class Test {
 		Configurator config = new Configurator("conf/schemes.conf");
 		Debugger debug = new Debugger(config, "log/debug.log");
 		
-		Assembler asm = new Assembler("asm/test.asm");
+		Assembler asm = new Assembler("asm/test2.asm");
 		Object[] code = asm.getCode();
 		int start = asm.getStartOfCode();
 		MEM mem = ((MEM)config.getComponents().get("mem_oper.mem"));
@@ -21,12 +21,12 @@ public class Test {
 		pc.initVal(start);
 		LogicalComponent.initMemory = false;
 		LogicalComponent.initialise();
-		for(int i = 0; i < 10000; i++) {
+		for(int i = 0; i < 1000; i++) {
 			debug.debug();
 			LogicalComponent.CLK();
 		}
 		int r2 = ((Registers) config.getComponents().get("addr.gpr")).getRegValue(2);
-		System.out.println("sum is: "+r2);
+		System.out.println("r2 is: "+r2);
 		long end = System.currentTimeMillis();
 		System.out.println("Test took "+(end - begin)+" ms");
 	}

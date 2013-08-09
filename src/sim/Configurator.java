@@ -8,11 +8,12 @@ import sim.components.*;
 
 public class Configurator {
 
-	private HashMap<String, ArrayList<ComponentInfo>> componentInfos = new HashMap<String, ArrayList<ComponentInfo>>();
-	private HashMap<String, LogicalComponent> components = new HashMap<String, LogicalComponent>();
+	private LinkedHashMap<String, ArrayList<ComponentInfo>> componentInfos = new LinkedHashMap<String, ArrayList<ComponentInfo>>();
+	private LinkedHashMap<String, LogicalComponent> components = new LinkedHashMap<String, LogicalComponent>();
+//	private ArrayList<String> usedComponents = new ArrayList<String>();
 	private ComponentInfo currScheme;
 	private ArrayList<ComponentInfo> currComponents;
-	static private int notID = 0;
+	static private int notID;
 	private long begin, end;
 
 	private static class ComponentPins {
@@ -226,6 +227,18 @@ public class Configurator {
 						
 						if(compArgs.length == 1) {
 							logComp = new IntToBools(1, Integer.parseInt(compArgs[0]));
+							for(ComponentPins pins: comp.pins) {
+								if(pins.type.equals("in")) {
+									String pinName = pins.names[0];
+									if (pinName.indexOf(".") == -1) {
+										pinName = schemeName + "." + pinName;
+									}
+									for (int k = 0; k < logComp.getOut().length; k++) {
+										components.put(pinName + k, new DummyPin(logComp.getOut(k)));
+									}
+									break;
+								}
+							}
 						} else {
 							throw new BadArgs(schemeName, comp.name, compName);
 						}
@@ -240,6 +253,7 @@ public class Configurator {
 									for(int i = 0; i < pins.names.length; i++){
 										components.put(schemeName+"."+pins.names[i], new DummyPin(logComp.getOut(i)));
 									}
+									break;
 								}
 							}
 							if(!outExist) {
@@ -283,6 +297,7 @@ public class Configurator {
 										for(int i = 0; i < pins.names.length; i++){
 											components.put(schemeName+"."+pins.names[i], new DummyPin(logComp.getOut(i)));
 										}
+										break;
 									}
 								}
 								if(!outExist) {
@@ -429,11 +444,13 @@ public class Configurator {
 											pinName = schemeName + "." + pinName;
 										}
 										parentComp = components.get(pinName);
+//										usedComponents.add(pinName);
 									}
 									
 									if (anonimousNOT && parentComp != null) {
 										LogicalComponent tempComp = new NOT();
 										components.put(schemeName+".NOT"+notID, tempComp);
+//										usedComponents.add(schemeName+".NOT"+notID);
 										notID++;
 										tempComp.setInputPin(0, parentComp.getOut(0));
 										parentComp = tempComp;
@@ -445,12 +462,6 @@ public class Configurator {
 									try {
 										if (pins.type.equals("in")) {
 											logComp.setInputPin(i, parentComp.getOut(0));
-											if (logComp instanceof IntToBools) {
-
-												for (int k = 0; k < logComp.getOut().length; k++) {
-													components.put(pinName + k, new DummyPin(logComp.getOut(k)));
-												}
-											}
 
 										} else if (pins.type.equals("ld")) {
 											((REG) logComp).setPinLd(parentComp.getOut(0));
@@ -571,6 +582,13 @@ public class Configurator {
 					}
 				}
 			}
+			
+//			// find unused pins
+//			for(String curr: components.keySet()) {
+//				if(!usedComponents.contains(curr)) {
+//					System.out.println(curr+" is not used!");
+//				}
+//			}
 			
 			end = System.currentTimeMillis();
 			System.out.println("-----------------------------");
