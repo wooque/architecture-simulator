@@ -335,7 +335,8 @@ public class Assembler {
 						if (hloc != -1) {
 							token = token.substring(0, hloc);
 						}
-						int temp = Integer.parseInt(token);
+						int limit = token.indexOf(')');
+						int temp = Integer.parseInt(token.substring(1, limit));
 						unpacked.high = temp >> 8;
 						unpacked.low = temp & 0xFF;
 						location += 4;
@@ -344,7 +345,7 @@ public class Assembler {
 					}
 					
 				// direct memory addressing
-				} else if (token.charAt(1) >= '0' && token.charAt(1) <= '9') {
+				} else if (token.charAt(0) >= '0' && token.charAt(0) <= '9') {
 					
 					unpacked.typeOfAddressing = 2;
 					int hloc = token.indexOf('h');
@@ -360,7 +361,7 @@ public class Assembler {
 				} else if (token.charAt(0) == '[' && ((token.charAt(1) == 'R') || (token.charAt(1) == 'r'))) {
 					
 					unpacked.typeOfAddressing = 5;
-					int limit = token.indexOf(")");
+					int limit = token.indexOf("]");
 					unpacked.register = Integer.parseInt(token.substring(2, limit));
 					int temp = Integer.parseInt(token.substring(limit + 1));
 					unpacked.high = temp >> 8;

@@ -25,7 +25,8 @@ public class Test {
 			debug.debug();
 			LogicalComponent.CLK();
 		}
-		int r2 = ((Registers) config.getComponents().get("addr.gpr")).getRegValue(2);
+		Registers regs = (Registers) config.getComponents().get("addr.gpr");
+		int r2 = regs.getRegValue(2);
 		System.out.println("r2 is: "+r2);
 		long end = System.currentTimeMillis();
 		System.out.println("Test took "+(end - begin)+" ms");

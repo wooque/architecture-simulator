@@ -191,6 +191,8 @@ public class Pin { // Izmene:prvi konstruktor Pin ne prima argumente jer to
             child=children.get(i);
 			if (!child.isSeq())
 				child.clockedFunc();
+			if(child instanceof Registers)
+				((Registers) child).read();
 		}
 	}
 }

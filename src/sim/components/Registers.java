@@ -18,11 +18,14 @@ public class Registers extends LogicalComponent {
 	}
 
 	public void func() {
-		if(read.getBoolVal()) {
-			out[0].setIntVal(regs[in[0].getIntVal()], false);
-		}
 		if(write.getBoolVal()) {
 			regs[in[0].getIntVal()] = in[1].getIntVal();
+		}
+	}
+	
+	public void read() {
+		if(read.getBoolVal()) {
+			out[0].setIntVal(regs[in[0].getIntVal()], false);
 		}
 	}
 

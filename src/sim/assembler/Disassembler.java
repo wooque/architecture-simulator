@@ -60,13 +60,13 @@ public class Disassembler {
 					
 					int mem = ((Integer)code[i++] << 8);
 					mem |= (Integer)code[i++];
-					System.out.println(mem+"h");
+					System.out.println(mem);
 					
 				} else if (typeOfAddressing == 3) {
 					
 					int mem = ((Integer)code[i++] << 8);
 					mem |= (Integer)code[i++];
-					System.out.println("("+mem+"h)");
+					System.out.println("("+mem+")");
 					
 				} else if (typeOfAddressing == 4) {
 					
