@@ -1,4 +1,4 @@
-ldb #10
-not
+ldb #11
+ror
 stb r2
 halt
