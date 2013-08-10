@@ -24,7 +24,7 @@ public class Disassembler {
 				|| group == 1 && (opcode == 3 || opcode == 5)
 				|| group == 4 && (opcode >= 4 && opcode <= 7)
 				|| group == 5
-				|| group == 6 && (opcode >= 2 && opcode <= 7)
+				|| group == 6 && (opcode == 2 || opcode == 3 || opcode == 7)
 				|| group == 7) {
 					
 				System.out.println();	
@@ -42,7 +42,7 @@ public class Disassembler {
 			}
 			
 			if (group == 4 && (opcode >= 0 && opcode <= 3)
-				|| group == 6 && (opcode == 0 || opcode == 1)) {
+				|| group == 6 && (opcode != 2 && opcode != 3 && opcode != 7)) {
 				
 				int secondByte = (Integer)code[i++];
 				int typeOfAddressing = (secondByte & 0xE0) >> 5;

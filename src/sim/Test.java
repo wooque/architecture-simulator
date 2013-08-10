@@ -19,15 +19,20 @@ public class Test {
 		}
 		REG pc = ((REG)config.getComponents().get("fetch1.pc"));
 		pc.initVal(start);
+		
 		LogicalComponent.initMemory = false;
 		LogicalComponent.initialise();
 		for(int i = 0; i < 1000; i++) {
 			debug.debug();
 			LogicalComponent.CLK();
 		}
+		
 		Registers regs = (Registers) config.getComponents().get("addr.gpr");
-		int r2 = regs.getRegValue(2);
-		System.out.println("r2 is: "+r2);
+		for(int i = 0; i < regs.getSize(); i++) {
+			if(regs.getRegValue(i) != 0) {
+				System.out.println("r"+i+" is: "+regs.getRegValue(i));
+			}
+		}
 		long end = System.currentTimeMillis();
 		System.out.println("Test took "+(end - begin)+" ms");
 	}

@@ -192,7 +192,7 @@ public class Assembler {
 				|| ins.group == 1 && (ins.opcode == 3 || ins.opcode == 5)
 				|| ins.group == 4 && (ins.opcode >= 4 && ins.opcode <= 7)
 				|| ins.group == 5
-				|| ins.group == 6 && (ins.opcode >= 2 && ins.opcode <= 7)
+				|| ins.group == 6 && (ins.opcode == 2 || ins.opcode == 3 || ins.opcode == 7)
 				|| ins.group == 7) {
 				
 				location++;
@@ -276,7 +276,7 @@ public class Assembler {
 			
 			// addressing instructions
 			if (ins.group == 4 && (ins.opcode >= 0 && ins.opcode <= 3)
-				|| ins.group == 6 && (ins.opcode == 0 || ins.opcode == 1)) {
+				|| ins.group == 6 && (ins.opcode != 2 && ins.opcode != 3 && ins.opcode != 7)) {
 				
 				token = tokens[currToken++];
 				
@@ -414,7 +414,7 @@ public class Assembler {
 			
 			// addressing instructions
 			if (ins.group == 4 && (ins.opcode >= 0 && ins.opcode <= 3)
-				|| ins.group == 6 && (ins.opcode == 0 || ins.opcode == 1)) {
+				|| ins.group == 6 && (ins.opcode != 2 && ins.opcode != 3 && ins.opcode != 7)) {
 				
 				int second = 0;
 				second |= (line.typeOfAddressing & 0x7) << 5;
