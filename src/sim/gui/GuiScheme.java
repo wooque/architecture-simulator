@@ -10,21 +10,21 @@ import javax.imageio.ImageIO;
 public class GuiScheme extends Canvas{
 	
 	private BufferedImage image;
-	private File imagefile;
 	private ArrayList<GuiLine> lines;
 	private ArrayList<GuiLabel> labels;
 	
 	public GuiScheme(String filename){
 		setBackground(Color.WHITE);
-		imagefile=new File(filename);
-		try {
-			image=ImageIO.read(imagefile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}	
+		if(filename != null && !filename.isEmpty()) {
+			try {
+				image=ImageIO.read(new File(filename));
+			} catch (IOException e) {
+				System.out.println("Can't read image!");
+			}
+		}
 		lines=new ArrayList<GuiLine>();
 		labels=new ArrayList<GuiLabel>();
-		Dimension size=new Dimension(800, 600);
+		Dimension size=new Dimension(image != null? image.getWidth(): 600, image != null? image.getHeight(): 600);
 		setSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
@@ -32,15 +32,16 @@ public class GuiScheme extends Canvas{
 	}
         
 	public void addLine(GuiLine line){ lines.add(line); }
-        public void removeLine(GuiLine line) { lines.remove(line); }
+	public void removeLine(GuiLine line) { lines.remove(line); }
 	public void addLabel(GuiLabel label){ labels.add(label); }
         
-        @Override
+	@Override
 	public void update(Graphics g) {
-            paint(g); 
-        }
+        //super.update(g);
+		paint(g); 
+    }
 	
-        @Override
+	@Override
 	public void paint(Graphics g){
 		//super.paint(g);
 		g.drawImage(image, 0, 0, null);
