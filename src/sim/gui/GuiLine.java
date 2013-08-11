@@ -5,35 +5,31 @@ import java.util.ArrayList;
 
 import sim.components.Pin;
 
-// Klasa koja predstavja jednu liniju
-// ( linija inace ima jedan ulazni i vise izlaznih pinova, pa zato postoje niz nizova tacaka )
-//
 public class GuiLine {
-	private ArrayList<ArrayList<Point>> sections; 					// Sve tacke svih izlomljenih linja
+	private ArrayList<Point> points;
 	private Color color;
 	private Pin pin;
-	
-	public GuiLine(ArrayList<ArrayList<Point>> sections, Pin pin){
-		this.sections=sections;
-		this.pin=pin;
+
+	public GuiLine(ArrayList<Point> points, Pin pin) {
+		this.points = points;
+		this.pin = pin;
 	}
 
-	public void draw(Graphics g){
+	public void draw(Graphics g) {
 		update();
 		Graphics2D g2d = ((Graphics2D) g);
 		g2d.setColor(color);
-		for(ArrayList<Point> section:sections){
-			Point last=null;
-			for(Point p:section){
-				if(last!=null){
-					g2d.setStroke(new BasicStroke(2));
-					g2d.drawLine(last.x, last.y, p.x, p.y);
-				}
-				last=p;
+		Point last = null;
+		for (Point p : points) {
+			if (last != null) {
+				g2d.setStroke(new BasicStroke(2));
+				g2d.drawLine(last.x, last.y, p.x, p.y);
 			}
+			last = p;
 		}
 	}
-	private void update(){
+
+	private void update() {
 		if (pin.isHighZ()) {
 			color = Color.GREEN;
 		} else {
