@@ -36,7 +36,7 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
 
         @Override
         public void mouseDragged(MouseEvent e) {
-            dragMouse(e);
+            moveMouse(e);
         }
 
         @Override
@@ -59,12 +59,6 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
                 guiScheme.addLine(guiLine);
                 guiScheme.repaint();
             }
-        }
-
-        private void dragMouse(MouseEvent e) {
-            zoomPanel.setZoomX(e.getX());
-            zoomPanel.setZoomY(e.getY());
-            zoomPanel.repaint();
         }
     }
 
