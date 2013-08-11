@@ -5,6 +5,7 @@ import java.awt.datatransfer.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
+
 import javax.swing.*;
 
 import sim.components.Pin;
@@ -32,8 +33,8 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
         }
     }
 
-    private class SignalMouseMotionListener implements MouseMotionListener {
-
+    private class SignalMouseAdapter extends MouseAdapter{
+    	
         @Override
         public void mouseDragged(MouseEvent e) {
             moveMouse(e);
@@ -60,12 +61,9 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
                 guiScheme.repaint();
             }
         }
-    }
-
-    private class SignalMouseListener extends MouseAdapter {
-
+    	
         @Override
-        public void mouseReleased(MouseEvent e) {
+        public void mouseClicked(MouseEvent e) {
             switch (e.getButton()) {
                 case MouseEvent.BUTTON1:
                     leftClick(e);
@@ -115,8 +113,9 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
         lines = new ArrayList<Line>();
 
         guiScheme = new GuiScheme("");
-        guiScheme.addMouseMotionListener(new SignalMouseMotionListener());
-        guiScheme.addMouseListener(new SignalMouseListener());
+        SignalMouseAdapter signalMouseAdapter = new SignalMouseAdapter();
+        guiScheme.addMouseMotionListener(signalMouseAdapter);
+        guiScheme.addMouseListener(signalMouseAdapter);
 
         zoomPanel = new ZoomPanel(guiScheme.getImage(), 10, 10, 10);
 
@@ -204,8 +203,9 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
             setTitle(chooser.getSelectedFile().getPath());
             remove(guiScheme);
             guiScheme = new GuiScheme(chooser.getSelectedFile().getPath());
-            guiScheme.addMouseMotionListener(new SignalMouseMotionListener());
-            guiScheme.addMouseListener(new SignalMouseListener());
+            SignalMouseAdapter signalMouseAdapter = new SignalMouseAdapter();
+            guiScheme.addMouseMotionListener(signalMouseAdapter);
+            guiScheme.addMouseListener(signalMouseAdapter);
             add("Center", guiScheme);
             northeast.remove(zoomPanel);
             zoomPanel = new ZoomPanel(guiScheme.getImage(), 10, 10, 10);
