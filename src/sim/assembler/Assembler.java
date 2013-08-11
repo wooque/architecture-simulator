@@ -258,7 +258,7 @@ public class Assembler {
 			}
 			
 			// INT instruction
-			if (ins.group == 0 && ins.opcode == 4) {
+			if (ins.group == 1 && ins.opcode == 4) {
 				token = tokens[currToken++];
 				
 				// immediate displacement (for example: #3)
@@ -401,8 +401,8 @@ public class Assembler {
 				}
 			}
 			
-			// branch conditional instructions
-			if (ins.group == 2 || ins.group == 3) {
+			// branch conditional instructions and INT
+			if (ins.group == 2 || ins.group == 3 || (ins.group == 1 && ins.opcode == 4)) {
 				code.add(line.low);
 			}
 			

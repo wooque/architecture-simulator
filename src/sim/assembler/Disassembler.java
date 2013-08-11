@@ -30,7 +30,7 @@ public class Disassembler {
 				System.out.println();	
 			}
 			
-			if (group == 2 || group == 3 || (group == 0 && opcode == 4)) {
+			if (group == 2 || group == 3 || (group == 1 && opcode == 4)) {
 				System.out.println((Integer)code[i++]);
 			}
 			
