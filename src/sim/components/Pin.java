@@ -7,6 +7,7 @@ public class Pin { // Izmene:prvi konstruktor Pin ne prima argumente jer to
 					// signalAll->stavljeno not(isSeq)
 	public static final Pin TRUE = new Pin(true);
 	public static final Pin FALSE = new Pin(false);
+	public static final Pin HIGHZ = new Pin();
 	private int intVal;
 	private boolean boolVal;
 	private int tempIntVal;
@@ -21,6 +22,10 @@ public class Pin { // Izmene:prvi konstruktor Pin ne prima argumente jer to
 
 	private ArrayList<LogicalComponent> children = new ArrayList<LogicalComponent>();
 
+	static {
+		HIGHZ.setHighZ(true);
+	}
+	
 	public Pin() {
 
 		boolVal = false;

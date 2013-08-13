@@ -20,6 +20,8 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
     private ZoomPanel zoomPanel;
     private ArrayList<Point> line;
     private ArrayList<Line> lines;
+    private List listOfLines;
+    private String selected;
     private JPanel northeast;
     private Point last;
 
@@ -98,6 +100,7 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
                     return;
                 }
                 lines.add(new Line(line, s));
+                listOfLines.add(s);
                 for (GuiLine gl : guiScheme.getLines()) {
                     gl.setPin(Pin.FALSE);
                 }
@@ -112,6 +115,14 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
 
         line = new ArrayList<Point>();
         lines = new ArrayList<Line>();
+        listOfLines = new List();
+        listOfLines.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				highlightLine(e);
+			}
+		});
 
         guiScheme = new GuiScheme("");
         SignalMouseAdapter signalMouseAdapter = new SignalMouseAdapter();
@@ -160,6 +171,7 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
         loadImage.setAlignmentX(CENTER_ALIGNMENT);
 
         southeast.add(loadImage);
+        southeast.add(listOfLines);
         southeast.add(removeSignalButton);
         southeast.add(generateCodeButton);
 
@@ -224,6 +236,36 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
         }
         guiScheme.setLines(new ArrayList<GuiLine>());
         guiScheme.repaint();
+    }
+    
+    private void setPinForSelected(Pin in) {
+		if(selected != null) {
+			ArrayList<Point> selectedLine = null;
+			for(Line line: lines) {
+				if(line.name.equals(selected)) {
+					selectedLine = line.line;
+					break;
+				}
+			}
+			Point last = null;
+			for(Point curr: selectedLine) {
+				if(last != null) {
+					for(GuiLine gl: guiScheme.getLines()) {
+						if(gl.getPoints().get(0) == last && gl.getPoints().get(1) == curr) {
+							gl.setPin(in);
+						}
+					}
+				}
+				last = curr;
+			}
+			guiScheme.repaint();
+		}
+    }
+    
+    private void highlightLine(ItemEvent e) {
+    	setPinForSelected(Pin.FALSE);
+		selected = listOfLines.getSelectedItem();
+		setPinForSelected(Pin.HIGHZ);
     }
 
     @Override

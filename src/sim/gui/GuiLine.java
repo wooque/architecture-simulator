@@ -51,4 +51,8 @@ public class GuiLine {
 	public void setPin(Pin pin) {
 		this.pin = pin;
 	}
+
+	public ArrayList<Point> getPoints() {
+		return points;
+	}
 }
