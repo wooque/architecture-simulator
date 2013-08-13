@@ -14,12 +14,13 @@ import sim.gui.*;
 @SuppressWarnings("serial")
 public class DrawSignals extends JFrame implements ClipboardOwner {
 
+	private ScrollPane scrollPane;
     private GuiScheme guiScheme;
     private GuiLine guiLine;
     private ZoomPanel zoomPanel;
     private ArrayList<Point> line;
     private ArrayList<Line> lines;
-    private final JPanel northeast;
+    private JPanel northeast;
     private Point last;
 
     private class Line {
@@ -162,7 +163,10 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
         southeast.add(removeSignalButton);
         southeast.add(generateCodeButton);
 
-        add("Center", guiScheme);
+        scrollPane = new ScrollPane();
+        scrollPane.setSize(new Dimension(800, 600));
+        scrollPane.add(guiScheme);
+        add("Center", scrollPane);
         add("East", east);
         
         addWindowListener(new WindowAdapter() {
@@ -173,7 +177,7 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
             }
         });
         
-        setBounds(0, 0, guiScheme.getWidth() + zoomPanel.getWidth() + 20, guiScheme.getHeight() + 50);
+        setBounds(0, 0, scrollPane.getWidth() + zoomPanel.getWidth() + 20, scrollPane.getHeight() + 50);
         validate();
         
         setVisible(true);
@@ -201,12 +205,12 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
         int returnVal = chooser.showOpenDialog(DrawSignals.this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             setTitle(chooser.getSelectedFile().getPath());
-            remove(guiScheme);
+            scrollPane.remove(guiScheme);
             guiScheme = new GuiScheme(chooser.getSelectedFile().getPath());
             SignalMouseAdapter signalMouseAdapter = new SignalMouseAdapter();
             guiScheme.addMouseMotionListener(signalMouseAdapter);
             guiScheme.addMouseListener(signalMouseAdapter);
-            add("Center", guiScheme);
+            scrollPane.add(guiScheme);
             northeast.remove(zoomPanel);
             zoomPanel = new ZoomPanel(guiScheme.getImage(), 10, 10, 10);
             northeast.add(zoomPanel);
