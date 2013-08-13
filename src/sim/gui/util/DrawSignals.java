@@ -115,6 +115,24 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
 
         line = new ArrayList<Point>();
         lines = new ArrayList<Line>();
+
+        guiScheme = new GuiScheme("");
+        SignalMouseAdapter signalMouseAdapter = new SignalMouseAdapter();
+        guiScheme.addMouseMotionListener(signalMouseAdapter);
+        guiScheme.addMouseListener(signalMouseAdapter);
+        
+        JPanel east = new JPanel();
+        east.setLayout(new GridLayout(2, 1));
+
+        northeast = new JPanel();
+        zoomPanel = new ZoomPanel(guiScheme.getImage(), 10, 10, 10);
+        northeast.add(zoomPanel);
+        east.add(northeast);
+
+        JPanel southeast = new JPanel();
+        southeast.setLayout(new BoxLayout(southeast, BoxLayout.Y_AXIS));
+        east.add(southeast);
+
         listOfLines = new List();
         listOfLines.addItemListener(new ItemListener() {
 			
@@ -123,27 +141,9 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
 				highlightLine(e);
 			}
 		});
+        southeast.add(listOfLines);
 
-        guiScheme = new GuiScheme("");
-        SignalMouseAdapter signalMouseAdapter = new SignalMouseAdapter();
-        guiScheme.addMouseMotionListener(signalMouseAdapter);
-        guiScheme.addMouseListener(signalMouseAdapter);
-
-        zoomPanel = new ZoomPanel(guiScheme.getImage(), 10, 10, 10);
-
-        JPanel east = new JPanel();
-        east.setLayout(new GridLayout(2, 1));
-
-        northeast = new JPanel();
-        east.add(northeast);
-
-        JPanel southeast = new JPanel();
-        southeast.setLayout(new BoxLayout(southeast, BoxLayout.Y_AXIS));
-        east.add(southeast);
-
-        northeast.add(zoomPanel);
-
-        JButton removeSignalButton = new JButton("Clear lines");
+        JButton removeSignalButton = new JButton("Clear all lines");
         removeSignalButton.setAlignmentX(CENTER_ALIGNMENT);
         removeSignalButton.addActionListener(new ActionListener() {
             @Override
@@ -151,7 +151,8 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
                 removeSignals();
             }
         });
-
+        southeast.add(removeSignalButton);
+        
         JButton generateCodeButton = new JButton("Generate code");
         generateCodeButton.addActionListener(new ActionListener() {
             @Override
@@ -160,6 +161,7 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
             }
         });
         generateCodeButton.setAlignmentX(CENTER_ALIGNMENT);
+        southeast.add(generateCodeButton);
 
         JButton loadImage = new JButton("Image...");
         loadImage.addActionListener(new ActionListener() {
@@ -171,10 +173,7 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
         loadImage.setAlignmentX(CENTER_ALIGNMENT);
 
         southeast.add(loadImage);
-        southeast.add(listOfLines);
-        southeast.add(removeSignalButton);
-        southeast.add(generateCodeButton);
-
+        
         scrollPane = new ScrollPane();
         scrollPane.setSize(new Dimension(800, 600));
         scrollPane.add(guiScheme);
@@ -234,6 +233,7 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
         if (lines.size() > 0) {
             lines = new ArrayList<Line>();
         }
+        listOfLines.removeAll();
         guiScheme.setLines(new ArrayList<GuiLine>());
         guiScheme.repaint();
     }
