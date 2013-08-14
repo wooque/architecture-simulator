@@ -232,7 +232,7 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
         Clipboard clipboard = getToolkit().getSystemClipboard();
         StringSelection tempString = new StringSelection(code.toString());
         clipboard.setContents(tempString, DrawSignals.this);
-        JOptionPane.showMessageDialog(DrawSignals.this, "Code generated", "Code copied to clipboard", JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(DrawSignals.this, "Code generated", "Code generated", JOptionPane.PLAIN_MESSAGE);
     }
 
     private void loadImage() {
@@ -243,6 +243,7 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
             setTitle(chooser.getSelectedFile().getPath());
             guiScheme.setImage(chooser.getSelectedFile().getPath());
             zoomPanel.setImage(guiScheme.getImage());
+            removeAllSignals();
             pack();
             //validate();
         }
