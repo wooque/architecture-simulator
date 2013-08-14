@@ -212,8 +212,6 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
             	System.out.println("("+point.x+","+point.y+")");
             }
         }
-        lines = new ArrayList<Line>();
-        line = new ArrayList<Point>();
         Clipboard clipboard = getToolkit().getSystemClipboard();
         StringSelection tempString = new StringSelection(code.toString());
         clipboard.setContents(tempString, DrawSignals.this);
@@ -237,6 +235,7 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
         if (lines.size() > 0) {
             lines = new ArrayList<Line>();
         }
+        selected = null;
         listModel.clear();
         guiScheme.setLines(new ArrayList<GuiLine>());
         guiScheme.repaint();
