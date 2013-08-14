@@ -164,15 +164,29 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
         southeast.add(linesScrollPane);
 
         southeast.add(Box.createVerticalGlue());
-        JButton removeSignalButton = new JButton("Clear all lines");
-        removeSignalButton.setAlignmentX(CENTER_ALIGNMENT);
-        removeSignalButton.addActionListener(new ActionListener() {
+        JPanel removeSignalPanel = new JPanel();
+        
+        JButton removeSelectedSignalButton = new JButton("Clear selected");
+        removeSelectedSignalButton.setAlignmentX(CENTER_ALIGNMENT);
+        removeSelectedSignalButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                removeSignals();
+                removeSelectedSignal();
             }
         });
-        southeast.add(removeSignalButton);
+        removeSignalPanel.add(removeSelectedSignalButton);
+        
+        JButton removeAllSignalsButton = new JButton("Clear all lines");
+        removeAllSignalsButton.setAlignmentX(CENTER_ALIGNMENT);
+        removeAllSignalsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeAllSignals();
+            }
+        });
+        removeSignalPanel.add(removeAllSignalsButton);
+        
+        southeast.add(removeSignalPanel);
         
         southeast.add(Box.createVerticalGlue());
         JButton generateCodeButton = new JButton("Generate code");
@@ -234,7 +248,41 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
         }
     }
 
-    private void removeSignals() {
+    private void removeSelectedSignal() {
+    	if(selected != null) {
+    		ArrayList<ArrayList<Point>> selectedLine = new ArrayList<ArrayList<Point>>();
+			for(int i = 0; i < lines.size();) {
+				Line line = lines.get(i);
+				if(line.name.equals(selected)) {
+					selectedLine.add(line.line);
+					lines.remove(i);
+				} else {
+					i++;
+				}
+			}
+			listModel.removeElement(selected);
+			selected = null;
+			for(ArrayList<Point> section: selectedLine) {
+				Point last = null;
+				for(Point curr: section) {
+					if(last != null) {
+						for(int i = 0; i < guiScheme.getLines().size();) {
+							GuiLine gl = guiScheme.getLines().get(i);
+							if(gl.getPoints().get(0) == last && gl.getPoints().get(1) == curr) {
+								guiScheme.removeLine(gl);
+							} else {
+								i++;
+							}
+						}
+					}
+					last = curr;
+				}
+			}
+			guiScheme.repaint();
+    	}
+    }
+    
+    private void removeAllSignals() {
         if (lines.size() > 0) {
             lines = new ArrayList<Line>();
         }
