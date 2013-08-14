@@ -1,7 +1,6 @@
 package sim.gui.util;
 
 import java.awt.Point;
-import java.awt.datatransfer.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import sim.components.Pin;
 import sim.gui.*;
 
 @SuppressWarnings("serial")
-public class DrawSignals extends JFrame implements ClipboardOwner {
+public class DrawSignals extends JFrame {
 
     private GuiScheme guiScheme;
     private GuiLine guiLine;
@@ -193,7 +192,7 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
         generateCodeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                generateCode();
+                saveConf();
             }
         });
         generateCodeButton.setAlignmentX(CENTER_ALIGNMENT);
@@ -220,19 +219,19 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
         setVisible(true);
     }
 
-    private void generateCode() {
-        StringBuilder code = new StringBuilder();
-        // TODO: improve code generating to remove duplicates 
+    // TODO: save gui conf in file
+    private void saveConf() {
         for (Line l : lines) {
         	System.out.println(l.name+":");
             for (Point point : l.line) {
             	System.out.println("("+point.x+","+point.y+")");
             }
         }
-        Clipboard clipboard = getToolkit().getSystemClipboard();
-        StringSelection tempString = new StringSelection(code.toString());
-        clipboard.setContents(tempString, DrawSignals.this);
         JOptionPane.showMessageDialog(DrawSignals.this, "Code generated", "Code generated", JOptionPane.PLAIN_MESSAGE);
+    }
+    
+    private void loadConf() {
+    	// TODO: load gui conf from file 
     }
 
     private void loadImage() {
@@ -245,7 +244,6 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
             zoomPanel.setImage(guiScheme.getImage());
             removeAllSignals();
             pack();
-            //validate();
         }
     }
 
@@ -322,10 +320,6 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
     	setPinForSelected(Pin.FALSE);
 		selected = (String) listOfLines.getSelectedValue();
 		setPinForSelected(Pin.HIGHZ);
-    }
-
-    @Override
-    public void lostOwnership(Clipboard arg0, Transferable arg1) {
     }
 
     public static void main(String[] args) {
