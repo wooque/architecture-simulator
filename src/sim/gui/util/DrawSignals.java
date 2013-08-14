@@ -2,7 +2,7 @@ package sim.gui.util;
 
 import java.awt.Point;
 import java.awt.event.*;
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -23,6 +23,8 @@ public class DrawSignals extends JFrame {
     private DefaultListModel<String> listModel;
     private String selected;
     private Point last;
+    private PrintWriter confFile;
+    private JLabel confFilename;
 
     private class Line {
 
@@ -188,7 +190,12 @@ public class DrawSignals extends JFrame {
         southeast.add(removeSignalPanel);
         
         southeast.add(Box.createVerticalGlue());
-        JButton generateCodeButton = new JButton("Generate code");
+        confFilename = new JLabel();
+        confFilename.setAlignmentX(CENTER_ALIGNMENT);
+        southeast.add(confFilename);
+        
+        southeast.add(Box.createVerticalGlue());
+        JButton generateCodeButton = new JButton("Save conf");
         generateCodeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -209,6 +216,9 @@ public class DrawSignals extends JFrame {
 
             @Override
             public void windowClosing(WindowEvent e) {
+            	if(confFile != null) {
+            		confFile.close();
+            	}
                 dispose();
             }
         });
@@ -219,24 +229,65 @@ public class DrawSignals extends JFrame {
         setVisible(true);
     }
 
-    // TODO: save gui conf in file
     private void saveConf() {
+    	if(confFile == null) {
+    		JFileChooser chooser = new JFileChooser("conf");
+    		int retVal = chooser.showSaveDialog(DrawSignals.this);
+    		if(retVal == JFileChooser.APPROVE_OPTION) {
+    			confFilename.setText(chooser.getSelectedFile().getPath());
+    		}
+    	}
+		try {
+			confFile = new PrintWriter(new FileWriter(confFilename.getText()), true);
+		} catch (FileNotFoundException e) {
+			System.out.println("Conf file not found!");
+		} catch (IOException e) {
+			System.out.println("Conf file corrupted!");
+		}
+		
+		// TODO finish configuration saving
+		
         for (Line l : lines) {
-        	System.out.println(l.name+":");
+        	confFile.println(l.name+":");
             for (Point point : l.line) {
-            	System.out.println("("+point.x+","+point.y+")");
+            	confFile.println("("+point.x+","+point.y+")");
             }
         }
-        JOptionPane.showMessageDialog(DrawSignals.this, "Code generated", "Code generated", JOptionPane.PLAIN_MESSAGE);
+        
+        JOptionPane.showMessageDialog(DrawSignals.this, "Configuration saved", "Configuration saved", JOptionPane.PLAIN_MESSAGE);
     }
     
     private void loadConf() {
-    	// TODO: load gui conf from file 
+    	JFileChooser chooser = new JFileChooser("conf");
+		int retVal = chooser.showOpenDialog(DrawSignals.this);
+		if(retVal == JFileChooser.APPROVE_OPTION) {
+			confFilename.setText(chooser.getSelectedFile().getPath());
+			try {
+				BufferedReader confFileReader = new BufferedReader(new FileReader(confFilename.getText()));
+				
+				String line = confFileReader.readLine();
+				while(line != null) {
+					
+					String[] tokens = line.split("\\(\\),");
+					if(!tokens[0].equals("") && !tokens[0].substring(0,2).equals("//")) {
+						if(tokens[1] != null && tokens[1].equals("scheme")) {
+							// TODO finish when scheme begin is hit
+						}
+						// TODO finish processing line points
+					}
+					line = confFileReader.readLine();
+				}
+				confFileReader.close();
+			} catch (FileNotFoundException e) {
+				System.out.println("Conf file not found!");
+			} catch (IOException e) {
+				System.out.println("Conf file corrupted!");
+			}
+		}
     }
 
     private void loadImage() {
-        JFileChooser chooser = new JFileChooser();
-        chooser.setCurrentDirectory(new File("images"));
+        JFileChooser chooser = new JFileChooser("images");
         int returnVal = chooser.showOpenDialog(DrawSignals.this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             setTitle(chooser.getSelectedFile().getPath());
