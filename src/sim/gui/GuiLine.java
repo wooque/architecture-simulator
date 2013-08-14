@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import sim.components.Pin;
 
 public class GuiLine {
+	
 	private ArrayList<Point> points;
 	private Color color;
 	private Pin pin;
@@ -16,7 +17,7 @@ public class GuiLine {
 	}
 
 	public void draw(Graphics g) {
-		update();
+		updateColor();
 		Graphics2D g2d = ((Graphics2D) g);
 		g2d.setColor(color);
 		Point last = null;
@@ -29,7 +30,7 @@ public class GuiLine {
 		}
 	}
 
-	private void update() {
+	private void updateColor() {
 		if (pin.isHighZ()) {
 			color = Color.GREEN;
 		} else {

@@ -4,8 +4,6 @@ import java.awt.*;
 
 import sim.components.Pin;
 
-// Klasa koja predstavja jednu labelu
-// labela ima jedan ulazni pin
 public class GuiLabel {
 
 	private String label;
@@ -20,8 +18,7 @@ public class GuiLabel {
 	}
 
 	public void draw(Graphics g) {
-		update();
-
+		updateLabel();
 		if (!pin.isHighZ()) {
 			g.setColor(Color.BLACK);
 			g.setFont(new Font("Arial", Font.BOLD, 12));
@@ -29,10 +26,9 @@ public class GuiLabel {
 		}
 	}
 
-	private void update() {
+	private void updateLabel() {
 		if (!pin.isHighZ()) {
 			label = Integer.toHexString(pin.getIntVal());
-
 		}
 	}
 
