@@ -100,7 +100,9 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
                     return;
                 }
                 lines.add(new Line(line, s));
-                listModel.addElement(s);
+                if(!listModel.contains(s)) {
+                	listModel.addElement(s);
+                }
                 for (GuiLine gl : guiScheme.getLines()) {
                     gl.setPin(Pin.FALSE);
                 }
@@ -206,6 +208,7 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
 
     private void generateCode() {
         StringBuilder code = new StringBuilder();
+        // TODO: improve code generating to remove duplicates 
         for (Line l : lines) {
         	System.out.println(l.name+":");
             for (Point point : l.line) {
@@ -243,23 +246,24 @@ public class DrawSignals extends JFrame implements ClipboardOwner {
     
     private void setPinForSelected(Pin in) {
 		if(selected != null) {
-			ArrayList<Point> selectedLine = null;
+			ArrayList<ArrayList<Point>> selectedLine = new ArrayList<ArrayList<Point>>();
 			for(Line line: lines) {
 				if(line.name.equals(selected)) {
-					selectedLine = line.line;
-					break;
+					selectedLine.add(line.line);
 				}
 			}
-			Point last = null;
-			for(Point curr: selectedLine) {
-				if(last != null) {
-					for(GuiLine gl: guiScheme.getLines()) {
-						if(gl.getPoints().get(0) == last && gl.getPoints().get(1) == curr) {
-							gl.setPin(in);
+			for(ArrayList<Point> section: selectedLine) {
+				Point last = null;
+				for(Point curr: section) {
+					if(last != null) {
+						for(GuiLine gl: guiScheme.getLines()) {
+							if(gl.getPoints().get(0) == last && gl.getPoints().get(1) == curr) {
+								gl.setPin(in);
+							}
 						}
 					}
+					last = curr;
 				}
-				last = curr;
 			}
 			guiScheme.repaint();
 		}
