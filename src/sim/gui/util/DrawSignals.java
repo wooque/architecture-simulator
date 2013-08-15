@@ -324,7 +324,7 @@ public class DrawSignals extends JFrame {
 					String[] tokens = line.split(",(\\s)*|(\\)){0,1}(\\s)+\\(|\\)");
 					
 					if(!(tokens.length == 1 && tokens[0].isEmpty()) 
-						&& !(!tokens[0].isEmpty() && tokens[0].substring(0,2).equals("//"))) {
+						&& !((tokens[0].length() > 1) && tokens[0].substring(0,2).equals("//"))) {
 						if(tokens.length == 1  
 							&& ((tokens[0].charAt(0) >= 'a' && tokens[0].charAt(0) <= 'z')
 								|| (tokens[0].charAt(0) >= 'A' && tokens[0].charAt(0) <= 'Z'))) {
