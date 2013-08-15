@@ -243,96 +243,96 @@ public class DrawSignals extends JFrame {
     }
 
     private void saveConf() {
-    	if(confFilename.getText().isEmpty()) {
-    		JFileChooser chooser = new JFileChooser("conf");
-    		int retVal = chooser.showSaveDialog(DrawSignals.this);
-    		if(retVal == JFileChooser.APPROVE_OPTION) {
-    			confFilename.setText(chooser.getSelectedFile().getPath());
-    		}
-    	}
-		try {
-			File confFileIn = new File(confFilename.getText());
-			BufferedReader confIn = new BufferedReader(new FileReader(confFileIn));
-			File confFileOut = new File(confFilename.getText()+"temp");
-			PrintWriter confOut = new PrintWriter(new FileWriter(confFileOut), true);
-			
-			String confLine = confIn.readLine();
-			String mode = "coping";
-			String schemeName = getTitle().substring(getTitle().lastIndexOf('\\') + 1);
-			while(confLine != null) {
-				if(mode.equals("coping")) {
-					String[] tokens = confLine.split(",(\\s)*|(\\)){0,1}(\\s)+\\(|\\)");
-					if(tokens.length == 1 && tokens[0].equals(schemeName)) {
-						mode = "updating";
-					} else {
-						confOut.println(confLine);
-					}
-					confLine = confIn.readLine();
-				} else if (mode.equals("skipping")) {
-					String[] tokens = confLine.split(",(\\s)*|(\\)){0,1}(\\s)+\\(|\\)");
-					if(tokens.length == 1 && !tokens[0].isEmpty()) {
-						if(!tokens[0].equals(schemeName)) {
+    	if(!confFilename.getText().isEmpty()) {
+			try {
+				File confFileIn = new File(confFilename.getText());
+				BufferedReader confIn = new BufferedReader(new FileReader(confFileIn));
+				File confFileOut = new File(confFilename.getText()+"temp");
+				PrintWriter confOut = new PrintWriter(new FileWriter(confFileOut), true);
+				
+				String confLine = confIn.readLine();
+				String mode = "coping";
+				String schemeName = getTitle().substring(getTitle().lastIndexOf('\\') + 1);
+				boolean saved = false;
+				
+				while(confLine != null || !saved) {
+					if(mode.equals("coping") && confLine != null) {
+						String[] tokens = confLine.split(",(\\s)*|(\\)){0,1}(\\s)+\\(|\\)");
+						if(tokens.length == 1 && tokens[0].equals(schemeName)) {
+							mode = "updating";
+						} else {
 							confOut.println(confLine);
-							mode = "coping";
 						}
+						confLine = confIn.readLine();
+					} else if (mode.equals("skipping") && confLine != null) {
+						String[] tokens = confLine.split(",(\\s)*|(\\)){0,1}(\\s)+\\(|\\)");
+						if(tokens.length == 1 && !tokens[0].isEmpty()) {
+							if(!tokens[0].equals(schemeName)) {
+								confOut.println(confLine);
+								mode = "coping";
+							}
+						}
+						confLine = confIn.readLine();
+					} else {
+						
+						HashMap<String, ArrayList<ArrayList<Point>>> linesToCommit = new HashMap<String, ArrayList<ArrayList<Point>>>();
+				        for (Line l : lines) {
+				        	if(linesToCommit.containsKey(l.name)) {
+				        		ArrayList<ArrayList<Point>> sections = linesToCommit.get(l.name);
+				        		sections.add(l.line);
+				        	} else {
+				        		ArrayList<ArrayList<Point>> sections = new ArrayList<ArrayList<Point>>();
+				        		sections.add(l.line);
+				        		linesToCommit.put(l.name, sections);
+				        	}
+				        }
+				
+				        String schemeToCommit = getTitle().substring(getTitle().lastIndexOf('\\') + 1);
+				        confOut.println(schemeToCommit);
+				        confOut.println();
+				        
+				        allLines.put(schemeToCommit, linesToCommit);
+				        
+				        for (Map.Entry<String, ArrayList<ArrayList<Point>>> entry : linesToCommit.entrySet()) {
+				        	String lineName = entry.getKey();
+				        	ArrayList<ArrayList<Point>> lineSections = entry.getValue();
+				        	confOut.printf("%-15s", lineName);
+				        	for(int i = 0; i < lineSections.size(); i++) {
+				        		if(i > 0) {
+				    				confOut.print("                ");
+				    			}
+				        		for (Point point : lineSections.get(i)) {
+				        			
+				        			confOut.print(" ("+point.x+","+point.y+")");
+				        		}
+				        		confOut.println();
+				        	}
+				            
+				        }
+				        confOut.println();
+				        saved = true;
+				        if(confLine != null) {
+				        	confLine = confIn.readLine();
+				        }
+				        mode = "skipping";
 					}
-					confLine = confIn.readLine();
-				} else {
-					
-					HashMap<String, ArrayList<ArrayList<Point>>> linesToCommit = new HashMap<String, ArrayList<ArrayList<Point>>>();
-			        for (Line l : lines) {
-			        	if(linesToCommit.containsKey(l.name)) {
-			        		ArrayList<ArrayList<Point>> sections = linesToCommit.get(l.name);
-			        		sections.add(l.line);
-			        	} else {
-			        		ArrayList<ArrayList<Point>> sections = new ArrayList<ArrayList<Point>>();
-			        		sections.add(l.line);
-			        		linesToCommit.put(l.name, sections);
-			        	}
-			        }
-			
-			        String schemeToCommit = getTitle().substring(getTitle().lastIndexOf('\\') + 1);
-			        confOut.println(schemeToCommit);
-			        confOut.println();
-			        
-			        allLines.put(schemeToCommit, linesToCommit);
-			        
-			        for (Map.Entry<String, ArrayList<ArrayList<Point>>> entry : linesToCommit.entrySet()) {
-			        	String lineName = entry.getKey();
-			        	ArrayList<ArrayList<Point>> lineSections = entry.getValue();
-			        	confOut.printf("%-15s", lineName);
-			        	for(int i = 0; i < lineSections.size(); i++) {
-			        		if(i > 0) {
-			    				confOut.print("                ");
-			    			}
-			        		for (Point point : lineSections.get(i)) {
-			        			
-			        			confOut.print(" ("+point.x+","+point.y+")");
-			        		}
-			        		confOut.println();
-			        	}
-			            
-			        }
-			        confOut.println();
-			        confLine = confIn.readLine();
-			        mode = "skipping";
 				}
+		        confIn.close();
+		        confOut.close();
+		        confFileIn.delete();
+		        boolean ret = confFileOut.renameTo(confFileIn);
+		        
+		        if(ret == false) {
+		        	JOptionPane.showMessageDialog(DrawSignals.this,	"Configuration saving failed", "Configuration saving failed", JOptionPane.ERROR_MESSAGE);
+		        } else {
+		        	JOptionPane.showMessageDialog(DrawSignals.this, "Configuration saved", "Configuration saved", JOptionPane.INFORMATION_MESSAGE);
+		        }
+			} catch (FileNotFoundException e) {
+				System.out.println("Conf file not found!");
+			} catch (IOException e) {
+				System.out.println("Conf file corrupted!");
 			}
-	        confIn.close();
-	        confOut.close();
-	        confFileIn.delete();
-	        boolean ret = confFileOut.renameTo(confFileIn);
-	        
-	        if(ret == false) {
-	        	JOptionPane.showMessageDialog(DrawSignals.this,	"Configuration saving failed", "Configuration saving failed", JOptionPane.ERROR_MESSAGE);
-	        } else {
-	        	JOptionPane.showMessageDialog(DrawSignals.this, "Configuration saved", "Configuration saved", JOptionPane.INFORMATION_MESSAGE);
-	        }
-		} catch (FileNotFoundException e) {
-			System.out.println("Conf file not found!");
-		} catch (IOException e) {
-			System.out.println("Conf file corrupted!");
-		}
+    	}
     }
     
     private void loadConf() {
