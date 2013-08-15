@@ -27,6 +27,7 @@ public class DrawSignals extends JFrame {
     private Point last;
     private PrintWriter confFile;
     private JLabel confFilename;
+	HashMap<String, HashMap<String, ArrayList<ArrayList<Point>>>> allLines;
 
     private class Line {
 
@@ -312,7 +313,7 @@ public class DrawSignals extends JFrame {
 				ArrayList<ArrayList<Point>> lineSections = null;
 				String schemeName = null;
 				HashMap<String, ArrayList<ArrayList<Point>>> schemeLines = null;
-				HashMap<String, HashMap<String, ArrayList<ArrayList<Point>>>> allLines = new HashMap<String, HashMap<String, ArrayList<ArrayList<Point>>>>();
+				allLines = new HashMap<String, HashMap<String, ArrayList<ArrayList<Point>>>>();
 				
 				String schemeFilename = null;
 				if(!getTitle().isEmpty()) {
@@ -329,11 +330,16 @@ public class DrawSignals extends JFrame {
 							&& ((tokens[0].charAt(0) >= 'a' && tokens[0].charAt(0) <= 'z')
 								|| (tokens[0].charAt(0) >= 'A' && tokens[0].charAt(0) <= 'Z'))) {
 							
+							if(lineSections != null) {
+								schemeLines.put(lineName, lineSections);
+							}
 							if(schemeLines != null) {
 								allLines.put(schemeName, schemeLines);
 							}
 							schemeName = tokens[0];
 							schemeLines = new HashMap<String, ArrayList<ArrayList<Point>>>();
+							lineName = null;
+							lineSections = null;
 						} else {
 							
 							int i = 0;
@@ -357,8 +363,8 @@ public class DrawSignals extends JFrame {
 								int y = Integer.parseInt(tokens[i + 1]);
 								section.add(new Point(x, y));
 							}
+							lineSections.add(section);
 							if(schemeName.equals(schemeFilename)) {
-								lineSections.add(section);
 								lines.add(new Line(section, lineName));
 				                if(!listModel.contains(lineName)) {
 				                	listModel.addElement(lineName);
@@ -392,10 +398,29 @@ public class DrawSignals extends JFrame {
         int returnVal = chooser.showOpenDialog(DrawSignals.this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             setTitle(chooser.getSelectedFile().getPath());
+            
             guiScheme.setImage(chooser.getSelectedFile().getPath());
             zoomPanel.setImage(guiScheme.getImage());
-            // removeAllSignals();
-            // TODO load new signals from hashmap if conf file is selected
+            
+            removeAllSignals();
+            
+            if(allLines != null) {
+            	String schemeName = getTitle().substring(getTitle().lastIndexOf('\\') + 1);
+	            HashMap<String, ArrayList<ArrayList<Point>>> schemeLines = allLines.get(schemeName);
+	            
+	            for(Map.Entry<String, ArrayList<ArrayList<Point>>> entry: schemeLines.entrySet()) {
+	            	String lineName = entry.getKey();
+	            	ArrayList<ArrayList<Point>> lineSections = entry.getValue();
+	            	
+	            	for(ArrayList<Point> section: lineSections) {
+	            		lines.add(new Line(section, lineName));
+	            		if(!listModel.contains(lineName)) {
+	            			listModel.addElement(lineName);
+	            		}
+	            		guiScheme.addLine(new GuiLine(section, Pin.FALSE));
+	            	}
+	            }
+            }
             pack();
         }
     }
@@ -420,6 +445,8 @@ public class DrawSignals extends JFrame {
 					if(last != null) {
 						for(int i = 0; i < guiScheme.getLines().size();) {
 							GuiLine gl = guiScheme.getLines().get(i);
+							// checking only first two points
+							// lines should not overlap
 							if(gl.getPoints().get(0) == last && gl.getPoints().get(1) == curr) {
 								guiScheme.removeLine(gl);
 							} else {
