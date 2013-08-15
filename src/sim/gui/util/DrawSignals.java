@@ -444,17 +444,19 @@ public class DrawSignals extends JFrame {
             	String schemeName = getTitle().substring(getTitle().lastIndexOf('\\') + 1);
 	            HashMap<String, ArrayList<ArrayList<Point>>> schemeLines = allLines.get(schemeName);
 	            
-	            for(Map.Entry<String, ArrayList<ArrayList<Point>>> entry: schemeLines.entrySet()) {
-	            	String lineName = entry.getKey();
-	            	ArrayList<ArrayList<Point>> lineSections = entry.getValue();
-	            	
-	            	for(ArrayList<Point> section: lineSections) {
-	            		lines.add(new Line(section, lineName));
-	            		if(!listModel.contains(lineName)) {
-	            			listModel.addElement(lineName);
-	            		}
-	            		guiScheme.addLine(new GuiLine(section, Pin.FALSE));
-	            	}
+	            if(schemeLines != null) {
+		            for(Map.Entry<String, ArrayList<ArrayList<Point>>> entry: schemeLines.entrySet()) {
+		            	String lineName = entry.getKey();
+		            	ArrayList<ArrayList<Point>> lineSections = entry.getValue();
+		            	
+		            	for(ArrayList<Point> section: lineSections) {
+		            		lines.add(new Line(section, lineName));
+		            		if(!listModel.contains(lineName)) {
+		            			listModel.addElement(lineName);
+		            		}
+		            		guiScheme.addLine(new GuiLine(section, Pin.FALSE));
+		            	}
+		            }
 	            }
             }
             pack();
