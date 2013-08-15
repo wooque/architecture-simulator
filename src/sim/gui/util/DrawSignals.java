@@ -296,10 +296,10 @@ public class DrawSignals extends JFrame {
 				        for (Map.Entry<String, ArrayList<ArrayList<Point>>> entry : linesToCommit.entrySet()) {
 				        	String lineName = entry.getKey();
 				        	ArrayList<ArrayList<Point>> lineSections = entry.getValue();
-				        	confOut.printf("%-15s", lineName);
+				        	confOut.printf("%-19s", lineName);
 				        	for(int i = 0; i < lineSections.size(); i++) {
 				        		if(i > 0) {
-				    				confOut.print("                ");
+				    				confOut.print("                   ");
 				    			}
 				        		for (Point point : lineSections.get(i)) {
 				        			
