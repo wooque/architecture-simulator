@@ -8,13 +8,7 @@ import sim.components.*;
 
 public class Configurator {
 
-	private LinkedHashMap<String, ArrayList<ComponentInfo>> componentInfos = new LinkedHashMap<String, ArrayList<ComponentInfo>>();
 	private LinkedHashMap<String, LogicalComponent> components = new LinkedHashMap<String, LogicalComponent>();
-//	private ArrayList<String> usedComponents = new ArrayList<String>();
-	private ComponentInfo currScheme;
-	private ArrayList<ComponentInfo> currComponents;
-	static private int notID;
-	private long begin, end;
 
 	private static class ComponentPins {
 		String type;
@@ -43,9 +37,13 @@ public class Configurator {
 		BufferedReader reader;
 		try {
 			reader = new BufferedReader(new FileReader(filename));
-			begin = System.currentTimeMillis();
+			long begin = System.currentTimeMillis();
 			String line = reader.readLine();
 
+			ComponentInfo currScheme = null;
+			ArrayList<ComponentInfo> currComponents = null;
+			LinkedHashMap<String, ArrayList<ComponentInfo>> componentInfos = new LinkedHashMap<String, ArrayList<ComponentInfo>>();
+			
 			while (line != null) {
 				if (!line.isEmpty()) {
 
@@ -408,6 +406,9 @@ public class Configurator {
 			
 			// Connecting components
 			
+			int notID = 0;
+//			ArrayList<String> usedComponents = new ArrayList<String>();
+			
 			for(Map.Entry<String, ArrayList<ComponentInfo>> entry: componentInfos.entrySet()) {
 				
 				String schemeName = entry.getKey();
@@ -590,7 +591,7 @@ public class Configurator {
 //				}
 //			}
 			
-			end = System.currentTimeMillis();
+			long end = System.currentTimeMillis();
 			System.out.println("-----------------------------");
 			System.out.println("| Initializing time: "+(end - begin)+" ms |");
 			System.out.println("-----------------------------");

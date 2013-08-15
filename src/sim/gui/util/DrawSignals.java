@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -137,6 +139,8 @@ public class DrawSignals extends JFrame {
         east.add(southeast);
         
         southeast.add(Box.createVerticalGlue());
+        JPanel loadPanel = new JPanel();
+        
         JButton loadImage = new JButton("Image...");
         loadImage.addActionListener(new ActionListener() {
             @Override
@@ -145,7 +149,19 @@ public class DrawSignals extends JFrame {
             }
         });
         loadImage.setAlignmentX(CENTER_ALIGNMENT);
-        southeast.add(loadImage);
+        loadPanel.add(loadImage);
+        
+        JButton loadConf = new JButton("Conf...");
+        loadConf.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadConf();
+            }
+        });
+        loadConf.setAlignmentX(CENTER_ALIGNMENT);
+        loadPanel.add(loadConf);
+        
+        southeast.add(loadPanel);
 
         southeast.add(Box.createVerticalGlue());
         listOfLines = new JList<String>();
@@ -245,13 +261,37 @@ public class DrawSignals extends JFrame {
 			System.out.println("Conf file corrupted!");
 		}
 		
-		// TODO finish configuration saving
+		// TODO change just one scheme instead owerwriting whole conf file
 		
+		HashMap<String, ArrayList<ArrayList<Point>>> linesToCommit = new HashMap<String, ArrayList<ArrayList<Point>>>();
         for (Line l : lines) {
-        	confFile.println(l.name+":");
-            for (Point point : l.line) {
-            	confFile.println("("+point.x+","+point.y+")");
-            }
+        	if(linesToCommit.containsKey(l.name)) {
+        		ArrayList<ArrayList<Point>> sections = linesToCommit.get(l.name);
+        		sections.add(l.line);
+        	} else {
+        		ArrayList<ArrayList<Point>> sections = new ArrayList<ArrayList<Point>>();
+        		sections.add(l.line);
+        		linesToCommit.put(l.name, sections);
+        	}
+        }
+
+        confFile.println(getTitle().substring(getTitle().lastIndexOf('\\') + 1));
+        confFile.println();
+        for (Map.Entry<String, ArrayList<ArrayList<Point>>> entry : linesToCommit.entrySet()) {
+        	String lineName = entry.getKey();
+        	ArrayList<ArrayList<Point>> lineSections = entry.getValue();
+        	confFile.printf("%-14s", lineName);
+        	for(int i = 0; i < lineSections.size(); i++) {
+        		if(i > 0) {
+    				confFile.print("              ");
+    			}
+        		for (Point point : lineSections.get(i)) {
+        			
+        			confFile.print(" ("+point.x+","+point.y+")");
+        		}
+        		confFile.println();
+        	}
+            
         }
         
         JOptionPane.showMessageDialog(DrawSignals.this, "Configuration saved", "Configuration saved", JOptionPane.PLAIN_MESSAGE);
@@ -264,20 +304,81 @@ public class DrawSignals extends JFrame {
 			confFilename.setText(chooser.getSelectedFile().getPath());
 			try {
 				BufferedReader confFileReader = new BufferedReader(new FileReader(confFilename.getText()));
+				confFile = new PrintWriter(new FileWriter(confFilename.getText(), true), true);
 				
 				String line = confFileReader.readLine();
+				
+				String lineName = null;
+				ArrayList<ArrayList<Point>> lineSections = null;
+				String schemeName = null;
+				HashMap<String, ArrayList<ArrayList<Point>>> schemeLines = null;
+				HashMap<String, HashMap<String, ArrayList<ArrayList<Point>>>> allLines = new HashMap<String, HashMap<String, ArrayList<ArrayList<Point>>>>();
+				
+				String schemeFilename = null;
+				if(!getTitle().isEmpty()) {
+					 schemeFilename = getTitle().substring(getTitle().lastIndexOf('\\') + 1);
+				}
+				
 				while(line != null) {
 					
-					String[] tokens = line.split("\\(\\),");
-					if(!tokens[0].equals("") && !tokens[0].substring(0,2).equals("//")) {
-						if(tokens[1] != null && tokens[1].equals("scheme")) {
-							// TODO finish when scheme begin is hit
+					String[] tokens = line.split(",(\\s)*|(\\)){0,1}(\\s)+\\(|\\)");
+					
+					if(!(tokens.length == 1 && tokens[0].isEmpty()) 
+						&& !(!tokens[0].isEmpty() && tokens[0].substring(0,2).equals("//"))) {
+						if(tokens.length == 1  
+							&& ((tokens[0].charAt(0) >= 'a' && tokens[0].charAt(0) <= 'z')
+								|| (tokens[0].charAt(0) >= 'A' && tokens[0].charAt(0) <= 'Z'))) {
+							
+							if(schemeLines != null) {
+								allLines.put(schemeName, schemeLines);
+							}
+							schemeName = tokens[0];
+							schemeLines = new HashMap<String, ArrayList<ArrayList<Point>>>();
+						} else {
+							
+							int i = 0;
+							if(tokens[0].isEmpty()) {
+								// workaround for String.split() method not recognizing if delimiter is on begining
+								i = 1;
+							} else if((tokens[0].charAt(0) >= 'a' && tokens[0].charAt(0) <= 'z')
+								|| (tokens[0].charAt(0) >= 'A' && tokens[0].charAt(0) <= 'Z')) {
+								
+								if(lineSections != null) {
+									schemeLines.put(lineName, lineSections);
+								}
+								lineName = tokens[0];
+								lineSections = new ArrayList<ArrayList<Point>>();
+								i = 1;
+							}
+							
+							ArrayList<Point> section = new ArrayList<Point>();
+							for(; i < tokens.length; i+=2) {
+								int x = Integer.parseInt(tokens[i]);
+								int y = Integer.parseInt(tokens[i + 1]);
+								section.add(new Point(x, y));
+							}
+							if(schemeName.equals(schemeFilename)) {
+								lineSections.add(section);
+								lines.add(new Line(section, lineName));
+				                if(!listModel.contains(lineName)) {
+				                	listModel.addElement(lineName);
+				                }
+								guiScheme.addLine(new GuiLine(section, Pin.FALSE));
+							}
 						}
-						// TODO finish processing line points
 					}
 					line = confFileReader.readLine();
 				}
+				
+				if(lineSections != null) {
+					schemeLines.put(lineName, lineSections);
+				}
+				
+				if(schemeLines != null) {
+					allLines.put(schemeName, schemeLines);
+				}
 				confFileReader.close();
+				guiScheme.repaint();
 			} catch (FileNotFoundException e) {
 				System.out.println("Conf file not found!");
 			} catch (IOException e) {
@@ -293,7 +394,8 @@ public class DrawSignals extends JFrame {
             setTitle(chooser.getSelectedFile().getPath());
             guiScheme.setImage(chooser.getSelectedFile().getPath());
             zoomPanel.setImage(guiScheme.getImage());
-            removeAllSignals();
+            // removeAllSignals();
+            // TODO load new signals from hashmap if conf file is selected
             pack();
         }
     }
