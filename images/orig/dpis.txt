@@ -1,0 +1,13 @@
+adr_1			16
+bus_1 			18
+exec_1 			18
+exec_2 			16
+exec_3 			18
+exec_4 			18
+fetch_1 		18
+fetch_2 		16
+fetch_3 		18
+intr_1 			16
+intr_2 			18
+intr_3 			18
+upr_jed_hard	16
