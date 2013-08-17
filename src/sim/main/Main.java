@@ -22,6 +22,7 @@ public class Main extends JFrame {
 	PrintStream log;
 	JScrollPane scrollPane;
 	ArrayList<String> steps;
+	ArrayList<String> desc;
 
 //	CPURegister cpuregs = new CPURegister();
 //	public static JDialog dialogRegs = new JDialog();
@@ -46,6 +47,10 @@ public class Main extends JFrame {
 		final Pin mem_cnt = components.get("mem_uprav.memacc").getOut(0);
 		final Pin start = components.get("exec2.start").getOut(0);
 		
+		StepsLoader stepLoader = new StepsLoader("conf/steps.conf", log);
+		steps = stepLoader.getSteps();
+		desc = stepLoader.getDesc();
+		
 		currentScheme = schemes.get("adr_1.png");
 		JPanel east = new JPanel();
 		JPanel northeast = new JPanel();
@@ -69,13 +74,8 @@ public class Main extends JFrame {
 		JButton resetnomem = new JButton("RESET BEZ MEM");
 		JPanel menu = new JPanel();
 
-		JLabel phaseName = new JLabel("Faza izvrsavanja:");
-		final JLabel phase = new JLabel("Citanje instrukcije");
-		final JLabel phaseExtraInfo = new JLabel("-");
-		JLabel adrName = new JLabel("Adresiranje:");
-		final JLabel adr = new JLabel("-");
-		JLabel operName = new JLabel("Operacija:");
-		final JLabel oper = new JLabel("-");
+		final JLabel descLabel = new JLabel("! Čitanje instrukcije !");
+		final JLabel stepLabel = new JLabel("<html>T00 brnotSTART, val00;", SwingConstants.CENTER);
 		
 		JButton load = new JButton("Ucitaj u memoriju");
 
@@ -134,124 +134,15 @@ public class Main extends JFrame {
 				
 				PC.setText("PC = "+pc.getIntVal());
 
-				// U zavisnosti od koraka T postavi fazu
-				if ("0".equals(step)) {
-					phase.setText("Citanje instrukcije");
-					adr.setText("-");
-					oper.setText("-");
-					phaseExtraInfo.setText("-");
-				} else if ("2".equals(step))
-					phaseExtraInfo.setText("Dohvatanje prvog bajta");
-				else if ("9".equals(step))
-					phaseExtraInfo.setText("Dohvatanje drugog bajta");
-				else if ("11".equals(step))
-					phaseExtraInfo.setText("Dohvatanje treceg bajta");
-				else if ("16".equals(step))
-					phaseExtraInfo.setText("Dohvatanje cetvrtog bajta");
-				else if ("1a".equals(step)) {
-					phase.setText("Formiranje adr i citanje oper");
-					phaseExtraInfo.setText("-");
-				} else if ("1b".equals(step))
-					adr.setText("Registarsko direktno");
-				else if ("1f".equals(step))
-					adr.setText("Registarsko ind. sa pomerajem");
-				else if ("22".equals(step))
-					adr.setText("PC relativno");
-				else if ("2c".equals(step))
-					adr.setText("Neposredno");
-				else if ("2d".equals(step)) {
-					phase.setText("Izvrsavanje operacije");
-					phaseExtraInfo.setText("-");
-				} else if ("2e".equals(step))
-					oper.setText("NOP");
-				else if ("2f".equals(step))
-					oper.setText("HALT");
-				else if ("30".equals(step))
-					oper.setText("INTD");
-				else if ("31".equals(step))
-					oper.setText("INTE");
-				else if ("32".equals(step))
-					oper.setText("TRPD");
-				else if ("33".equals(step))
-					oper.setText("TRPE");
-				else if ("34".equals(step))
-					oper.setText("LDB");
-				else if ("36".equals(step))
-					oper.setText("LDW");
-				else if ("37".equals(step))
-					oper.setText("STB");
-				else if ("3d".equals(step))
-					oper.setText("STW");
-				else if ("46".equals(step))
-					oper.setText("STIVTP");
-				else if ("47".equals(step))
-					oper.setText("STSP");
-				else if ("48".equals(step))
-					oper.setText("ADD");
-				else if ("4a".equals(step))
-					oper.setText("SUB");
-				else if ("4c".equals(step))
-					oper.setText("AND");
-				else if ("4e".equals(step))
-					oper.setText("OR");
-				else if ("50".equals(step))
-					oper.setText("XOR");
-				else if ("52".equals(step))
-					oper.setText("NOT");
-				else if ("54".equals(step)){
-//					if(Fetch2.ASR().getBoolVal())oper.setText("ASR");
-//					else if (Fetch2.LSR().getBoolVal())oper.setText("LSR");
-//					else if (Fetch2.ROR().getBoolVal())oper.setText("ROR");
-//					else if (Fetch2.RORC().getBoolVal())oper.setText("RORC");
-				}
-				else if ("56".equals(step)){
-//					if(Fetch2.ASL().getBoolVal())oper.setText("ASL");
-//					else if (Fetch2.LSL().getBoolVal())oper.setText("LSL");
-//					else if (Fetch2.ROL().getBoolVal())oper.setText("ROL");
-//					else if (Fetch2.ROLC().getBoolVal())oper.setText("ROLC");
-				}
-				else if ("58".equals(step)){
-//					if(Fetch2.BEQL().getBoolVal())oper.setText("BEQL");
-//					else if (Fetch2.BNEQ().getBoolVal())oper.setText("BNEQ");
-//					else if (Fetch2.BNEG().getBoolVal())oper.setText("BNEG");
-//					else if (Fetch2.BNNG().getBoolVal())oper.setText("BNNG");
-//					else if (Fetch2.BOVF().getBoolVal())oper.setText("BOVF");
-//					else if (Fetch2.BNVF().getBoolVal())oper.setText("BNVF");
-//					else if (Fetch2.BCR().getBoolVal())oper.setText("BCR");
-//					else if (Fetch2.BNCR().getBoolVal())oper.setText("BNCR");
-//					else if (Fetch2.BGRT().getBoolVal())oper.setText("BGRT");
-//					else if (Fetch2.BGRE().getBoolVal())oper.setText("BGRE");
-//					else if (Fetch2.BLSS().getBoolVal())oper.setText("BLSS");
-//					else if (Fetch2.BLEQ().getBoolVal())oper.setText("BLEQ");
-//					else if (Fetch2.BGRTU().getBoolVal())oper.setText("BGRTU");
-//					else if (Fetch2.BGREU().getBoolVal())oper.setText("BGREU");
-//					else if (Fetch2.BLSSU().getBoolVal())oper.setText("BLSSU");
-//					else if (Fetch2.BLEQU().getBoolVal())oper.setText("BLEQU");
-				}
-				else if ("5b".equals(step))
-					oper.setText("JMP");
-				else if ("5c".equals(step))
-					oper.setText("INT");
-				else if ("5d".equals(step))
-					oper.setText("JSR");
-				else if ("64".equals(step))
-					oper.setText("RTI");
-				else if (("6c".equals(step))&&(components.get("fetch2.rts").getOut(0).getBoolVal()))
-					oper.setText("RTS");
-				else if ("75".equals(step)) {
-					phase.setText("Opsluzivanje prekida");
-					phaseExtraInfo.setText("-");
-				} else if ("76".equals(step))
-					phaseExtraInfo.setText("Cuvanje konteksta");
-				else if ("8d".equals(step))
-					phaseExtraInfo.setText("Utvrdjivanje adrese prekidne rutine");
-
 				currentScheme.repaint();
 				if(start.getBoolVal() == false){
 					CLK.setEnabled(false);
 					INS.setEnabled(false);
 					PRG.setEnabled(false);
 				}
+				int stepNum = cnt.getIntVal();
+				descLabel.setText(desc.get(stepNum));
+				stepLabel.setText(steps.get(stepNum));
 			}
 		});
 		CLK.setAlignmentX(CENTER_ALIGNMENT);
@@ -296,10 +187,9 @@ public class Main extends JFrame {
 					INS.setEnabled(false);
 					PRG.setEnabled(false);
 				}
-				phase.setText("Citanje instrukcije");
-				adr.setText("-");
-				oper.setText("-");
-				phaseExtraInfo.setText("-");
+				int step = cnt.getIntVal();
+				descLabel.setText(desc.get(step));
+				stepLabel.setText(steps.get(step));
 			}
 		});
 		INS.setAlignmentX(CENTER_ALIGNMENT);
@@ -328,23 +218,10 @@ public class Main extends JFrame {
 		
 		JPanel northeastII=new JPanel();
 		northeastII.setLayout(new BoxLayout(northeastII, BoxLayout.Y_AXIS));
-		phaseName.setAlignmentX(CENTER_ALIGNMENT);
-		northeastII.add(phaseName);
-		//phaseName.setFont(new Font("D", 10, 13));
-		phase.setAlignmentX(CENTER_ALIGNMENT);
-		northeastII.add(phase);
-		phaseExtraInfo.setAlignmentX(CENTER_ALIGNMENT);
-		northeastII.add(phaseExtraInfo);
-		adrName.setAlignmentX(CENTER_ALIGNMENT);
-		northeastII.add(adrName);
-		//adrName.setFont(new Font("D", 10, 13));
-		adr.setAlignmentX(CENTER_ALIGNMENT);
-		northeastII.add(adr);
-		operName.setAlignmentX(CENTER_ALIGNMENT);
-		northeastII.add(operName);
-		//operName.setFont(new Font("D", 10, 13));
-		oper.setAlignmentX(CENTER_ALIGNMENT);
-		northeastII.add(oper);
+		descLabel.setAlignmentX(CENTER_ALIGNMENT);
+		northeastII.add(descLabel);
+		stepLabel.setAlignmentX(CENTER_ALIGNMENT);
+		northeastII.add(stepLabel);
 		northeast.add(northeastII);
 		
 		asmtext.setText("ld #4\nst r0\nld #5\nst r1\nadd r0\nhalt");
@@ -401,10 +278,9 @@ public class Main extends JFrame {
 				Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
 				memCnt.setText("Mem = "+ Integer.toHexString(mem_cnt.getIntVal()));
 				PC.setText("PC ="+pc.getIntVal());
-				phase.setText("Citanje instrukcije");
-				adr.setText("-");
-				oper.setText("-");
-				phaseExtraInfo.setText("-");
+				int step = cnt.getIntVal();
+				descLabel.setText(desc.get(step));
+				stepLabel.setText(steps.get(step));
 
 				JOptionPane.showMessageDialog(Main.this, "Simulacija resetovana","Resetovanje simulacije...", JOptionPane.PLAIN_MESSAGE);
 				CLK.setEnabled(true);
@@ -428,10 +304,9 @@ public class Main extends JFrame {
 				Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
 				memCnt.setText("Mem = "+ Integer.toHexString(mem_cnt.getIntVal()));
 				PC.setText("PC ="+pc.getIntVal());
-				phase.setText("Citanje instrukcije");
-				adr.setText("-");
-				oper.setText("-");
-				phaseExtraInfo.setText("-");
+				int step = cnt.getIntVal();
+				descLabel.setText(desc.get(step));
+				stepLabel.setText(steps.get(step));
 				
 				JOptionPane.showMessageDialog(Main.this, "Simulator resetovan, memorija nepromenjena.","Resetovanje simulacije...", JOptionPane.PLAIN_MESSAGE);
 				CLK.setEnabled(true);
