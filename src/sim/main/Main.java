@@ -1,14 +1,16 @@
-package sim;
+package sim.main;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.List;
 import java.awt.event.*;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.*;
 
+import sim.Configurator;
 import sim.assembler.Assembler;
 import sim.components.*;
 import sim.gui.*;
@@ -19,6 +21,7 @@ public class Main extends JFrame {
 	GuiScheme currentScheme;
 	PrintStream log;
 	JScrollPane scrollPane;
+	ArrayList<String> steps;
 
 //	CPURegister cpuregs = new CPURegister();
 //	public static JDialog dialogRegs = new JDialog();
@@ -607,6 +610,8 @@ public class Main extends JFrame {
 	}
 
 	public static void main(String[] args) {
+		long begin = System.currentTimeMillis();
 		new Main();
+		System.out.println("startup: "+(System.currentTimeMillis() - begin)+" ms");
 	}
 }
