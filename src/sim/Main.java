@@ -259,20 +259,13 @@ public class Main extends JFrame {
 				else if ("8d".equals(step))
 					phaseExtraInfo.setText("Utvrdjivanje adrese prekidne rutine");
 
-				// System.out.println(step + ":   " +
-				// Bus3.FFC.in[0].getBoolVal() + Bus3.FFC.out[0].getBoolVal() +
-				// "   " + Bus3.FFC.out[1].getBoolVal());
-
 				currentScheme.repaint();
-				// cpuregs.repaint(); suvisno je jer kad se otvori dijalog tada
-				// ne moze da se krece kroz simulaciju
 				if(start.getBoolVal() == false){
 					CLK.setEnabled(false);
 					INS.setEnabled(false);
 					PRG.setEnabled(false);
 				}
-			} // pa ne moze da ispadnu lose brojke u pregledu registara ako se
-				// ne repaintuje
+			}
 		});
 		CLK.setAlignmentX(CENTER_ALIGNMENT);
 		northeastI.add(CLK);
@@ -281,7 +274,6 @@ public class Main extends JFrame {
 		INS.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
-				// par kloka da izadje iz T00
 				LogicalComponent.CLK();
 				CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
 				BUSclock.setText("BUS clock = " + (int)(LogicalComponent.globalClock/2));
@@ -308,7 +300,6 @@ public class Main extends JFrame {
 					INS.setEnabled(false);
 					PRG.setEnabled(false);
 				}
-				// vrti se dok ne dodje do T00
 				while ((cnt.getIntVal() != 0)&&(start.getBoolVal() == true)){
 					LogicalComponent.CLK();
 					CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
@@ -331,7 +322,6 @@ public class Main extends JFrame {
 			}
 		});
 		INS.setAlignmentX(CENTER_ALIGNMENT);
-		//northeastI.add(INS);
 		JPanel child=new JPanel(new GridLayout(1,2));
 		child.add(INS);
 		
@@ -354,13 +344,11 @@ public class Main extends JFrame {
 			}
 		});
 		PRG.setAlignmentX(CENTER_ALIGNMENT);
-		//northeastI.add(PRG);
 		child.add(PRG);
 		northeastI.add(child);
 		
 		JPanel northeastII=new JPanel();
 		northeastII.setLayout(new BoxLayout(northeastII, BoxLayout.Y_AXIS));
-		// Dodati labelu koja kazuje fazu
 		phaseName.setAlignmentX(CENTER_ALIGNMENT);
 		northeastII.add(phaseName);
 		//phaseName.setFont(new Font("D", 10, 13));
@@ -368,13 +356,11 @@ public class Main extends JFrame {
 		northeastII.add(phase);
 		phaseExtraInfo.setAlignmentX(CENTER_ALIGNMENT);
 		northeastII.add(phaseExtraInfo);
-		// Dodati labelu koja kazuje nacin adresiranja
 		adrName.setAlignmentX(CENTER_ALIGNMENT);
 		northeastII.add(adrName);
 		//adrName.setFont(new Font("D", 10, 13));
 		adr.setAlignmentX(CENTER_ALIGNMENT);
 		northeastII.add(adr);
-		// Dodati labelu koja kazuje vrstu operacije
 		operName.setAlignmentX(CENTER_ALIGNMENT);
 		northeastII.add(operName);
 		//operName.setFont(new Font("D", 10, 13));
@@ -388,7 +374,6 @@ public class Main extends JFrame {
 		load.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
-				//String asmcode = asmtext.getText();
 				Assembler asm = new Assembler("asm/test.asm", log);
 				Object[] code = asm.getCode();
 				int start = asm.getStartOfCode();
@@ -407,20 +392,6 @@ public class Main extends JFrame {
 //
 //			public void actionPerformed(ActionEvent arg0) {
 //
-//				// JFrame mem = new JFrame();
-//
-//				// mem.setBounds(currentScheme.getX() + currentScheme.getWidth()
-//				// 8, currentScheme.getY(), 600, 600);
-//
-//				// mem.setLayout(new GridLayout(8 * 32, 8 * 32));
-//
-//				// mem.getContentPane().setBackground(Color.WHITE);
-//
-//				// for (int i = 0; i < 64 * 1024; i++)
-//				// mem.add(new JLabel(" mem" + i + ": " + Mem11.readMEM(i)));
-//
-//				// mem.setVisible(true);
-//
 //				dialogMem.setVisible(true);
 //				currentScheme.repaint();
 //
@@ -432,21 +403,7 @@ public class Main extends JFrame {
 //
 //			public void actionPerformed(ActionEvent arg0) {
 //
-//				// JFrame regs = new JFrame();
-//
-//				// regs.setBounds(currentScheme.getX() +
-//				// currentScheme.getWidth()
-//				// / 8, currentScheme.getY(), 600, 600);
-//
-//				// regs.setLayout(new GridLayout(8, 8));
-//
-//				// regs.getContentPane().setBackground(Color.WHITE);
-//
-//				// for (int i = 0; i < 64; i++)
-//				// regs.add(new JLabel(" Reg" + i + ": " + Adr.readGPR(i)));
-//
 //				dialogRegs.setVisible(true);
-//
 //				currentScheme.repaint();
 //
 //			}
@@ -461,7 +418,6 @@ public class Main extends JFrame {
 				LogicalComponent.initMemory=true;
 				LogicalComponent.initialise();
 				
-				// Podesi labele
 				CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
 				BUSclock.setText("BUS clock = " + (int)(LogicalComponent.globalClock/2));
 				MEMclock.setText("MEM clock = " + (int)(LogicalComponent.globalClock/3));
@@ -473,13 +429,7 @@ public class Main extends JFrame {
 				oper.setText("-");
 				phaseExtraInfo.setText("-");
 
-				// Ucitaj na pocetku program iz text-area
-				//String asmcode = asmtext.getText();
-				//asm.asembly(asmcode);
-
-				JOptionPane.showMessageDialog(load.getParent().getParent()
-						.getParent(), "Simulacija resetovana",
-						"Resetovanje simulacije...", JOptionPane.PLAIN_MESSAGE);
+				JOptionPane.showMessageDialog(Main.this, "Simulacija resetovana","Resetovanje simulacije...", JOptionPane.PLAIN_MESSAGE);
 				CLK.setEnabled(true);
 				INS.setEnabled(true);
 				PRG.setEnabled(true);
@@ -497,7 +447,6 @@ public class Main extends JFrame {
 				LogicalComponent.initMemory=false;
 				LogicalComponent.initialise();
 				
-				// Podesi labele
 				CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
 				BUSclock.setText("BUS clock = " + (int)(LogicalComponent.globalClock/2));
 				MEMclock.setText("MEM clock = " + (int)(LogicalComponent.globalClock/3));
@@ -508,14 +457,8 @@ public class Main extends JFrame {
 				adr.setText("-");
 				oper.setText("-");
 				phaseExtraInfo.setText("-");
-
-				// Ucitaj na pocetku program iz text-area
-				//String asmcode = asmtext.getText();
-				//asm.asembly(asmcode);
-
-				JOptionPane.showMessageDialog(load.getParent().getParent()
-						.getParent(), "Simulator resetovan, memorija nepromenjena.",
-						"Resetovanje simulacije...", JOptionPane.PLAIN_MESSAGE);
+				
+				JOptionPane.showMessageDialog(Main.this, "Simulator resetovan, memorija nepromenjena.","Resetovanje simulacije...", JOptionPane.PLAIN_MESSAGE);
 				CLK.setEnabled(true);
 				INS.setEnabled(true);
 				PRG.setEnabled(true);
@@ -527,8 +470,7 @@ public class Main extends JFrame {
 
 		southeast.setLayout(new BoxLayout(southeast, BoxLayout.Y_AXIS));
 
-		// Dodat scroll bar za asemblerski tekst
-		//
+
 		asmtxt.setAlignmentX(CENTER_ALIGNMENT);
 		southeast.add(asmtxt);
 
@@ -545,13 +487,10 @@ public class Main extends JFrame {
 		east.add(southeast);
 		add("East", east);
 
-		//listOfShemes.add("Arbitrator");
 		listOfShemes.add("Procesor");
 		listOfShemes.add("     Operaciona");
 		listOfShemes.add("          Addr");
 		listOfShemes.add("          Bus");
-//		listOfShemes.add("          Bus 2");
-//		listOfShemes.add("          Bus 3");
 		listOfShemes.add("          Exec 1");
 		listOfShemes.add("          Exec 2");
 		listOfShemes.add("          Exec 3");
@@ -575,7 +514,6 @@ public class Main extends JFrame {
 		listOfShemes.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
 
-				//scrollPane.remove(currentScheme);
 				if (listOfShemes.getSelectedItem().equals("          Addr")
 						|| listOfShemes.getSelectedItem().equals("Procesor")
 						|| listOfShemes.getSelectedItem().equals("     Operaciona")) {
@@ -657,10 +595,6 @@ public class Main extends JFrame {
 		setBounds(0, 0, currentScheme.getWidth() + listOfShemes.getWidth()
 				+ asmtext.getWidth() + 320, currentScheme.getHeight() + 40);
 		setVisible(true);
-
-		// Ucitaj na pocetku default program
-		//String asmcode = asmtext.getText();
-		//asm.asembly(asmcode);
 
 //		dialogRegs.setResizable(false);
 //		dialogRegs.setTitle("CPU registri");
