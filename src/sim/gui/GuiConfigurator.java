@@ -5,6 +5,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import sim.components.LogicalComponent;
 import sim.components.Pin;
@@ -13,9 +14,17 @@ public class GuiConfigurator {
 
 	private LinkedHashMap<String, GuiScheme> guiSchemes = new LinkedHashMap<String, GuiScheme>();
 	
-	public GuiConfigurator(HashMap<String, LogicalComponent> components, String guiConfFilename) {
+	public GuiConfigurator(HashMap<String, LogicalComponent> components, String guiConfFilename, PrintStream log) {
 		
 		try {
+			if(log == null) {
+				log = System.out;
+			}
+			log.println();
+			log.println("GuiConfigurator:");
+			log.println();
+			
+			long begin = System.currentTimeMillis();
 			
 			BufferedReader confFileReader = new BufferedReader(new FileReader(guiConfFilename));
 			
@@ -69,7 +78,7 @@ public class GuiConfigurator {
 						} else {
 							LogicalComponent logComp = components.get(lineName);
 							if(logComp == null) {
-								System.out.println("Non existent pin: "+lineName);
+								log.println("Non existent pin: "+lineName);
 							} else {
 								linePin = logComp.getOut(0);
 							}
@@ -85,11 +94,23 @@ public class GuiConfigurator {
 				guiSchemes.put(schemeName, scheme);
 			}
 			
+			
 			confFileReader.close();
+			
+			long end = System.currentTimeMillis();
+			
+			for(Map.Entry<String, GuiScheme> schemeEntry: guiSchemes.entrySet()) {
+				String name = schemeEntry.getKey();
+				GuiScheme guiScheme = schemeEntry.getValue();
+				log.println(name+": "+(guiScheme != null));
+			}
+			log.println();
+			log.println("time taken: " + (end - begin) + " ms");
+			
 		} catch (FileNotFoundException e) {
-			System.out.println("Conf file not found!");
+			log.println("Conf file not found!");
 		} catch (IOException e) {
-			System.out.println("Conf file corrupted!");
+			log.println("Conf file corrupted!");
 		}
 	}
 

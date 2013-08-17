@@ -6,11 +6,13 @@ import sim.components.*;
 public class Test {
 
 	public static void main(String[] args) {
+		
 		long begin = System.currentTimeMillis();
-		Configurator config = new Configurator("conf/schemes.conf");
+		
+		Configurator config = new Configurator("conf/schemes.conf", null);
 		Debugger debug = new Debugger(config, "log/debug.log");
 		
-		Assembler asm = new Assembler("asm/test2.asm");
+		Assembler asm = new Assembler("asm/test2.asm", null);
 		Object[] code = asm.getCode();
 		int start = asm.getStartOfCode();
 		MEM mem = ((MEM)config.getComponents().get("mem_oper.mem"));

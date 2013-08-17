@@ -44,8 +44,14 @@ public class Assembler {
 	private ArrayList<Integer> code;
 	private int startOfCode = 256;
 
-	public Assembler(String asmcode) {
+	public Assembler(String asmcode, PrintStream log) {
 		try {
+			if(log == null) {
+				log = System.out;
+			}
+			log.println();
+			log.println("Assembler:");
+			log.println();
 			read = new BufferedReader(new FileReader(asmcode));
 			unpackedSource = new ArrayList<UnpackedLine>();
 			labels = new HashMap<String, Integer>();
@@ -56,8 +62,11 @@ public class Assembler {
 			} catch (BadInstruction be) {
 				System.out.println(be.getMessage());
 			}
+			read.close();
 		} catch (FileNotFoundException e) {
 			System.out.println("Assembly file not found!");
+		} catch (IOException e) {
+			System.out.println("Assembly file corrupted!");
 		}
 	}
 	

@@ -33,11 +33,19 @@ public class Configurator {
 		}
 	}
 
-	public Configurator(String filename) {
-		BufferedReader reader;
+	public Configurator(String filename, PrintStream log) {
 		try {
-			reader = new BufferedReader(new FileReader(filename));
+			if(log == null) {
+				log = System.out;
+			}
+			log.println();
+			log.println("Configurator:");
+			log.println();
+			
 			long begin = System.currentTimeMillis();
+			
+			BufferedReader reader = new BufferedReader(new FileReader(filename));
+			
 			String line = reader.readLine();
 
 			ComponentInfo currScheme = null;
@@ -65,7 +73,7 @@ public class Configurator {
 							}
 							info.type = type;
 						} else {
-							System.out.println("Config file corupted!");
+							log.println("Config file corupted!");
 							reader.close();
 							return;
 						}
@@ -111,7 +119,7 @@ public class Configurator {
 				
 				String schemeName = entry.getKey();
 				ArrayList<ComponentInfo> schemeComponents = entry.getValue();
-				System.out.println("----------------- Initializing "+schemeName+" -----------------");
+				log.println("----------------- Initializing "+schemeName+" -----------------");
 				
 				for (ComponentInfo comp : schemeComponents) {
 					
@@ -393,7 +401,7 @@ public class Configurator {
 						}
 					} else {
 						
-						System.out.println(compName + " does not exist");
+						log.println(compName + " does not exist");
 					}
 					
 					if (logComp != null) {
@@ -413,7 +421,7 @@ public class Configurator {
 				
 				String schemeName = entry.getKey();
 				ArrayList<ComponentInfo> schemeComponents = entry.getValue();
-				System.out.println("----------------- Connecting "+schemeName+" ---------------");
+				log.println("----------------- Connecting "+schemeName+" ---------------");
 				
 				for (ComponentInfo comp : schemeComponents) {
 					
@@ -476,7 +484,7 @@ public class Configurator {
 											} else if(logComp instanceof ALU) {
 												((ALU) logComp).setPinInc(parentComp.getOut(0));
 											} else {
-												System.out.println("Non existent atribute inc for component: "+schemeName+"."+comp.name);
+												log.println("Non existent atribute inc for component: "+schemeName+"."+comp.name);
 											}
 
 										} else if (pins.type.equals("dec")) {
@@ -485,7 +493,7 @@ public class Configurator {
 											} else if(logComp instanceof ALU) {
 												((ALU) logComp).setPinDec(parentComp.getOut(0));
 											} else {
-												System.out.println("Non existent atribute inc for component: "+schemeName+"."+comp.name);
+												log.println("Non existent atribute inc for component: "+schemeName+"."+comp.name);
 											}
 
 										} else if (pins.type.equals("ctrl")) {
@@ -494,7 +502,7 @@ public class Configurator {
 											} else if(logComp instanceof TSB) {
 												((TSB) logComp).setCtrl(parentComp.getOut(0));
 											} else {
-												System.out.println("Non existent atribute ctrl for component: "+schemeName+"."+comp.name);
+												log.println("Non existent atribute ctrl for component: "+schemeName+"."+comp.name);
 											}
 
 										} else if (pins.type.equals("init")) {
@@ -503,7 +511,7 @@ public class Configurator {
 											} else if (logComp instanceof RSFF) {
 												((RSFF) logComp).setInit(Boolean.parseBoolean(pinName));
 											} else {
-												System.out.println("Non existent atribute init for component: "+schemeName+"."+comp.name);
+												log.println("Non existent atribute init for component: "+schemeName+"."+comp.name);
 											}
 
 										} else if (pins.type.equals("wr")) {
@@ -512,7 +520,7 @@ public class Configurator {
 											} else if(logComp instanceof MEM) {
 												((MEM) logComp).setWrite(parentComp.getOut(0));
 											} else {
-												System.out.println("Non existent atribute wr for component: "+schemeName+"."+comp.name);
+												log.println("Non existent atribute wr for component: "+schemeName+"."+comp.name);
 											}
 
 										} else if (pins.type.equals("rd")) {
@@ -521,7 +529,7 @@ public class Configurator {
 											} else if(logComp instanceof MEM) {
 												((MEM) logComp).setRead(parentComp.getOut(0));
 											} else {
-												System.out.println("Non existent atribute rd for component: "+schemeName+"."+comp.name);
+												log.println("Non existent atribute rd for component: "+schemeName+"."+comp.name);
 											}
 
 										} else if (pins.type.equals("not")) {
@@ -570,13 +578,13 @@ public class Configurator {
 											((CMP) logComp).setPinB(i, parentComp.getOut(0));
 											
 										} else {
-											System.out.println("Non existent atribute "+pins.type+" for component: "+schemeName+"."+comp.name);
+											log.println("Non existent atribute "+pins.type+" for component: "+schemeName+"."+comp.name);
 										}
 									} catch (ClassCastException cce) {
-										System.out.println("Non existent atribute "+pins.type+" for component: "+schemeName+"."+comp.name);
+										log.println("Non existent atribute "+pins.type+" for component: "+schemeName+"."+comp.name);
 									}
 								} else {
-									System.out.println(pins.names[i]+" does not exist");
+									log.println(pins.names[i]+" does not exist");
 								}
 							}
 						}
@@ -587,21 +595,21 @@ public class Configurator {
 //			// find unused pins
 //			for(String curr: components.keySet()) {
 //				if(!usedComponents.contains(curr)) {
-//					System.out.println(curr+" is not used!");
+//					log.println(curr+" is not used!");
 //				}
 //			}
 			
 			long end = System.currentTimeMillis();
-			System.out.println("-----------------------------");
-			System.out.println("| Initializing time: "+(end - begin)+" ms |");
-			System.out.println("-----------------------------");
+			log.println("-----------------------------");
+			log.println("| Initializing time: "+(end - begin)+" ms |");
+			log.println("-----------------------------");
 
 		} catch (FileNotFoundException ignored) {
-			System.out.println("Config file not found!");
+			log.println("Config file not found!");
 		} catch (IOException e) {
-			System.out.println("Config file corrupted!");
+			log.println("Config file corrupted!");
 		} catch (BadArgs b) {
-			System.out.println(b.getMessage());
+			log.println(b.getMessage());
 		}
 	}
 	

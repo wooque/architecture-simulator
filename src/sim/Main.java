@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.List;
 import java.awt.event.*;
+import java.io.*;
 import java.util.HashMap;
 
 import javax.swing.*;
@@ -26,11 +27,11 @@ public class Main extends JFrame {
 	JLabel MEMclock = new JLabel("MEM clock = 0");
 	JLabel Tcpu = new JLabel("Tcpu = 0");
 	JLabel Tmem = new JLabel("Tmem = 0");
-	JLabel PC =new JLabel("PC = 0");
+	JLabel PC = new JLabel("PC = 0");
 	JButton CLK = new JButton("CLK+");
 	JButton INS = new JButton("INS+");
 	JButton PRG = new JButton("PRG+");
-	JLabel asmtxt=new JLabel("Asemblerski kod:");
+	JLabel asmtxt = new JLabel("Asemblerski kod:");
 
 	JButton reset = new JButton("RESET");
 	JButton registers = new JButton("REGISTRI");
@@ -62,6 +63,7 @@ public class Main extends JFrame {
 
 	List listOfShemes = new List();
 	GuiScheme currentScheme;
+	PrintStream log;
 
 //	Asembler asm = new Asembler();
 
@@ -75,11 +77,15 @@ public class Main extends JFrame {
 //	}
 	
 	public Main() {
-		
-		Configurator conf = new Configurator("conf/schemes.conf");
+		try {
+			log = new PrintStream(new FileOutputStream("log/debug.log"), true);
+		} catch (FileNotFoundException e) {
+			System.out.println("Log file can't be open, logging on standard output");
+		}
+		Configurator conf = new Configurator("conf/schemes.conf", log);
 		final HashMap<String, LogicalComponent> components = conf.getComponents();
 		
-		GuiConfigurator guiConf = new GuiConfigurator(components, "conf/gui.conf");
+		GuiConfigurator guiConf = new GuiConfigurator(components, "conf/gui.conf", log);
 		final HashMap<String, GuiScheme> schemes = guiConf.getGuiSchemes();
 		
 		final Pin pc = components.get("fetch1.pc").getOut(0);
@@ -92,7 +98,14 @@ public class Main extends JFrame {
 //		cpuregs.init();
 //		guimem.init();
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	log.close();
+                dispose();
+            }
+        });
 		add("Center",currentScheme);
 		
 		Dimension d=new Dimension(160, 620);
@@ -382,8 +395,8 @@ public class Main extends JFrame {
 		load.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
-				String asmcode = asmtext.getText();
-				Assembler asm = new Assembler(asmcode);
+				//String asmcode = asmtext.getText();
+				Assembler asm = new Assembler("asm/test.asm", log);
 				Object[] code = asm.getCode();
 				int start = asm.getStartOfCode();
 				MEM mem = ((MEM)components.get("mem_oper.mem"));
