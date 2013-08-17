@@ -13,7 +13,7 @@ public class GuiLine {
 
 	public GuiLine(ArrayList<Point> points, Pin pin) {
 		this.points = points;
-		if(this.pin != null) {
+		if(pin != null) {
 			this.pin = pin;
 			updateColor();
 		}
