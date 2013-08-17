@@ -15,20 +15,28 @@ public class GuiLabel {
 		x = xx;
 		y = yy;
 		pin = pinko;
+		updateLabel();
 	}
 
 	public void draw(Graphics g) {
-		updateLabel();
-		if (!pin.isHighZ()) {
-			g.setColor(Color.BLACK);
-			g.setFont(new Font("Arial", Font.BOLD, 12));
-			g.drawString(label, x, y);
+		if (updateLabel()) {
+			Graphics2D g2d = (Graphics2D) g;
+			g2d.setColor(Color.BLACK);
+			//g2d.setFont(new Font("Arial", Font.BOLD, 12));
+			g2d.setFont(g2d.getFont().deriveFont(Font.BOLD).deriveFont(12));
+			g2d.drawString(label, x, y);
 		}
 	}
 
-	private void updateLabel() {
-		if (!pin.isHighZ()) {
+	private boolean updateLabel() {
+		if(pin.isHighZ() && (label == null || !label.equals("Z"))) {
+			label = "Z";
+			return true;
+		} else if (label == null || !label.equals(Integer.toHexString(pin.getIntVal()))) {
 			label = Integer.toHexString(pin.getIntVal());
+			return true;
+		} else {
+			return false;
 		}
 	}
 

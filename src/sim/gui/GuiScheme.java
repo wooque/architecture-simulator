@@ -33,6 +33,16 @@ public class GuiScheme extends JPanel{
 		//getToolkit().sync();
 	}
 	
+	public void updateScheme() {
+		Graphics g = getGraphics();
+		for(GuiLine gl:lines){
+			gl.draw(g);
+		}
+		for(GuiLabel gl:labels){
+			gl.draw(g);
+		}
+	}
+	
 	public BufferedImage getImage() {
 		return image;
 	}
