@@ -1,7 +1,7 @@
 package sim.assembler;
 
 
-public class TestAssembler {
+public class Test {
 
 	public static void main(String[] args) {
 		
