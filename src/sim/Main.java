@@ -55,10 +55,8 @@ public class Main extends JFrame {
 		
 
 		final JLabel CPUclock = new JLabel("CPU clock = 0");
-		final JLabel BUSclock = new JLabel("BUS clock = 0");
-		final JLabel MEMclock = new JLabel("MEM clock = 0");
 		final JLabel Tcpu = new JLabel("Tcpu = 0");
-		final JLabel Tmem = new JLabel("Tmem = 0");
+		final JLabel memCnt = new JLabel("Mem = 0");
 		final JLabel PC = new JLabel("PC = 0");
 		JLabel asmtxt = new JLabel("Asemblerski kod:");
 
@@ -107,14 +105,10 @@ public class Main extends JFrame {
 		northeastI.setLayout(new BoxLayout(northeastI, BoxLayout.Y_AXIS));
 		CPUclock.setAlignmentX(CENTER_ALIGNMENT);
 		northeastI.add(CPUclock);
-		BUSclock.setAlignmentX(CENTER_ALIGNMENT);
-		northeastI.add(BUSclock);
-		MEMclock.setAlignmentX(CENTER_ALIGNMENT);
-		northeastI.add(MEMclock);
 		Tcpu.setAlignmentX(CENTER_ALIGNMENT);
 		northeastI.add(Tcpu);
-		Tmem.setAlignmentX(CENTER_ALIGNMENT);
-		northeastI.add(Tmem);
+		memCnt.setAlignmentX(CENTER_ALIGNMENT);
+		northeastI.add(memCnt);
 		PC.setAlignmentX(CENTER_ALIGNMENT);
 		northeastI.add(PC);
 		northeast.add(northeastI);
@@ -127,9 +121,9 @@ public class Main extends JFrame {
 
 				CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
 
-				BUSclock.setText("BUS clock = " + (int)(LogicalComponent.globalClock/2));
 				
-				MEMclock.setText("MEM clock = " + (int)(LogicalComponent.globalClock/3));
+				
+				
 				
 				String step = Integer.toHexString(cnt.getIntVal());
 
@@ -137,7 +131,7 @@ public class Main extends JFrame {
 				
 				String stepmem = Integer.toHexString(mem_cnt.getIntVal());
 
-				Tmem.setText("Tmem = " + stepmem);
+				memCnt.setText("Mem = " + stepmem);
 				
 				PC.setText("PC = "+pc.getIntVal());
 
@@ -270,10 +264,10 @@ public class Main extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				LogicalComponent.CLK();
 				CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
-				BUSclock.setText("BUS clock = " + (int)(LogicalComponent.globalClock/2));
-				MEMclock.setText("MEM clock = " + (int)(LogicalComponent.globalClock/3));
+				
+				
 				Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
-				Tmem.setText("Tmem = "+ Integer.toHexString(mem_cnt.getIntVal()));
+				memCnt.setText("Mem = "+ Integer.toHexString(mem_cnt.getIntVal()));
 				PC.setText("PC = "+pc.getIntVal());
 				currentScheme.repaint();
 				if(start.getBoolVal() == false){
@@ -283,10 +277,10 @@ public class Main extends JFrame {
 				}
 				LogicalComponent.CLK();
 				CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
-				BUSclock.setText("BUS clock = " + (int)(LogicalComponent.globalClock/2));
-				MEMclock.setText("MEM clock = " + (int)(LogicalComponent.globalClock/3));
+				
+				
 				Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
-				Tmem.setText("Tmem = "+ Integer.toHexString(mem_cnt.getIntVal()));
+				memCnt.setText("Mem = "+ Integer.toHexString(mem_cnt.getIntVal()));
 				PC.setText("PC = "+pc.getIntVal());
 				currentScheme.repaint();
 				if(start.getBoolVal() == false){
@@ -297,10 +291,10 @@ public class Main extends JFrame {
 				while ((cnt.getIntVal() != 0)&&(start.getBoolVal() == true)){
 					LogicalComponent.CLK();
 					CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
-					BUSclock.setText("BUS clock = " + (int)(LogicalComponent.globalClock/2));
-					MEMclock.setText("MEM clock = " + (int)(LogicalComponent.globalClock/3));
+					
+					
 					Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
-					Tmem.setText("Tmem = "+ Integer.toHexString(mem_cnt.getIntVal()));
+					memCnt.setText("Mem = "+ Integer.toHexString(mem_cnt.getIntVal()));
 					PC.setText("PC = "+pc.getIntVal());
 					currentScheme.repaint();
 				}
@@ -325,10 +319,10 @@ public class Main extends JFrame {
 				while (start.getBoolVal() == true) {
 					LogicalComponent.CLK();
 					CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
-					BUSclock.setText("BUS clock = " + (int)(LogicalComponent.globalClock/2));
-					MEMclock.setText("MEM clock = " + (int)(LogicalComponent.globalClock/3));
+					
+					
 					Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
-					Tmem.setText("Tmem = "+ Integer.toHexString(mem_cnt.getIntVal()));
+					memCnt.setText("Mem = "+ Integer.toHexString(mem_cnt.getIntVal()));
 					PC.setText("PC = "+pc.getIntVal());
 					currentScheme.repaint();
 				}
@@ -413,10 +407,10 @@ public class Main extends JFrame {
 				LogicalComponent.initialise();
 				
 				CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
-				BUSclock.setText("BUS clock = " + (int)(LogicalComponent.globalClock/2));
-				MEMclock.setText("MEM clock = " + (int)(LogicalComponent.globalClock/3));
+				
+				
 				Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
-				Tmem.setText("Tmem = "+ Integer.toHexString(mem_cnt.getIntVal()));
+				memCnt.setText("Mem = "+ Integer.toHexString(mem_cnt.getIntVal()));
 				PC.setText("PC ="+pc.getIntVal());
 				phase.setText("Citanje instrukcije");
 				adr.setText("-");
@@ -442,10 +436,10 @@ public class Main extends JFrame {
 				LogicalComponent.initialise();
 				
 				CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
-				BUSclock.setText("BUS clock = " + (int)(LogicalComponent.globalClock/2));
-				MEMclock.setText("MEM clock = " + (int)(LogicalComponent.globalClock/3));
+				
+				
 				Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
-				Tmem.setText("Tmem = "+ Integer.toHexString(mem_cnt.getIntVal()));
+				memCnt.setText("Mem = "+ Integer.toHexString(mem_cnt.getIntVal()));
 				PC.setText("PC ="+pc.getIntVal());
 				phase.setText("Citanje instrukcije");
 				adr.setText("-");
