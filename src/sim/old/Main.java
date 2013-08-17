@@ -60,22 +60,22 @@ public class Main extends JFrame {
 	List listOfShemes = new List();
 	GuiScheme currentScheme;
 
-	Asembler asm = new Asembler();
+//	Asembler asm = new Asembler();
 
-	CPURegister cpuregs = new CPURegister();
-	public static JDialog dialogRegs = new JDialog();
-
-	Memory guimem = new Memory();
-	public static JDialog dialogMem = new JDialog();
-	public void update(Graphics g){
-		paint(g);
-	}
+//	CPURegister cpuregs = new CPURegister();
+//	public static JDialog dialogRegs = new JDialog();
+//
+//	Memory guimem = new Memory();
+//	public static JDialog dialogMem = new JDialog();
+//	public void update(Graphics g){
+//		paint(g);
+//	}
 	
 	public Main() {
 		currentScheme = Adr.getGui();
 
-		cpuregs.init();
-		guimem.init();
+//		cpuregs.init();
+//		guimem.init();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		add("Center",currentScheme);
