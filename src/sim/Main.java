@@ -39,19 +39,12 @@ public class Main extends JFrame {
 	JButton resetnomem = new JButton("RESET BEZ MEM");
 	JPanel menu = new JPanel();
 
-	// Labela za oznaku faze
 	JLabel phaseName = new JLabel("Faza izvrsavanja:");
-	// Labela koja kazuje fazu
 	JLabel phase = new JLabel("Citanje instrukcije");
-	// Dodatne informacije o fazi
 	JLabel phaseExtraInfo = new JLabel("-");
-	// Labela za oznaku nacina adresiranja
 	JLabel adrName = new JLabel("Adresiranje:");
-	// Labela koja kazuje nacina adresiranja
 	JLabel adr = new JLabel("-");
-	// Oznaka operacije
 	JLabel operName = new JLabel("Operacija:");
-	// Operacija
 	JLabel oper = new JLabel("-");
 
 	// treba dodati opcioju da se resetuje sistem na pocetno stanje
@@ -64,8 +57,8 @@ public class Main extends JFrame {
 	List listOfShemes = new List();
 	GuiScheme currentScheme;
 	PrintStream log;
+	JScrollPane scrollPane;
 
-//	Asembler asm = new Asembler();
 
 //	CPURegister cpuregs = new CPURegister();
 //	public static JDialog dialogRegs = new JDialog();
@@ -106,7 +99,8 @@ public class Main extends JFrame {
                 dispose();
             }
         });
-		add("Center",currentScheme);
+        scrollPane = new JScrollPane(currentScheme);
+		add("Center", scrollPane);
 		
 		Dimension d=new Dimension(160, 620);
 		east.setMaximumSize(d);
@@ -263,8 +257,7 @@ public class Main extends JFrame {
 				} else if ("76".equals(step))
 					phaseExtraInfo.setText("Cuvanje konteksta");
 				else if ("8d".equals(step))
-					phaseExtraInfo
-							.setText("Utvrdjivanje adrese prekidne rutine");
+					phaseExtraInfo.setText("Utvrdjivanje adrese prekidne rutine");
 
 				// System.out.println(step + ":   " +
 				// Bus3.FFC.in[0].getBoolVal() + Bus3.FFC.out[0].getBoolVal() +
@@ -405,7 +398,7 @@ public class Main extends JFrame {
 				}
 				REG pc = ((REG)components.get("fetch1.pc"));
 				pc.initVal(start);
-				JOptionPane.showMessageDialog(load.getParent().getParent().getParent(), "Program ucitan u memoriju", "Ucitavanje programa", JOptionPane.PLAIN_MESSAGE);
+				JOptionPane.showMessageDialog(Main.this, "Program ucitan u memoriju", "Ucitavanje programa", JOptionPane.PLAIN_MESSAGE);
 			}
 		});
 		load.setAlignmentX(CENTER_ALIGNMENT);
@@ -552,13 +545,13 @@ public class Main extends JFrame {
 		east.add(southeast);
 		add("East", east);
 
-		listOfShemes.add("Arbitrator");
+		//listOfShemes.add("Arbitrator");
 		listOfShemes.add("Procesor");
 		listOfShemes.add("     Operaciona");
 		listOfShemes.add("          Addr");
-		listOfShemes.add("          Bus 1");
-		listOfShemes.add("          Bus 2");
-		listOfShemes.add("          Bus 3");
+		listOfShemes.add("          Bus");
+//		listOfShemes.add("          Bus 2");
+//		listOfShemes.add("          Bus 3");
 		listOfShemes.add("          Exec 1");
 		listOfShemes.add("          Exec 2");
 		listOfShemes.add("          Exec 3");
@@ -571,19 +564,21 @@ public class Main extends JFrame {
 		listOfShemes.add("          Intr 3");
 		listOfShemes.add("     Upravljacka");
 		listOfShemes.add("          Brojac koraka");
-		listOfShemes.add("          Operacioni 1");
-		listOfShemes.add("          Operacioni 2");
-		listOfShemes.add("          Upravljacki 1");
-		listOfShemes.add("          Upravljacki 2");
-		listOfShemes.add("Memorija");
-		listOfShemes.add("      Operaciona jedinica");
-		listOfShemes.add("      Upravljacka jedinica");
+//		listOfShemes.add("          Operacioni 1");
+//		listOfShemes.add("          Operacioni 2");
+//		listOfShemes.add("          Upravljacki 1");
+//		listOfShemes.add("          Upravljacki 2");
+//		listOfShemes.add("Memorija");
+//		listOfShemes.add("      Operaciona jedinica");
+//		listOfShemes.add("      Upravljacka jedinica");
 
 		listOfShemes.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
 
-				remove(currentScheme);
-				if (listOfShemes.getSelectedItem().equals("          Addr") || listOfShemes.getSelectedItem().equals("Procesor") || listOfShemes.getSelectedItem().equals("     Operaciona")) {
+				//scrollPane.remove(currentScheme);
+				if (listOfShemes.getSelectedItem().equals("          Addr")
+						|| listOfShemes.getSelectedItem().equals("Procesor")
+						|| listOfShemes.getSelectedItem().equals("     Operaciona")) {
 					currentScheme = schemes.get("adr_1.png");
 				} else if (listOfShemes.getSelectedItem().equals(
 						"          Bus")) {
@@ -591,7 +586,7 @@ public class Main extends JFrame {
 				} else if (listOfShemes.getSelectedItem().equals(
 						"          Brojac koraka") || listOfShemes.getSelectedItem().equals(
 						"     Upravljacka")) {
-					currentScheme = schemes.get("uprav_jed_hard.png");
+					currentScheme = schemes.get("upr_jed_hard.png");
 				} else if (listOfShemes.getSelectedItem().equals(
 						"          Exec 1")) {
 					currentScheme = schemes.get("exec_1.png");
@@ -643,8 +638,8 @@ public class Main extends JFrame {
 //						"          Upravljacki 2")) {
 //					currentScheme = Uprav1.getGui();
 //				}
-				add(currentScheme);
-				repaint();
+				remove(scrollPane);
+				add("Center", new JScrollPane(currentScheme));
 				validate();
 			}
 		});
@@ -703,6 +698,7 @@ public class Main extends JFrame {
 	}
 
 	public static void main(String[] args) {
+		LogicalComponent.initMemory = false;
 		LogicalComponent.initialise();
 		new Main();
 	}
