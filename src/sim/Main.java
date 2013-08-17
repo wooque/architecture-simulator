@@ -121,10 +121,6 @@ public class Main extends JFrame {
 
 				CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
 
-				
-				
-				
-				
 				String step = Integer.toHexString(cnt.getIntVal());
 
 				Tcpu.setText("Tcpu = " + step);
@@ -264,8 +260,6 @@ public class Main extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				LogicalComponent.CLK();
 				CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
-				
-				
 				Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
 				memCnt.setText("Mem = "+ Integer.toHexString(mem_cnt.getIntVal()));
 				PC.setText("PC = "+pc.getIntVal());
@@ -277,8 +271,6 @@ public class Main extends JFrame {
 				}
 				LogicalComponent.CLK();
 				CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
-				
-				
 				Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
 				memCnt.setText("Mem = "+ Integer.toHexString(mem_cnt.getIntVal()));
 				PC.setText("PC = "+pc.getIntVal());
@@ -291,8 +283,6 @@ public class Main extends JFrame {
 				while ((cnt.getIntVal() != 0)&&(start.getBoolVal() == true)){
 					LogicalComponent.CLK();
 					CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
-					
-					
 					Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
 					memCnt.setText("Mem = "+ Integer.toHexString(mem_cnt.getIntVal()));
 					PC.setText("PC = "+pc.getIntVal());
@@ -319,8 +309,6 @@ public class Main extends JFrame {
 				while (start.getBoolVal() == true) {
 					LogicalComponent.CLK();
 					CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
-					
-					
 					Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
 					memCnt.setText("Mem = "+ Integer.toHexString(mem_cnt.getIntVal()));
 					PC.setText("PC = "+pc.getIntVal());
@@ -407,8 +395,6 @@ public class Main extends JFrame {
 				LogicalComponent.initialise();
 				
 				CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
-				
-				
 				Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
 				memCnt.setText("Mem = "+ Integer.toHexString(mem_cnt.getIntVal()));
 				PC.setText("PC ="+pc.getIntVal());
@@ -436,8 +422,6 @@ public class Main extends JFrame {
 				LogicalComponent.initialise();
 				
 				CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
-				
-				
 				Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
 				memCnt.setText("Mem = "+ Integer.toHexString(mem_cnt.getIntVal()));
 				PC.setText("PC ="+pc.getIntVal());
