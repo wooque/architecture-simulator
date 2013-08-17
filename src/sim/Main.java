@@ -586,6 +586,11 @@ public class Main extends JFrame {
 		add("West", west);
 		validate();
 		setBounds(0, 0, currentScheme.getWidth() + listOfShemes.getWidth() + asmtext.getWidth() + 320, currentScheme.getHeight() + 40);
+		
+
+		LogicalComponent.initMemory = false;
+		LogicalComponent.initialise();
+		
 		setVisible(true);
 
 //		dialogRegs.setResizable(false);
@@ -624,8 +629,6 @@ public class Main extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		LogicalComponent.initMemory = false;
-		LogicalComponent.initialise();
 		new Main();
 	}
 }
