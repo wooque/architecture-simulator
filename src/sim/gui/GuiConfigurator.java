@@ -71,7 +71,7 @@ public class GuiConfigurator {
 							if(logComp == null) {
 								System.out.println("Non existent pin: "+lineName);
 							} else {
-								logComp.getOut(0);
+								linePin = logComp.getOut(0);
 							}
 						}
 						scheme.addLine(new GuiLine(lineSections, linePin));

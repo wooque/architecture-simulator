@@ -1,7 +1,7 @@
 package sim;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
+//import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.List;
 import java.awt.event.*;
@@ -357,7 +357,7 @@ public class Main extends JFrame {
 		// Dodati labelu koja kazuje fazu
 		phaseName.setAlignmentX(CENTER_ALIGNMENT);
 		northeastII.add(phaseName);
-		phaseName.setFont(new Font("D", 10, 13));
+		//phaseName.setFont(new Font("D", 10, 13));
 		phase.setAlignmentX(CENTER_ALIGNMENT);
 		northeastII.add(phase);
 		phaseExtraInfo.setAlignmentX(CENTER_ALIGNMENT);
@@ -365,13 +365,13 @@ public class Main extends JFrame {
 		// Dodati labelu koja kazuje nacin adresiranja
 		adrName.setAlignmentX(CENTER_ALIGNMENT);
 		northeastII.add(adrName);
-		adrName.setFont(new Font("D", 10, 13));
+		//adrName.setFont(new Font("D", 10, 13));
 		adr.setAlignmentX(CENTER_ALIGNMENT);
 		northeastII.add(adr);
 		// Dodati labelu koja kazuje vrstu operacije
 		operName.setAlignmentX(CENTER_ALIGNMENT);
 		northeastII.add(operName);
-		operName.setFont(new Font("D", 10, 13));
+		//operName.setFont(new Font("D", 10, 13));
 		oper.setAlignmentX(CENTER_ALIGNMENT);
 		northeastII.add(oper);
 		northeast.add(northeastII);
