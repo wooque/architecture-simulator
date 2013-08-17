@@ -1,7 +1,6 @@
 package sim;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-//import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.List;
 import java.awt.event.*;
@@ -17,57 +16,15 @@ import sim.gui.*;
 @SuppressWarnings("serial")
 public class Main extends JFrame {
 
-	JPanel east = new JPanel();
-	JPanel northeast = new JPanel();
-	JPanel southeast = new JPanel();
-	JPanel west = new JPanel();
-
-	JLabel CPUclock = new JLabel("CPU clock = 0");
-	JLabel BUSclock = new JLabel("BUS clock = 0");
-	JLabel MEMclock = new JLabel("MEM clock = 0");
-	JLabel Tcpu = new JLabel("Tcpu = 0");
-	JLabel Tmem = new JLabel("Tmem = 0");
-	JLabel PC = new JLabel("PC = 0");
-	JButton CLK = new JButton("CLK+");
-	JButton INS = new JButton("INS+");
-	JButton PRG = new JButton("PRG+");
-	JLabel asmtxt = new JLabel("Asemblerski kod:");
-
-	JButton reset = new JButton("RESET");
-	JButton registers = new JButton("REGISTRI");
-	JButton memory = new JButton("MEMORIJA");
-	JButton resetnomem = new JButton("RESET BEZ MEM");
-	JPanel menu = new JPanel();
-
-	JLabel phaseName = new JLabel("Faza izvrsavanja:");
-	JLabel phase = new JLabel("Citanje instrukcije");
-	JLabel phaseExtraInfo = new JLabel("-");
-	JLabel adrName = new JLabel("Adresiranje:");
-	JLabel adr = new JLabel("-");
-	JLabel operName = new JLabel("Operacija:");
-	JLabel oper = new JLabel("-");
-
-	// treba dodati opcioju da se resetuje sistem na pocetno stanje
-
-	JTextArea asmtext = new JTextArea();
-	
-	JButton load = new JButton("Ucitaj u memoriju");
-	
-
-	List listOfShemes = new List();
 	GuiScheme currentScheme;
 	PrintStream log;
 	JScrollPane scrollPane;
-
 
 //	CPURegister cpuregs = new CPURegister();
 //	public static JDialog dialogRegs = new JDialog();
 //
 //	Memory guimem = new Memory();
 //	public static JDialog dialogMem = new JDialog();
-//	public void update(Graphics g){
-//		paint(g);
-//	}
 	
 	public Main() {
 		try {
@@ -87,6 +44,43 @@ public class Main extends JFrame {
 		final Pin start = components.get("exec2.start").getOut(0);
 		
 		currentScheme = schemes.get("adr_1.png");
+		JPanel east = new JPanel();
+		JPanel northeast = new JPanel();
+		JPanel southeast = new JPanel();
+		JPanel west = new JPanel();
+
+		final JButton CLK = new JButton("CLK+");
+		final JButton INS = new JButton("INS+");
+		final JButton PRG = new JButton("PRG+");
+		
+
+		final JLabel CPUclock = new JLabel("CPU clock = 0");
+		final JLabel BUSclock = new JLabel("BUS clock = 0");
+		final JLabel MEMclock = new JLabel("MEM clock = 0");
+		final JLabel Tcpu = new JLabel("Tcpu = 0");
+		final JLabel Tmem = new JLabel("Tmem = 0");
+		final JLabel PC = new JLabel("PC = 0");
+		JLabel asmtxt = new JLabel("Asemblerski kod:");
+
+		JButton reset = new JButton("RESET");
+		JButton registers = new JButton("REGISTRI");
+		JButton memory = new JButton("MEMORIJA");
+		JButton resetnomem = new JButton("RESET BEZ MEM");
+		JPanel menu = new JPanel();
+
+		JLabel phaseName = new JLabel("Faza izvrsavanja:");
+		final JLabel phase = new JLabel("Citanje instrukcije");
+		final JLabel phaseExtraInfo = new JLabel("-");
+		JLabel adrName = new JLabel("Adresiranje:");
+		final JLabel adr = new JLabel("-");
+		JLabel operName = new JLabel("Operacija:");
+		final JLabel oper = new JLabel("-");
+		
+		JButton load = new JButton("Ucitaj u memoriju");
+
+		JTextArea asmtext = new JTextArea();
+
+		final List listOfShemes = new List();
 
 //		cpuregs.init();
 //		guimem.init();
@@ -582,18 +576,16 @@ public class Main extends JFrame {
 			}
 		});
 		west.setLayout(new BorderLayout());
-		west.add(listOfShemes, BorderLayout.CENTER);
+		west.add("Center", listOfShemes);
 		menu.setLayout(new GridLayout(4, 1));
 		menu.add(memory);
 		menu.add(registers);
 		menu.add(reset);
 		menu.add(resetnomem);
-		west.add(menu, BorderLayout.SOUTH);
+		west.add("South", menu);
 		add("West", west);
-		;
 		validate();
-		setBounds(0, 0, currentScheme.getWidth() + listOfShemes.getWidth()
-				+ asmtext.getWidth() + 320, currentScheme.getHeight() + 40);
+		setBounds(0, 0, currentScheme.getWidth() + listOfShemes.getWidth() + asmtext.getWidth() + 320, currentScheme.getHeight() + 40);
 		setVisible(true);
 
 //		dialogRegs.setResizable(false);
