@@ -1,13 +1,16 @@
-package sim.old;
-
-import java.awt.*;
+package sim;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.List;
 import java.awt.event.*;
+import java.util.HashMap;
 
 import javax.swing.*;
 
-import sim.Asembler;
+import sim.assembler.Assembler;
 import sim.components.*;
-//import sim.Debuger;
 import sim.gui.*;
 
 @SuppressWarnings("serial")
@@ -72,7 +75,19 @@ public class Main extends JFrame {
 //	}
 	
 	public Main() {
-		currentScheme = Adr.getGui();
+		
+		Configurator conf = new Configurator("conf/schemes.conf");
+		final HashMap<String, LogicalComponent> components = conf.getComponents();
+		
+		GuiConfigurator guiConf = new GuiConfigurator(components, "conf/gui.conf");
+		final HashMap<String, GuiScheme> schemes = guiConf.getGuiSchemes();
+		
+		final Pin pc = components.get("fetch1.pc").getOut(0);
+		final Pin cnt = components.get("uprav.cnt").getOut(0);
+		final Pin mem_cnt = components.get("mem_uprav.memacc").getOut(0);
+		final Pin start = components.get("exec2.start").getOut(0);
+		
+		currentScheme = schemes.get("adr_1.png");
 
 //		cpuregs.init();
 //		guimem.init();
@@ -115,17 +130,15 @@ public class Main extends JFrame {
 				
 				MEMclock.setText("MEM clock = " + (int)(LogicalComponent.globalClock/3));
 				
-				String step = Integer.toHexString(Counter.CNT.getOut(0)
-						.getIntVal());
+				String step = Integer.toHexString(cnt.getIntVal());
 
 				Tcpu.setText("Tcpu = " + step);
 				
-				String stepmem = Integer.toHexString(Mem12.REGCNT.getOut(0)
-						.getIntVal());
+				String stepmem = Integer.toHexString(mem_cnt.getIntVal());
 
 				Tmem.setText("Tmem = " + stepmem);
 				
-				PC.setText("PC = "+Fetch1.PC.getVal());
+				PC.setText("PC = "+pc.getIntVal());
 
 				// U zavisnosti od koraka T postavi fazu
 				if ("0".equals(step)) {
@@ -192,34 +205,34 @@ public class Main extends JFrame {
 				else if ("52".equals(step))
 					oper.setText("NOT");
 				else if ("54".equals(step)){
-					if(Fetch2.ASR().getBoolVal())oper.setText("ASR");
-					else if (Fetch2.LSR().getBoolVal())oper.setText("LSR");
-					else if (Fetch2.ROR().getBoolVal())oper.setText("ROR");
-					else if (Fetch2.RORC().getBoolVal())oper.setText("RORC");
+//					if(Fetch2.ASR().getBoolVal())oper.setText("ASR");
+//					else if (Fetch2.LSR().getBoolVal())oper.setText("LSR");
+//					else if (Fetch2.ROR().getBoolVal())oper.setText("ROR");
+//					else if (Fetch2.RORC().getBoolVal())oper.setText("RORC");
 				}
 				else if ("56".equals(step)){
-					if(Fetch2.ASL().getBoolVal())oper.setText("ASL");
-					else if (Fetch2.LSL().getBoolVal())oper.setText("LSL");
-					else if (Fetch2.ROL().getBoolVal())oper.setText("ROL");
-					else if (Fetch2.ROLC().getBoolVal())oper.setText("ROLC");
+//					if(Fetch2.ASL().getBoolVal())oper.setText("ASL");
+//					else if (Fetch2.LSL().getBoolVal())oper.setText("LSL");
+//					else if (Fetch2.ROL().getBoolVal())oper.setText("ROL");
+//					else if (Fetch2.ROLC().getBoolVal())oper.setText("ROLC");
 				}
 				else if ("58".equals(step)){
-					if(Fetch2.BEQL().getBoolVal())oper.setText("BEQL");
-					else if (Fetch2.BNEQ().getBoolVal())oper.setText("BNEQ");
-					else if (Fetch2.BNEG().getBoolVal())oper.setText("BNEG");
-					else if (Fetch2.BNNG().getBoolVal())oper.setText("BNNG");
-					else if (Fetch2.BOVF().getBoolVal())oper.setText("BOVF");
-					else if (Fetch2.BNVF().getBoolVal())oper.setText("BNVF");
-					else if (Fetch2.BCR().getBoolVal())oper.setText("BCR");
-					else if (Fetch2.BNCR().getBoolVal())oper.setText("BNCR");
-					else if (Fetch2.BGRT().getBoolVal())oper.setText("BGRT");
-					else if (Fetch2.BGRE().getBoolVal())oper.setText("BGRE");
-					else if (Fetch2.BLSS().getBoolVal())oper.setText("BLSS");
-					else if (Fetch2.BLEQ().getBoolVal())oper.setText("BLEQ");
-					else if (Fetch2.BGRTU().getBoolVal())oper.setText("BGRTU");
-					else if (Fetch2.BGREU().getBoolVal())oper.setText("BGREU");
-					else if (Fetch2.BLSSU().getBoolVal())oper.setText("BLSSU");
-					else if (Fetch2.BLEQU().getBoolVal())oper.setText("BLEQU");
+//					if(Fetch2.BEQL().getBoolVal())oper.setText("BEQL");
+//					else if (Fetch2.BNEQ().getBoolVal())oper.setText("BNEQ");
+//					else if (Fetch2.BNEG().getBoolVal())oper.setText("BNEG");
+//					else if (Fetch2.BNNG().getBoolVal())oper.setText("BNNG");
+//					else if (Fetch2.BOVF().getBoolVal())oper.setText("BOVF");
+//					else if (Fetch2.BNVF().getBoolVal())oper.setText("BNVF");
+//					else if (Fetch2.BCR().getBoolVal())oper.setText("BCR");
+//					else if (Fetch2.BNCR().getBoolVal())oper.setText("BNCR");
+//					else if (Fetch2.BGRT().getBoolVal())oper.setText("BGRT");
+//					else if (Fetch2.BGRE().getBoolVal())oper.setText("BGRE");
+//					else if (Fetch2.BLSS().getBoolVal())oper.setText("BLSS");
+//					else if (Fetch2.BLEQ().getBoolVal())oper.setText("BLEQ");
+//					else if (Fetch2.BGRTU().getBoolVal())oper.setText("BGRTU");
+//					else if (Fetch2.BGREU().getBoolVal())oper.setText("BGREU");
+//					else if (Fetch2.BLSSU().getBoolVal())oper.setText("BLSSU");
+//					else if (Fetch2.BLEQU().getBoolVal())oper.setText("BLEQU");
 				}
 				else if ("5b".equals(step))
 					oper.setText("JMP");
@@ -229,7 +242,7 @@ public class Main extends JFrame {
 					oper.setText("JSR");
 				else if ("64".equals(step))
 					oper.setText("RTI");
-				else if (("6c".equals(step))&&(Fetch2.RTS().getBoolVal()))
+				else if (("6c".equals(step))&&(components.get("fetch2.rts").getOut(0).getBoolVal()))
 					oper.setText("RTS");
 				else if ("75".equals(step)) {
 					phase.setText("Opsluzivanje prekida");
@@ -247,7 +260,7 @@ public class Main extends JFrame {
 				currentScheme.repaint();
 				// cpuregs.repaint(); suvisno je jer kad se otvori dijalog tada
 				// ne moze da se krece kroz simulaciju
-				if(Exec2.START().getBoolVal() == false){
+				if(start.getBoolVal() == false){
 					CLK.setEnabled(false);
 					INS.setEnabled(false);
 					PRG.setEnabled(false);
@@ -267,15 +280,11 @@ public class Main extends JFrame {
 				CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
 				BUSclock.setText("BUS clock = " + (int)(LogicalComponent.globalClock/2));
 				MEMclock.setText("MEM clock = " + (int)(LogicalComponent.globalClock/3));
-				Tcpu.setText("Tcpu = "
-						+ Integer
-								.toHexString(Counter.CNT.getOut(0).getIntVal()));
-				Tmem.setText("Tmem = "
-						+ Integer
-								.toHexString(Mem12.REGCNT.getOut(0).getIntVal()));
-				PC.setText("PC = "+Fetch1.PC.getVal());
+				Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
+				Tmem.setText("Tmem = "+ Integer.toHexString(mem_cnt.getIntVal()));
+				PC.setText("PC = "+pc.getIntVal());
 				currentScheme.repaint();
-				if(Exec2.START().getBoolVal() == false){
+				if(start.getBoolVal() == false){
 					CLK.setEnabled(false);
 					INS.setEnabled(false);
 					PRG.setEnabled(false);
@@ -284,35 +293,27 @@ public class Main extends JFrame {
 				CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
 				BUSclock.setText("BUS clock = " + (int)(LogicalComponent.globalClock/2));
 				MEMclock.setText("MEM clock = " + (int)(LogicalComponent.globalClock/3));
-				Tcpu.setText("Tcpu = "
-						+ Integer
-								.toHexString(Counter.CNT.getOut(0).getIntVal()));
-				Tmem.setText("Tmem = "
-						+ Integer
-								.toHexString(Mem12.REGCNT.getOut(0).getIntVal()));
-				PC.setText("PC = "+Fetch1.PC.getVal());
+				Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
+				Tmem.setText("Tmem = "+ Integer.toHexString(mem_cnt.getIntVal()));
+				PC.setText("PC = "+pc.getIntVal());
 				currentScheme.repaint();
-				if(Exec2.START().getBoolVal() == false){
+				if(start.getBoolVal() == false){
 					CLK.setEnabled(false);
 					INS.setEnabled(false);
 					PRG.setEnabled(false);
 				}
 				// vrti se dok ne dodje do T00
-				while ((Counter.CNT.getOut(0).getIntVal() != 0)&&(Exec2.START().getBoolVal() == true)){
+				while ((cnt.getIntVal() != 0)&&(start.getBoolVal() == true)){
 					LogicalComponent.CLK();
 					CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
 					BUSclock.setText("BUS clock = " + (int)(LogicalComponent.globalClock/2));
 					MEMclock.setText("MEM clock = " + (int)(LogicalComponent.globalClock/3));
-					Tcpu.setText("Tcpu = "
-							+ Integer.toHexString(Counter.CNT.getOut(0)
-									.getIntVal()));
-					Tmem.setText("Tmem = "
-							+ Integer
-									.toHexString(Mem12.REGCNT.getOut(0).getIntVal()));
-					PC.setText("PC = "+Fetch1.PC.getVal());
+					Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
+					Tmem.setText("Tmem = "+ Integer.toHexString(mem_cnt.getIntVal()));
+					PC.setText("PC = "+pc.getIntVal());
 					currentScheme.repaint();
 				}
-				if(Exec2.START().getBoolVal() == false){
+				if(start.getBoolVal() == false){
 					CLK.setEnabled(false);
 					INS.setEnabled(false);
 					PRG.setEnabled(false);
@@ -331,18 +332,14 @@ public class Main extends JFrame {
 		PRG.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
-				while (Exec2.START().getBoolVal() == true) {
+				while (start.getBoolVal() == true) {
 					LogicalComponent.CLK();
 					CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
 					BUSclock.setText("BUS clock = " + (int)(LogicalComponent.globalClock/2));
 					MEMclock.setText("MEM clock = " + (int)(LogicalComponent.globalClock/3));
-					Tcpu.setText("Tcpu = "
-							+ Integer.toHexString(Counter.CNT.getOut(0)
-									.getIntVal()));
-					Tmem.setText("Tmem = "
-							+ Integer
-									.toHexString(Mem12.REGCNT.getOut(0).getIntVal()));
-					PC.setText("PC = "+Fetch1.PC.getVal());
+					Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
+					Tmem.setText("Tmem = "+ Integer.toHexString(mem_cnt.getIntVal()));
+					PC.setText("PC = "+pc.getIntVal());
 					currentScheme.repaint();
 				}
 				CLK.setEnabled(false);
@@ -386,63 +383,69 @@ public class Main extends JFrame {
 
 			public void actionPerformed(ActionEvent arg0) {
 				String asmcode = asmtext.getText();
-				asm.asembly(asmcode);
-				JOptionPane.showMessageDialog(load.getParent().getParent()
-						.getParent(), "Program ucitan u memoriju",
-						"Ucitavanje programa", JOptionPane.PLAIN_MESSAGE);
+				Assembler asm = new Assembler(asmcode);
+				Object[] code = asm.getCode();
+				int start = asm.getStartOfCode();
+				MEM mem = ((MEM)components.get("mem_oper.mem"));
+				for(int i = 0; i < code.length; i++) {
+					mem.write(start + i, (Integer)code[i]);
+				}
+				REG pc = ((REG)components.get("fetch1.pc"));
+				pc.initVal(start);
+				JOptionPane.showMessageDialog(load.getParent().getParent().getParent(), "Program ucitan u memoriju", "Ucitavanje programa", JOptionPane.PLAIN_MESSAGE);
 			}
 		});
 		load.setAlignmentX(CENTER_ALIGNMENT);
 
-		memory.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent arg0) {
-
-				// JFrame mem = new JFrame();
-
-				// mem.setBounds(currentScheme.getX() + currentScheme.getWidth()
-				// 8, currentScheme.getY(), 600, 600);
-
-				// mem.setLayout(new GridLayout(8 * 32, 8 * 32));
-
-				// mem.getContentPane().setBackground(Color.WHITE);
-
-				// for (int i = 0; i < 64 * 1024; i++)
-				// mem.add(new JLabel(" mem" + i + ": " + Mem11.readMEM(i)));
-
-				// mem.setVisible(true);
-
-				dialogMem.setVisible(true);
-				currentScheme.repaint();
-
-			}
-		});
-		memory.setAlignmentX(CENTER_ALIGNMENT);
-
-		registers.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent arg0) {
-
-				// JFrame regs = new JFrame();
-
-				// regs.setBounds(currentScheme.getX() +
-				// currentScheme.getWidth()
-				// / 8, currentScheme.getY(), 600, 600);
-
-				// regs.setLayout(new GridLayout(8, 8));
-
-				// regs.getContentPane().setBackground(Color.WHITE);
-
-				// for (int i = 0; i < 64; i++)
-				// regs.add(new JLabel(" Reg" + i + ": " + Adr.readGPR(i)));
-
-				dialogRegs.setVisible(true);
-
-				currentScheme.repaint();
-
-			}
-		});
-		registers.setAlignmentX(CENTER_ALIGNMENT);
+//		memory.addActionListener(new ActionListener() {
+//
+//			public void actionPerformed(ActionEvent arg0) {
+//
+//				// JFrame mem = new JFrame();
+//
+//				// mem.setBounds(currentScheme.getX() + currentScheme.getWidth()
+//				// 8, currentScheme.getY(), 600, 600);
+//
+//				// mem.setLayout(new GridLayout(8 * 32, 8 * 32));
+//
+//				// mem.getContentPane().setBackground(Color.WHITE);
+//
+//				// for (int i = 0; i < 64 * 1024; i++)
+//				// mem.add(new JLabel(" mem" + i + ": " + Mem11.readMEM(i)));
+//
+//				// mem.setVisible(true);
+//
+//				dialogMem.setVisible(true);
+//				currentScheme.repaint();
+//
+//			}
+//		});
+//		memory.setAlignmentX(CENTER_ALIGNMENT);
+//
+//		registers.addActionListener(new ActionListener() {
+//
+//			public void actionPerformed(ActionEvent arg0) {
+//
+//				// JFrame regs = new JFrame();
+//
+//				// regs.setBounds(currentScheme.getX() +
+//				// currentScheme.getWidth()
+//				// / 8, currentScheme.getY(), 600, 600);
+//
+//				// regs.setLayout(new GridLayout(8, 8));
+//
+//				// regs.getContentPane().setBackground(Color.WHITE);
+//
+//				// for (int i = 0; i < 64; i++)
+//				// regs.add(new JLabel(" Reg" + i + ": " + Adr.readGPR(i)));
+//
+//				dialogRegs.setVisible(true);
+//
+//				currentScheme.repaint();
+//
+//			}
+//		});
+//		registers.setAlignmentX(CENTER_ALIGNMENT);
 
 		reset.addActionListener(new ActionListener() {
 
@@ -456,13 +459,9 @@ public class Main extends JFrame {
 				CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
 				BUSclock.setText("BUS clock = " + (int)(LogicalComponent.globalClock/2));
 				MEMclock.setText("MEM clock = " + (int)(LogicalComponent.globalClock/3));
-				Tcpu.setText("Tcpu = "
-						+ Integer
-								.toHexString(Counter.CNT.getOut(0).getIntVal()));
-				Tmem.setText("Tmem = "
-						+ Integer
-								.toHexString(Mem12.REGCNT.getOut(0).getIntVal()));
-				PC.setText("PC ="+Fetch1.PC.getVal());
+				Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
+				Tmem.setText("Tmem = "+ Integer.toHexString(mem_cnt.getIntVal()));
+				PC.setText("PC ="+pc.getIntVal());
 				phase.setText("Citanje instrukcije");
 				adr.setText("-");
 				oper.setText("-");
@@ -496,13 +495,9 @@ public class Main extends JFrame {
 				CPUclock.setText("CPU clock = " + LogicalComponent.globalClock);
 				BUSclock.setText("BUS clock = " + (int)(LogicalComponent.globalClock/2));
 				MEMclock.setText("MEM clock = " + (int)(LogicalComponent.globalClock/3));
-				Tcpu.setText("Tcpu = "
-						+ Integer
-								.toHexString(Counter.CNT.getOut(0).getIntVal()));
-				Tmem.setText("Tmem = "
-						+ Integer
-								.toHexString(Mem12.REGCNT.getOut(0).getIntVal()));
-				PC.setText("PC ="+Fetch1.PC.getVal());
+				Tcpu.setText("Tcpu = "+ Integer.toHexString(cnt.getIntVal()));
+				Tmem.setText("Tmem = "+ Integer.toHexString(mem_cnt.getIntVal()));
+				PC.setText("PC ="+pc.getIntVal());
 				phase.setText("Citanje instrukcije");
 				adr.setText("-");
 				oper.setText("-");
@@ -576,72 +571,65 @@ public class Main extends JFrame {
 
 				remove(currentScheme);
 				if (listOfShemes.getSelectedItem().equals("          Addr") || listOfShemes.getSelectedItem().equals("Procesor") || listOfShemes.getSelectedItem().equals("     Operaciona")) {
-					currentScheme = Adr.getGui();
+					currentScheme = schemes.get("adr_1.png");
 				} else if (listOfShemes.getSelectedItem().equals(
-						"          Bus 1")) {
-					currentScheme = Bus1.getGui();
-				} else if (listOfShemes.getSelectedItem().equals(
-						"          Bus 2")) {
-					currentScheme = Bus2.getGui();
-				} else if (listOfShemes.getSelectedItem().equals(
-						"          Bus 3")) {
-					currentScheme = Bus3.getGui();
-				} else if (listOfShemes.getSelectedItem().equals("Arbitrator")) {
-					currentScheme = Arbitary.getGui();
+						"          Bus")) {
+					currentScheme = schemes.get("bus_1.png");
 				} else if (listOfShemes.getSelectedItem().equals(
 						"          Brojac koraka") || listOfShemes.getSelectedItem().equals(
 						"     Upravljacka")) {
-					currentScheme = Counter.getGui();
+					currentScheme = schemes.get("uprav_jed_hard.png");
 				} else if (listOfShemes.getSelectedItem().equals(
 						"          Exec 1")) {
-					currentScheme = Exec1.getGui();
+					currentScheme = schemes.get("exec_1.png");
 				} else if (listOfShemes.getSelectedItem().equals(
 						"          Exec 2")) {
-					currentScheme = Exec2.getGui();
+					currentScheme = schemes.get("exec_2.png");
 				} else if (listOfShemes.getSelectedItem().equals(
 						"          Exec 3")) {
-					currentScheme = Exec3.getGui();
+					currentScheme = schemes.get("exec_3.png");
 				} else if (listOfShemes.getSelectedItem().equals(
 						"          Exec 4")) {
-					currentScheme = Exec4.getGui();
+					currentScheme = schemes.get("exec_4.png");
 				} else if (listOfShemes.getSelectedItem().equals(
 						"          Fetch 1")) {
-					currentScheme = Fetch1.getGui();
+					currentScheme = schemes.get("fetch_1.png");
 				} else if (listOfShemes.getSelectedItem().equals(
 						"          Fetch 2")) {
-					currentScheme = Fetch2.getGui();
+					currentScheme = schemes.get("fetch_2.png");
 				} else if (listOfShemes.getSelectedItem().equals(
 						"          Fetch 3")) {
-					currentScheme = Fetch3.getGui();
+					currentScheme = schemes.get("fetch_3.png");
 				} else if (listOfShemes.getSelectedItem().equals(
 						"          Intr 1")) {
-					currentScheme = Intr1.getGui();
+					currentScheme = schemes.get("intr_1.png");
 				} else if (listOfShemes.getSelectedItem().equals(
 						"          Intr 2")) {
-					currentScheme = Intr2.getGui();
+					currentScheme =schemes.get("intr_2.png");
 				} else if (listOfShemes.getSelectedItem().equals(
 						"          Intr 3")) {
-					currentScheme = Intr3.getGui();
-				} else if (listOfShemes.getSelectedItem().equals(
-						"      Operaciona jedinica") || listOfShemes.getSelectedItem().equals(
-						"Memorija")) {
-					currentScheme = Mem11.getGui();
-				} else if (listOfShemes.getSelectedItem().equals(
-						"      Upravljacka jedinica")) {
-					currentScheme = Mem12.getGui();
-				} else if (listOfShemes.getSelectedItem().equals(
-						"          Operacioni 1")) {
-					currentScheme = Oper1.getGui();
-				} else if (listOfShemes.getSelectedItem().equals(
-						"          Operacioni 2")) {
-					currentScheme = Oper2.getGui();
-				} else if (listOfShemes.getSelectedItem().equals(
-						"          Upravljacki 1")) {
-					currentScheme = Uprav2.getGui();
-				} else if (listOfShemes.getSelectedItem().equals(
-						"          Upravljacki 2")) {
-					currentScheme = Uprav1.getGui();
+					currentScheme = schemes.get("intr_3.png");
 				}
+//				} else if (listOfShemes.getSelectedItem().equals(
+//						"      Operaciona jedinica") || listOfShemes.getSelectedItem().equals(
+//						"Memorija")) {
+//					currentScheme = Mem11.getGui();
+//				} else if (listOfShemes.getSelectedItem().equals(
+//						"      Upravljacka jedinica")) {
+//					currentScheme = Mem12.getGui();
+//				} else if (listOfShemes.getSelectedItem().equals(
+//						"          Operacioni 1")) {
+//					currentScheme = Oper1.getGui();
+//				} else if (listOfShemes.getSelectedItem().equals(
+//						"          Operacioni 2")) {
+//					currentScheme = Oper2.getGui();
+//				} else if (listOfShemes.getSelectedItem().equals(
+//						"          Upravljacki 1")) {
+//					currentScheme = Uprav2.getGui();
+//				} else if (listOfShemes.getSelectedItem().equals(
+//						"          Upravljacki 2")) {
+//					currentScheme = Uprav1.getGui();
+//				}
 				add(currentScheme);
 				repaint();
 				validate();
@@ -666,39 +654,39 @@ public class Main extends JFrame {
 		//String asmcode = asmtext.getText();
 		//asm.asembly(asmcode);
 
-		dialogRegs.setResizable(false);
-		dialogRegs.setTitle("CPU registri");
-		dialogRegs.setModal(true);
-		dialogRegs.addWindowListener(new WindowAdapter() {
-
-			public void windowClosing(WindowEvent arg0) {
-				dialogRegs.setVisible(false);
-				currentScheme.repaint();
-			}
-
-		});
-		cpuregs.setSadrzalacRegistara(dialogRegs);
-		dialogRegs.add(cpuregs);
-		dialogRegs.setSize(600, 600);
-		dialogRegs.setLocation(100, 100);
-		dialogRegs.setVisible(false);
-
-		dialogMem.setResizable(false);
-		dialogMem.setTitle("Pregled Memorije");
-		dialogMem.setModal(true);
-		dialogMem.addWindowListener(new WindowAdapter() {
-
-			public void windowClosing(WindowEvent arg0) {
-				dialogMem.setVisible(false);
-				currentScheme.repaint();
-			}
-
-		});
-		guimem.setSadrzalacMemorije(dialogMem);
-		dialogMem.add(guimem);
-		dialogMem.setSize(500, 300);
-		dialogMem.setLocation(100, 100);
-		dialogMem.setVisible(false);
+//		dialogRegs.setResizable(false);
+//		dialogRegs.setTitle("CPU registri");
+//		dialogRegs.setModal(true);
+//		dialogRegs.addWindowListener(new WindowAdapter() {
+//
+//			public void windowClosing(WindowEvent arg0) {
+//				dialogRegs.setVisible(false);
+//				currentScheme.repaint();
+//			}
+//
+//		});
+//		cpuregs.setSadrzalacRegistara(dialogRegs);
+//		dialogRegs.add(cpuregs);
+//		dialogRegs.setSize(600, 600);
+//		dialogRegs.setLocation(100, 100);
+//		dialogRegs.setVisible(false);
+//
+//		dialogMem.setResizable(false);
+//		dialogMem.setTitle("Pregled Memorije");
+//		dialogMem.setModal(true);
+//		dialogMem.addWindowListener(new WindowAdapter() {
+//
+//			public void windowClosing(WindowEvent arg0) {
+//				dialogMem.setVisible(false);
+//				currentScheme.repaint();
+//			}
+//
+//		});
+//		guimem.setSadrzalacMemorije(dialogMem);
+//		dialogMem.add(guimem);
+//		dialogMem.setSize(500, 300);
+//		dialogMem.setLocation(100, 100);
+//		dialogMem.setVisible(false);
 	}
 
 	public static void main(String[] args) {
