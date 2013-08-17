@@ -13,12 +13,22 @@ public class GuiLine {
 
 	public GuiLine(ArrayList<Point> points, Pin pin) {
 		this.points = points;
-		this.pin = pin;
-		updateColor();
+		if(this.pin != null) {
+			this.pin = pin;
+			updateColor();
+		}
+	}
+	
+	public void update(Graphics g) {
+		draw(g, false);
 	}
 
 	public void draw(Graphics g) {
-		if(updateColor()) {
+		draw(g, true);
+	}
+	
+	public void draw(Graphics g, boolean forceDraw) {
+		if(updateColor() || forceDraw) {
 			Graphics2D g2d = ((Graphics2D) g);
 			g2d.setColor(color);
 			Point last = null;
@@ -33,15 +43,23 @@ public class GuiLine {
 	}
 
 	private boolean updateColor() {
-		if (pin.isHighZ() && (color == null || color != Color.GREEN)) {
-			color = Color.GREEN;
-			return true;
+		if (pin.isHighZ()) { 
+			if (color == null || color != Color.GREEN) {
+				color = Color.GREEN;
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			if (pin.isBool()) {
-				if (pin.getBoolVal() && (color == null || color != Color.RED)) {
-					color = Color.RED;
-					return true;
-				} else if(!pin.getBoolVal() && (color == null || color != Color.BLUE)) {
+				if (pin.getBoolVal()) { 
+					if(color == null || color != Color.RED) {
+						color = Color.RED;
+						return true;
+					} else {
+						return false;
+					}
+				} else if(color == null || color != Color.BLUE) {
 					color = Color.BLUE;
 					return true;
 				} else {

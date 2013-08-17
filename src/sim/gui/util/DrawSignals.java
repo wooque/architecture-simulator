@@ -530,7 +530,7 @@ public class DrawSignals extends JFrame {
 					last = curr;
 				}
 			}
-			guiScheme.repaint();
+			guiScheme.updateScheme();;
 		}
     }
     

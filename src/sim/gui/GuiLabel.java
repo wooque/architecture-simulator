@@ -11,15 +11,25 @@ public class GuiLabel {
 	private int x;
 	private int y;
 
-	public GuiLabel(int xx, int yy, Pin pinko) {
-		x = xx;
-		y = yy;
-		pin = pinko;
-		updateLabel();
+	public GuiLabel(int x, int y, Pin pin) {
+		this.x = x;
+		this.y = y;
+		if(pin != null) {
+			this.pin = pin;
+			updateLabel();
+		}
+	}
+	
+	public void update(Graphics g) {
+		draw(g, false);
+	}
+	
+	public void draw(Graphics g) {
+		draw(g, true);
 	}
 
-	public void draw(Graphics g) {
-		if (updateLabel()) {
+	public void draw(Graphics g, boolean forceDraw) {
+		if (updateLabel() || forceDraw) {
 			Graphics2D g2d = (Graphics2D) g;
 			g2d.setColor(Color.BLACK);
 			//g2d.setFont(new Font("Arial", Font.BOLD, 12));
@@ -29,9 +39,13 @@ public class GuiLabel {
 	}
 
 	private boolean updateLabel() {
-		if(pin.isHighZ() && (label == null || !label.equals("Z"))) {
-			label = "Z";
-			return true;
+		if(pin.isHighZ()) {
+			if (label == null || !label.equals("Z")) {
+				label = "Z";
+				return true;
+			} else {
+				return false;
+			}
 		} else if (label == null || !label.equals(Integer.toHexString(pin.getIntVal()))) {
 			label = Integer.toHexString(pin.getIntVal());
 			return true;

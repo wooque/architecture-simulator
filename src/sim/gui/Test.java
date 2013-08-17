@@ -19,9 +19,9 @@ public class Test {
 		for(Map.Entry<String, GuiScheme> schemeEntry: schemes.entrySet()) {
 			String schemeName = schemeEntry.getKey();
 			GuiScheme scheme = schemeEntry.getValue();
-			System.out.println(schemeName+" :"+(scheme != null));
+			System.out.println(schemeName+": "+(scheme != null));
 		}
-		
+		System.out.println();
 		System.out.println("time taken: " + (end - begin) + " ms");
 	}
 

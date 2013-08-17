@@ -36,10 +36,10 @@ public class GuiScheme extends JPanel{
 	public void updateScheme() {
 		Graphics g = getGraphics();
 		for(GuiLine gl:lines){
-			gl.draw(g);
+			gl.update(g);
 		}
 		for(GuiLabel gl:labels){
-			gl.draw(g);
+			gl.update(g);
 		}
 	}
 	
