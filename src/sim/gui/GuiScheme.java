@@ -1,16 +1,13 @@
 package sim.gui;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
-import javax.swing.JPanel;
 
-@SuppressWarnings("serial")
-public class GuiScheme extends JPanel{
+public class GuiScheme{
 	
 	private BufferedImage image;
 	private ArrayList<GuiLine> lines;
@@ -20,35 +17,7 @@ public class GuiScheme extends JPanel{
 		setImage(filename);
 	}
 	
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		g.drawImage(image, 0, 0, null);
-		for(GuiLine gl:lines){
-			gl.draw(g);
-		}
-		for(GuiLabel gl:labels){
-			gl.draw(g);
-		}
-		//getToolkit().sync();
-	}
-	
-	public void updateScheme() {
-		Graphics g = getGraphics();
-		for(GuiLine gl:lines){
-			gl.update(g);
-		}
-		for(GuiLabel gl:labels){
-			gl.update(g);
-		}
-	}
-	
-	public BufferedImage getImage() {
-		return image;
-	}
-
 	public void setImage(String filename) {
-		setBackground(Color.WHITE);
 		if (filename != null && !filename.isEmpty()) {
 			try {
 				image = ImageIO.read(new File(filename));
@@ -58,13 +27,12 @@ public class GuiScheme extends JPanel{
 		}
 		lines = new ArrayList<GuiLine>();
 		labels = new ArrayList<GuiLabel>();
-		Dimension size = new Dimension(image != null ? image.getWidth() : 600, image != null ? image.getHeight() : 600);
-		setSize(size);
-		setPreferredSize(size);
-		setMaximumSize(size);
-		setMinimumSize(size);
 	}
-
+	
+	public BufferedImage getImage() {
+		return image;
+	}
+	
 	public ArrayList<GuiLine> getLines() {
 		return lines;
 	}

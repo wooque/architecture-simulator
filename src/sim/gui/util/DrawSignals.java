@@ -16,6 +16,7 @@ import sim.gui.*;
 @SuppressWarnings("serial")
 public class DrawSignals extends JFrame {
 
+    private GuiSchemeRenderer guiRenderer;
     private GuiScheme guiScheme;
     private GuiLine guiLine;
     private ZoomPanel zoomPanel;
@@ -64,7 +65,7 @@ public class DrawSignals extends JFrame {
                 guiScheme.removeLine(guiLine);
                 guiLine = new GuiLine(tempPoints, Pin.TRUE);
                 guiScheme.addLine(guiLine);
-                guiScheme.repaint();
+                guiRenderer.repaint();
             }
         }
     	
@@ -88,14 +89,14 @@ public class DrawSignals extends JFrame {
                     tempPoints.add(last);
                     tempPoints.add(curr);
                     guiScheme.addLine(new GuiLine(tempPoints, Pin.TRUE));
-                    guiScheme.repaint();
+                    guiRenderer.repaint();
                 }
                 last = curr;
         }
 
         private void rightClick() {
             guiScheme.removeLine(guiLine);
-            guiScheme.repaint();
+            guiRenderer.repaint();
             last = null;
             if (line.size() > 1) {
                 String s = (String) JOptionPane.showInputDialog(DrawSignals.this, "Signal Name:", "New signal", JOptionPane.PLAIN_MESSAGE, null, null, null);
@@ -109,7 +110,7 @@ public class DrawSignals extends JFrame {
                 for (GuiLine gl : guiScheme.getLines()) {
                     gl.setPin(Pin.FALSE);
                 }
-                guiScheme.repaint();
+                guiRenderer.repaint();
             }
             line = new ArrayList<Point>();
         }
@@ -122,9 +123,10 @@ public class DrawSignals extends JFrame {
         lines = new ArrayList<Line>();
 
         guiScheme = new GuiScheme("");
+        guiRenderer = new GuiSchemeRenderer(guiScheme);
         SignalMouseAdapter signalMouseAdapter = new SignalMouseAdapter();
-        guiScheme.addMouseMotionListener(signalMouseAdapter);
-        guiScheme.addMouseListener(signalMouseAdapter);
+        guiRenderer.addMouseMotionListener(signalMouseAdapter);
+        guiRenderer.addMouseListener(signalMouseAdapter);
         
         JPanel east = new JPanel();
         east.setLayout(new BoxLayout(east, BoxLayout.Y_AXIS));
@@ -223,7 +225,7 @@ public class DrawSignals extends JFrame {
         
         southeast.add(Box.createVerticalGlue());
         
-        JScrollPane scrollPane = new JScrollPane(guiScheme);
+        JScrollPane scrollPane = new JScrollPane(guiRenderer);
         scrollPane.setSize(800, 600);
         add("Center", scrollPane);
         add("East", east);
@@ -420,7 +422,7 @@ public class DrawSignals extends JFrame {
 					allLines.put(schemeName, schemeLines);
 				}
 				confFileReader.close();
-				guiScheme.repaint();
+				guiRenderer.repaint();
 			} catch (FileNotFoundException e) {
 				System.out.println("Conf file not found!");
 			} catch (IOException e) {
@@ -436,6 +438,7 @@ public class DrawSignals extends JFrame {
             setTitle(chooser.getSelectedFile().getPath());
             
             guiScheme.setImage(chooser.getSelectedFile().getPath());
+            guiRenderer.switchScheme(guiScheme);
             zoomPanel.setImage(guiScheme.getImage());
             
             removeAllSignals();
@@ -495,7 +498,7 @@ public class DrawSignals extends JFrame {
 					last = curr;
 				}
 			}
-			guiScheme.repaint();
+			guiRenderer.repaint();
     	}
     }
     
@@ -506,7 +509,7 @@ public class DrawSignals extends JFrame {
         selected = null;
         listModel.clear();
         guiScheme.setLines(new ArrayList<GuiLine>());
-        guiScheme.repaint();
+        guiRenderer.repaint();
     }
     
     private void setPinForSelected(Pin in) {
@@ -530,7 +533,7 @@ public class DrawSignals extends JFrame {
 					last = curr;
 				}
 			}
-			guiScheme.updateScheme();;
+			guiRenderer.updateScheme();;
 		}
     }
     

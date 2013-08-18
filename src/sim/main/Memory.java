@@ -1,4 +1,4 @@
-package sim.old;
+package sim.main;
 
 import java.awt.*;
 import java.awt.event.*;

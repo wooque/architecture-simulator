@@ -1,4 +1,4 @@
-package main;
+package sim.main;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,7 +8,7 @@ import javax.swing.*;
 import sim.components.*;
 
 
-public class CPURegister extends JPanel implements ActionListener
+public class Register extends JPanel implements ActionListener
 
 {
 
@@ -31,7 +31,7 @@ public class CPURegister extends JPanel implements ActionListener
 		this.sadrzalacRegistara = sadrzalacRegistara;
 	}
 
-	public CPURegister() {
+	public Register() {
 
 		setLayout(new BorderLayout());
 		setBackground(Color.white);
