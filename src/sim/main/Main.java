@@ -1,5 +1,5 @@
 package sim.main;
-import java.awt.BorderLayout;
+
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.*;
@@ -27,7 +27,6 @@ public class Main extends JFrame {
 	private ArrayList<String> steps;
 	private ArrayList<String> desc;
 	private GuiSchemeRenderer schemeRenderer;
-	private JScrollPane scrollPane;
 	private JButton clk = new JButton("CLK+");
 	private JButton ins = new JButton("INS+");
 	private JButton prg = new JButton("PRG+");
@@ -36,7 +35,7 @@ public class Main extends JFrame {
 	private JLabel memTimeLabel = new JLabel("MEM time = 0");
 	private JLabel pcLabel = new JLabel("PC = 0");
 	private JLabel descLabel = new JLabel("! Čitanje instrukcije !", SwingConstants.CENTER);
-	private JLabel stepLabel = new JLabel("<html>T00 brnotSTART, val00;", SwingConstants.CENTER);
+	private JLabel stepLabel = new JLabel("<html>brnotSTART, val00;", SwingConstants.CENTER);
 
 //	CPURegister cpuregs = new CPURegister();
 //	public static JDialog dialogRegs = new JDialog();
@@ -64,45 +63,17 @@ public class Main extends JFrame {
 		desc = stepLoader.getDesc();
 		
 		schemeRenderer = new GuiSchemeRenderer(schemes.get("adr_1.png"));
-		
-		JPanel east = new JPanel();
-		JPanel northeast = new JPanel();
-		JPanel southeast = new JPanel();
-		JPanel west = new JPanel();
-		
-		JButton reset = new JButton("RESET");
-		JButton registers = new JButton("REGISTRI");
-		JButton memory = new JButton("MEMORIJA");
-		JPanel menu = new JPanel();
-		JButton load = new JButton("Učitaj u memoriju");
 		Menu menuItems = new Menu(schemes, schemeRenderer, "conf/menu.conf", log);
-
-//		cpuregs.init();
-//		guimem.init();
-        
-        scrollPane = new JScrollPane(schemeRenderer);
+		JScrollPane scrollPane = new JScrollPane(schemeRenderer);
         scrollPane.setSize(700, 700);
-		add("Center", scrollPane);
-		
-		Dimension d = new Dimension(160, 620);
-		east.setMaximumSize(d);
-		east.setMinimumSize(d);
-		east.setPreferredSize(d);
-		east.setSize(d);
-
-		northeast.setLayout(new GridLayout(2, 1));
-		JPanel northeastI=new JPanel();
-		northeastI.setLayout(new BoxLayout(northeastI, BoxLayout.Y_AXIS));
-		clockLabel.setAlignmentX(CENTER_ALIGNMENT);
-		northeastI.add(clockLabel);
+        
+        clockLabel.setAlignmentX(CENTER_ALIGNMENT);
+		descLabel.setAlignmentX(CENTER_ALIGNMENT);
+		stepLabel.setAlignmentX(CENTER_ALIGNMENT);
 		cntLabel.setAlignmentX(CENTER_ALIGNMENT);
-		northeastI.add(cntLabel);
 		memTimeLabel.setAlignmentX(CENTER_ALIGNMENT);
-		northeastI.add(memTimeLabel);
 		pcLabel.setAlignmentX(CENTER_ALIGNMENT);
-		northeastI.add(pcLabel);
-		northeast.add(northeastI);
-
+		
 		clk.addActionListener(new ActionListener() {
 
 			@Override
@@ -111,8 +82,6 @@ public class Main extends JFrame {
 			}
 		});
 		clk.setAlignmentX(CENTER_ALIGNMENT);
-		northeastI.add(clk);
-		
 		
 		ins.addActionListener(new ActionListener() {
 
@@ -123,9 +92,6 @@ public class Main extends JFrame {
 		});
 		ins.setAlignmentX(CENTER_ALIGNMENT);
 		
-		JPanel child=new JPanel(new GridLayout(1,2));
-		child.add(ins);
-		
 		prg.addActionListener(new ActionListener() {
 
 			@Override
@@ -134,17 +100,8 @@ public class Main extends JFrame {
 			}
 		});
 		prg.setAlignmentX(CENTER_ALIGNMENT);
-		child.add(prg);
-		northeastI.add(child);
 		
-		JPanel northeastII=new JPanel();
-		northeastII.setLayout(new BoxLayout(northeastII, BoxLayout.Y_AXIS));
-		descLabel.setAlignmentX(CENTER_ALIGNMENT);
-		northeastII.add(descLabel);
-		stepLabel.setAlignmentX(CENTER_ALIGNMENT);
-		northeastII.add(stepLabel);
-		northeast.add(northeastII);
-
+		JButton load = new JButton("Učitaj program");
 		load.addActionListener(new ActionListener() {
 
 			@Override
@@ -153,29 +110,8 @@ public class Main extends JFrame {
 			}
 		});
 		load.setAlignmentX(CENTER_ALIGNMENT);
-
-//		memory.addActionListener(new ActionListener() {
-//
-//			public void actionPerformed(ActionEvent arg0) {
-//
-//				dialogMem.setVisible(true);
-//				currentScheme.repaint();
-//
-//			}
-//		});
-//		memory.setAlignmentX(CENTER_ALIGNMENT);
-//
-//		registers.addActionListener(new ActionListener() {
-//
-//			public void actionPerformed(ActionEvent arg0) {
-//
-//				dialogRegs.setVisible(true);
-//				currentScheme.repaint();
-//
-//			}
-//		});
-//		registers.setAlignmentX(CENTER_ALIGNMENT);
-
+		
+		JButton reset = new JButton("Reset");
 		reset.addActionListener(new ActionListener() {
 
 			@Override
@@ -184,25 +120,96 @@ public class Main extends JFrame {
 			}
 		});
 		reset.setAlignmentX(CENTER_ALIGNMENT);
-
-		southeast.setLayout(new BoxLayout(southeast, BoxLayout.Y_AXIS));
 		
-		southeast.add(load);
+		JButton memory = new JButton("Memorija");
+//		memory.addActionListener(new ActionListener() {
+//
+//			public void actionPerformed(ActionEvent arg0) {
+//
+//				dialogMem.setVisible(true);
+//				currentScheme.repaint();
+//			}
+//		});
+		memory.setAlignmentX(CENTER_ALIGNMENT);
+		JButton registers = new JButton("Registri");
+//		registers.addActionListener(new ActionListener() {
+//
+//		public void actionPerformed(ActionEvent arg0) {
+//
+//				dialogRegs.setVisible(true);
+//				currentScheme.repaint();
+//			}
+//		});
+		registers.setAlignmentX(CENTER_ALIGNMENT);
+	
+//		cpuregs.init();
+//		guimem.init();
+
+		add("Center", scrollPane);
+		
+		JPanel west = new JPanel();
+		west.add(menuItems);
+		add("West", west);
+		
+		JPanel east = new JPanel();
+		Dimension size = new Dimension(200, 700);
+		east.setSize(size);
+		east.setPreferredSize(size);
+		east.setMinimumSize(size);
 		east.setLayout(new GridLayout(2, 1));
-		east.add(northeast);
+		
+		JPanel northEast = new JPanel();
+		northEast.setLayout(new GridLayout(2, 1));
+		
+		JPanel northNorthEast = new JPanel();
+		northNorthEast.setLayout(new BoxLayout(northNorthEast, BoxLayout.Y_AXIS));
+		northNorthEast.add(Box.createVerticalGlue());
+		northNorthEast.add(clockLabel);
+		northNorthEast.add(Box.createVerticalGlue());
+		northNorthEast.add(cntLabel);
+		northNorthEast.add(Box.createVerticalGlue());
+		northNorthEast.add(memTimeLabel);
+		northNorthEast.add(Box.createVerticalGlue());
+		northNorthEast.add(pcLabel);
+		northNorthEast.add(Box.createVerticalGlue());
+		northNorthEast.add(descLabel);
+		northNorthEast.add(Box.createVerticalGlue());
+		northNorthEast.add(stepLabel);
+		northNorthEast.add(Box.createVerticalGlue());
+		northEast.add(northNorthEast);
+		
+		JPanel southNorthEast = new JPanel();
+		southNorthEast.setLayout(new BoxLayout(southNorthEast, BoxLayout.Y_AXIS));
+		southNorthEast.add(Box.createVerticalGlue());
+		southNorthEast.add(clk);
+		southNorthEast.add(Box.createVerticalGlue());
+		southNorthEast.add(ins);
+		southNorthEast.add(Box.createVerticalGlue());
+		southNorthEast.add(prg);
+		southNorthEast.add(Box.createVerticalGlue());
+		northEast.add(southNorthEast);
+		
+		east.add(northEast);
+		
+		JPanel southeast = new JPanel();
+		southeast.setLayout(new BoxLayout(southeast, BoxLayout.Y_AXIS));
+		southeast.add(Box.createVerticalGlue());
+		southeast.add(load);
+		southeast.add(Box.createVerticalGlue());
+		southeast.add(reset);
+		southeast.add(Box.createVerticalGlue());
+		southeast.add(memory);
+		southeast.add(Box.createVerticalGlue());
+		southeast.add(registers);
+		southeast.add(Box.createVerticalGlue());
 		east.add(southeast);
+		
 		add("East", east);
 
-		west.setLayout(new BorderLayout());
-		west.add("Center", menuItems);
-		menu.setLayout(new GridLayout(4, 1));
-		menu.add(memory);
-		menu.add(registers);
-		menu.add(reset);
-		west.add("South", menu);
-		add("West", west);
 		validate();
-		setBounds(0, 0, scrollPane.getWidth() + menuItems.getWidth() + 400, scrollPane.getHeight() + 40);
+		size = new Dimension(scrollPane.getWidth() + menuItems.getWidth() + east.getWidth(), scrollPane.getHeight());
+		setSize(size);
+		setPreferredSize(size);
 
 		LogicalComponent.initMemory = false;
 		LogicalComponent.initialise();

@@ -49,10 +49,10 @@ public class StepsLoader {
 						steps.add("");
 						desc.add(currDesc);
 					}
-					currStep = "<html>"+line;
+					currStep = "<html>"+line.substring(3, line.length());
 				} else {
 					
-					currStep = currStep+"<br>    "+line;
+					currStep = currStep+"<br>"+line;
 				}
 				
 				line = reader.readLine();
