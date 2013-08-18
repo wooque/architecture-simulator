@@ -19,15 +19,15 @@ public class GuiLine {
 		}
 	}
 	
-	public void update(Graphics g) {
-		draw(g, false);
+	public void update(Graphics g, int x, int y) {
+		draw(g, x, y, false);
 	}
 
-	public void draw(Graphics g) {
-		draw(g, true);
+	public void draw(Graphics g, int x, int y) {
+		draw(g, x, y, true);
 	}
 	
-	public void draw(Graphics g, boolean forceDraw) {
+	public void draw(Graphics g, int x, int y, boolean forceDraw) {
 		if(updateColor() || forceDraw) {
 			Graphics2D g2d = ((Graphics2D) g);
 			g2d.setColor(color);
@@ -35,7 +35,7 @@ public class GuiLine {
 			for (Point p : points) {
 				if (last != null) {
 					g2d.setStroke(new BasicStroke(2));
-					g2d.drawLine(last.x, last.y, p.x, p.y);
+					g2d.drawLine(x + last.x, y + last.y, x + p.x, y + p.y);
 				}
 				last = p;
 			}

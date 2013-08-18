@@ -3,6 +3,7 @@ package sim.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
@@ -19,9 +20,12 @@ public class GuiSchemeRenderer extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(guiScheme.getImage(), 0, 0, null);
+		BufferedImage image = guiScheme.getImage();
+		int x = (getWidth() - image.getWidth())/2;
+		int y = (getHeight() - image.getHeight())/2;
+		g.drawImage(image, x, y, null);
 		for(GuiLine gl: guiScheme.getLines()){
-			gl.draw(g);
+			gl.draw(g, x, y);
 		}
 		for(GuiLabel gl: guiScheme.getLabels()){
 			gl.draw(g);
@@ -30,8 +34,11 @@ public class GuiSchemeRenderer extends JPanel {
 	
 	public void updateScheme() {
 		Graphics g = getGraphics();
+		BufferedImage image = guiScheme.getImage();
+		int x = (getWidth() - image.getWidth())/2;
+		int y = (getHeight() - image.getHeight())/2;
 		for(GuiLine gl: guiScheme.getLines()){
-			gl.update(g);
+			gl.update(g, x, y);
 		}
 		for(GuiLabel gl: guiScheme.getLabels()){
 			gl.update(g);

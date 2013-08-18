@@ -58,6 +58,9 @@ public class Main extends JFrame {
 		memTime = components.get("mem_uprav.memacc").getOut(0);
 		start = components.get("exec2.start").getOut(0);
 		
+		LogicalComponent.initMemory = false;
+		LogicalComponent.initialise();
+		
 		StepsLoader stepLoader = new StepsLoader("conf/steps.conf", log);
 		steps = stepLoader.getSteps();
 		desc = stepLoader.getDesc();
@@ -156,53 +159,52 @@ public class Main extends JFrame {
 		east.setSize(size);
 		east.setPreferredSize(size);
 		east.setMinimumSize(size);
-		east.setLayout(new GridLayout(2, 1));
+		east.setLayout(new GridLayout(5, 1));
 		
-		JPanel northEast = new JPanel();
-		northEast.setLayout(new GridLayout(2, 1));
 		
-		JPanel northNorthEast = new JPanel();
-		northNorthEast.setLayout(new BoxLayout(northNorthEast, BoxLayout.Y_AXIS));
-		northNorthEast.add(Box.createVerticalGlue());
-		northNorthEast.add(clockLabel);
-		northNorthEast.add(Box.createVerticalGlue());
-		northNorthEast.add(cntLabel);
-		northNorthEast.add(Box.createVerticalGlue());
-		northNorthEast.add(memTimeLabel);
-		northNorthEast.add(Box.createVerticalGlue());
-		northNorthEast.add(pcLabel);
-		northNorthEast.add(Box.createVerticalGlue());
-		northNorthEast.add(descLabel);
-		northNorthEast.add(Box.createVerticalGlue());
-		northNorthEast.add(stepLabel);
-		northNorthEast.add(Box.createVerticalGlue());
-		northEast.add(northNorthEast);
+		JPanel east1 = new JPanel();
+		east1.setLayout(new BoxLayout(east1, BoxLayout.Y_AXIS));
+		east1.add(Box.createVerticalGlue());
+		east1.add(clockLabel);
+		east1.add(Box.createVerticalGlue());
+		east1.add(cntLabel);
+		east1.add(Box.createVerticalGlue());
+		east1.add(memTimeLabel);
+		east1.add(Box.createVerticalGlue());
+		east1.add(pcLabel);
+		east1.add(Box.createVerticalGlue());
+		east1.add(descLabel);
+		east1.add(Box.createVerticalGlue());
+		east1.add(stepLabel);
+		east1.add(Box.createVerticalGlue());
+		east.add(east1);
 		
-		JPanel southNorthEast = new JPanel();
-		southNorthEast.setLayout(new BoxLayout(southNorthEast, BoxLayout.Y_AXIS));
-		southNorthEast.add(Box.createVerticalGlue());
-		southNorthEast.add(clk);
-		southNorthEast.add(Box.createVerticalGlue());
-		southNorthEast.add(ins);
-		southNorthEast.add(Box.createVerticalGlue());
-		southNorthEast.add(prg);
-		southNorthEast.add(Box.createVerticalGlue());
-		northEast.add(southNorthEast);
+		JPanel east2 = new JPanel();
+		east2.setLayout(new BoxLayout(east2, BoxLayout.Y_AXIS));
+		east2.add(Box.createVerticalGlue());
+		east2.add(clk);
+		east2.add(Box.createVerticalGlue());
+		east2.add(ins);
+		east2.add(Box.createVerticalGlue());
+		east2.add(prg);
+		east2.add(Box.createVerticalGlue());
+		east.add(east2);
 		
-		east.add(northEast);
+		east.add(new JPanel());
 		
-		JPanel southeast = new JPanel();
-		southeast.setLayout(new BoxLayout(southeast, BoxLayout.Y_AXIS));
-		southeast.add(Box.createVerticalGlue());
-		southeast.add(load);
-		southeast.add(Box.createVerticalGlue());
-		southeast.add(reset);
-		southeast.add(Box.createVerticalGlue());
-		southeast.add(memory);
-		southeast.add(Box.createVerticalGlue());
-		southeast.add(registers);
-		southeast.add(Box.createVerticalGlue());
-		east.add(southeast);
+		JPanel east3 = new JPanel();
+		east3.setLayout(new BoxLayout(east3, BoxLayout.Y_AXIS));
+		east3.add(Box.createVerticalGlue());
+		east3.add(load);
+		east3.add(Box.createVerticalGlue());
+		east3.add(reset);
+		east3.add(Box.createVerticalGlue());
+		east3.add(memory);
+		east3.add(Box.createVerticalGlue());
+		east3.add(registers);
+		east3.add(Box.createVerticalGlue());
+		
+		east.add(east3);
 		
 		add("East", east);
 
@@ -210,9 +212,6 @@ public class Main extends JFrame {
 		size = new Dimension(scrollPane.getWidth() + menuItems.getWidth() + east.getWidth(), scrollPane.getHeight());
 		setSize(size);
 		setPreferredSize(size);
-
-		LogicalComponent.initMemory = false;
-		LogicalComponent.initialise();
 		
         addWindowListener(new WindowAdapter() {
 
@@ -352,6 +351,11 @@ public class Main extends JFrame {
 	}
 	
 	public static void main(String[] args) {
+//		try {
+//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		long begin = System.currentTimeMillis();
 		new Main();
 		System.out.println("startup: "+(System.currentTimeMillis() - begin)+" ms");
