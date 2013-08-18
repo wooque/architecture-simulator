@@ -7,11 +7,9 @@ import javax.swing.*;
 
 import sim.components.*;
 
-public class Memory extends JPanel implements ActionListener
+@SuppressWarnings("serial")
+public class Memory extends JPanel implements ActionListener {
 
-{
-
-	private static final long serialVersionUID = 1L;
 	private JButton read;
 	private JButton write;
 	private JButton cancel;
@@ -35,176 +33,32 @@ public class Memory extends JPanel implements ActionListener
 		this.sadrzalacMemorije = sadrzalacMemorije;
 	}
 
-	public void setMemory(MEM m) {
-		mem = m;
-	}
+	public Memory(MEM mem) {
 
-	public Memory() {
-
+		this.mem = mem;
 		setLayout(new BorderLayout());
 		setBackground(Color.white);
-		mem = Mem11.getMEM();
-
-	}
-
-	public void init() {
 		Color bgcolor = Color.white;
 		JPanel dataPanel = new JPanel(new GridLayout(10, 1));
 		dataPanel.setBackground(bgcolor);
-		
 
 		data = new JTextField[100];
 
-		JPanel prvi = new JPanel(new GridLayout(1, 10));
-		prvi.setBackground(bgcolor);
-		for (int i = 0; i < 10; i++) {
-
-			data[i] = new JTextField(5);// 5 je broj kolona
-			data[i].setEnabled(false);
-			data[i].setDisabledTextColor(Color.BLACK);
-			data[i].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-			data[i].setColumns(3);
-			data[i].setText(Integer.toHexString(mem.read(i)));
-			prvi.add(data[i]);
+		for(int j = 0; j < 100; j+=10) {
+			JPanel temp = new JPanel(new GridLayout(1, 10));
+			temp.setBackground(bgcolor);
+			for (int i = j; i < j + 10; i++) {
+	
+				data[i] = new JTextField(5);// 5 je broj kolona
+				data[i].setEnabled(false);
+				data[i].setDisabledTextColor(Color.BLACK);
+				data[i].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+				data[i].setColumns(3);
+				data[i].setText(Integer.toHexString(mem.read(i)));
+				temp.add(data[i]);
+			}
+			dataPanel.add(temp);
 		}
-
-		dataPanel.add(prvi);
-
-		JPanel drugi = new JPanel(new GridLayout(1, 10));
-		drugi.setBackground(bgcolor);
-		for (int i = 10; i < 20; i++) {
-
-			data[i] = new JTextField(5);// 5 je broj kolona
-			data[i].setEnabled(false);
-			data[i].setDisabledTextColor(Color.BLACK);
-			data[i].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-			data[i].setColumns(3);
-			data[i].setText(Integer.toHexString(mem.read(i)));
-			drugi.add(data[i]);
-		}
-
-		dataPanel.add(drugi);
-
-		JPanel treci = new JPanel(new GridLayout(1, 10));
-		treci.setBackground(bgcolor);
-		for (int i = 20; i < 30; i++) {
-
-			data[i] = new JTextField(5);// 5 je broj kolona
-			data[i].setEnabled(false);
-			data[i].setDisabledTextColor(Color.BLACK);
-			data[i].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-			data[i].setColumns(3);
-			data[i].setText(Integer.toHexString(mem.read(i)));
-			
-			treci.add(data[i]);
-		}
-
-		dataPanel.add(treci);
-
-		JPanel cetvrti = new JPanel(new GridLayout(1, 10));
-		cetvrti.setBackground(bgcolor);
-		for (int i = 30; i < 40; i++) {
-
-			data[i] = new JTextField(5);// 5 je broj kolona
-			data[i].setEnabled(false);
-			data[i].setDisabledTextColor(Color.BLACK);
-			data[i].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-			data[i].setColumns(3);
-			data[i].setText(Integer.toHexString(mem.read(i)));
-			cetvrti.add(data[i]);
-		}
-
-		dataPanel.add(cetvrti);
-
-		JPanel peti = new JPanel(new GridLayout(1, 10));
-		peti.setBackground(bgcolor);
-		for (int i = 40; i < 50; i++) {
-
-			data[i] = new JTextField(5);// 5 je broj kolona
-			data[i].setEnabled(false);
-			data[i].setDisabledTextColor(Color.BLACK);
-			data[i].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-			data[i].setColumns(3);
-			data[i].setText(Integer.toHexString(mem.read(i)));
-			peti.add(data[i]);
-		}
-
-		dataPanel.add(peti);
-
-		JPanel sesti = new JPanel(new GridLayout(1, 10));
-		sesti.setBackground(bgcolor);
-		for (int i = 50; i < 60; i++) {
-
-			data[i] = new JTextField(5);// 5 je broj kolona
-			data[i].setEnabled(false);
-			data[i].setDisabledTextColor(Color.BLACK);
-			data[i].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-			data[i].setColumns(3);
-			data[i].setText(Integer.toHexString(mem.read(i)));
-			sesti.add(data[i]);
-		}
-
-		dataPanel.add(sesti);
-
-		JPanel sedmi = new JPanel(new GridLayout(1, 10));
-		sedmi.setBackground(bgcolor);
-		for (int i = 60; i < 70; i++) {
-
-			data[i] = new JTextField(5);// 5 je broj kolona
-			data[i].setEnabled(false);
-			data[i].setDisabledTextColor(Color.BLACK);
-			data[i].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-			data[i].setColumns(3);
-			data[i].setText(Integer.toHexString(mem.read(i)));
-			sedmi.add(data[i]);
-		}
-
-		dataPanel.add(sedmi);
-
-		JPanel osmi = new JPanel(new GridLayout(1, 10));
-		osmi.setBackground(bgcolor);
-		for (int i = 70; i < 80; i++) {
-
-			data[i] = new JTextField(5);// 5 je broj kolona
-			data[i].setEnabled(false);
-			data[i].setDisabledTextColor(Color.BLACK);
-			data[i].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-			data[i].setColumns(3);
-			data[i].setText(Integer.toHexString(mem.read(i)));
-			osmi.add(data[i]);
-		}
-
-		dataPanel.add(osmi);
-
-		JPanel deveti = new JPanel(new GridLayout(1, 10));
-		deveti.setBackground(bgcolor);
-		for (int i = 80; i < 90; i++) {
-
-			data[i] = new JTextField(5);// 5 je broj kolona
-			data[i].setEnabled(false);
-			data[i].setDisabledTextColor(Color.BLACK);
-			data[i].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-			data[i].setColumns(3);
-			data[i].setText(Integer.toHexString(mem.read(i)));
-			deveti.add(data[i]);
-		}
-
-		dataPanel.add(deveti);
-
-		JPanel deseti = new JPanel(new GridLayout(1, 10));
-		deseti.setBackground(bgcolor);
-		for (int i = 90; i < 100; i++) {
-
-			data[i] = new JTextField(5);// 5 je broj kolona
-			data[i].setEnabled(false);
-			data[i].setDisabledTextColor(Color.BLACK);
-			data[i].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-			data[i].setColumns(3);
-			data[i].setText(Integer.toHexString(mem.read(i)));
-			deseti.add(data[i]);
-		}
-
-		dataPanel.add(deseti);
 
 		JPanel BigCenter = new JPanel(new BorderLayout());
 		BigCenter.add(dataPanel, "Center");
@@ -466,10 +320,8 @@ public class Memory extends JPanel implements ActionListener
 	}
 
 	public static void main(String[] args) {
-		Memory guimem = new Memory();
-		guimem.setMemory(new MEM(64 * 1024));
+		Memory guimem = new Memory(new MEM(64 * 1024));
 		JDialog dialogMem = new JDialog();
-		guimem.init();
 		dialogMem.setResizable(false);
 		dialogMem.setTitle("Pregled Memorije");
 		dialogMem.setModal(true);
@@ -477,7 +329,6 @@ public class Memory extends JPanel implements ActionListener
 
 			public void windowClosing(WindowEvent arg0) {
 				// dialogMem.setVisible(false);
-
 			}
 
 		});

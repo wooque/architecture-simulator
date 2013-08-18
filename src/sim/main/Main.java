@@ -37,11 +37,10 @@ public class Main extends JFrame {
 	private JLabel descLabel = new JLabel("! Čitanje instrukcije !", SwingConstants.CENTER);
 	private JLabel stepLabel = new JLabel("<html>brnotSTART, val00;", SwingConstants.CENTER);
 
-//	CPURegister cpuregs = new CPURegister();
-//	public static JDialog dialogRegs = new JDialog();
-//
-//	Memory guimem = new Memory();
-//	public static JDialog dialogMem = new JDialog();
+//	private Register cpuregs;
+//	private JDialog dialogRegs = new JDialog();
+	private Memory guimem;
+	private JDialog dialogMem = new JDialog();
 	
 	public Main() {
 		try {
@@ -57,6 +56,9 @@ public class Main extends JFrame {
 		cnt = components.get("uprav.cnt").getOut(0);
 		memTime = components.get("mem_uprav.memacc").getOut(0);
 		start = components.get("exec2.start").getOut(0);
+		
+		guimem = new Memory((MEM) components.get("mem_oper.mem"));
+//		cpuregs = new Register(components);
 		
 		LogicalComponent.initMemory = false;
 		LogicalComponent.initialise();
@@ -125,28 +127,26 @@ public class Main extends JFrame {
 		reset.setAlignmentX(CENTER_ALIGNMENT);
 		
 		JButton memory = new JButton("Memorija");
-//		memory.addActionListener(new ActionListener() {
-//
-//			public void actionPerformed(ActionEvent arg0) {
-//
-//				dialogMem.setVisible(true);
-//				currentScheme.repaint();
-//			}
-//		});
+		memory.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				dialogMem.setVisible(true);
+				schemeRenderer.repaint();
+			}
+		});
 		memory.setAlignmentX(CENTER_ALIGNMENT);
-		JButton registers = new JButton("Registri");
+		
+//		JButton registers = new JButton("Registri");
 //		registers.addActionListener(new ActionListener() {
 //
-//		public void actionPerformed(ActionEvent arg0) {
-//
+//			@Override
+//			public void actionPerformed(ActionEvent arg0) {
 //				dialogRegs.setVisible(true);
-//				currentScheme.repaint();
+//				schemeRenderer.repaint();
 //			}
 //		});
-		registers.setAlignmentX(CENTER_ALIGNMENT);
-	
-//		cpuregs.init();
-//		guimem.init();
+//		registers.setAlignmentX(CENTER_ALIGNMENT);
 
 		add("Center", scrollPane);
 		
@@ -201,7 +201,7 @@ public class Main extends JFrame {
 		east3.add(Box.createVerticalGlue());
 		east3.add(memory);
 		east3.add(Box.createVerticalGlue());
-		east3.add(registers);
+//		east3.add(registers);
 		east3.add(Box.createVerticalGlue());
 		
 		east.add(east3);
@@ -218,6 +218,7 @@ public class Main extends JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
             	log.close();
+            	dialogMem.dispose();
                 dispose();
             }
         });
@@ -229,9 +230,10 @@ public class Main extends JFrame {
 //		dialogRegs.setModal(true);
 //		dialogRegs.addWindowListener(new WindowAdapter() {
 //
+//			@Override
 //			public void windowClosing(WindowEvent arg0) {
 //				dialogRegs.setVisible(false);
-//				currentScheme.repaint();
+//				schemeRenderer.repaint();
 //			}
 //
 //		});
@@ -240,23 +242,24 @@ public class Main extends JFrame {
 //		dialogRegs.setSize(600, 600);
 //		dialogRegs.setLocation(100, 100);
 //		dialogRegs.setVisible(false);
-//
-//		dialogMem.setResizable(false);
-//		dialogMem.setTitle("Pregled Memorije");
-//		dialogMem.setModal(true);
-//		dialogMem.addWindowListener(new WindowAdapter() {
-//
-//			public void windowClosing(WindowEvent arg0) {
-//				dialogMem.setVisible(false);
-//				currentScheme.repaint();
-//			}
-//
-//		});
-//		guimem.setSadrzalacMemorije(dialogMem);
-//		dialogMem.add(guimem);
-//		dialogMem.setSize(500, 300);
-//		dialogMem.setLocation(100, 100);
-//		dialogMem.setVisible(false);
+
+		dialogMem.setResizable(false);
+		dialogMem.setTitle("Pregled Memorije");
+		dialogMem.setModal(true);
+		dialogMem.addWindowListener(new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				dialogMem.setVisible(false);
+				schemeRenderer.repaint();
+			}
+
+		});
+		guimem.setSadrzalacMemorije(dialogMem);
+		dialogMem.add(guimem);
+		dialogMem.setSize(500, 300);
+		dialogMem.setLocation(100, 100);
+		dialogMem.setVisible(false);
 	}
 
 	private void setLabels() {
