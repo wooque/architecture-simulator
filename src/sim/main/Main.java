@@ -315,6 +315,7 @@ public class Main extends JFrame {
 	
 	private void executeCLK() {
 		LogicalComponent.CLK();
+		checkEnd();
 		setLabels();
 		schemeRenderer.updateScheme();
 	}
