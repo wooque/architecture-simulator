@@ -21,9 +21,13 @@ public class GuiSchemeRenderer extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		BufferedImage image = guiScheme.getImage();
-		int x = (getWidth() - image.getWidth())/2;
-		int y = (getHeight() - image.getHeight())/2;
-		g.drawImage(image, x, y, null);
+		int x = 0;
+		int y = 0;
+		if(image != null) {
+			x = (getWidth() - image.getWidth())/2;
+			y = (getHeight() - image.getHeight())/2;
+			g.drawImage(image, x, y, null);
+		}
 		for(GuiLine gl: guiScheme.getLines()){
 			gl.draw(g, x, y);
 		}
