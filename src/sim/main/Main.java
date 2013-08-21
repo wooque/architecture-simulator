@@ -70,7 +70,9 @@ public class Main extends JFrame {
 		schemeRenderer = new GuiSchemeRenderer(schemes.get("adr_1.png"));
 		Menu menuItems = new Menu(schemes, schemeRenderer, "conf/menu.conf", log);
 		JScrollPane scrollPane = new JScrollPane(schemeRenderer);
-        scrollPane.setSize(700, 700);
+		Dimension scrollSize = new Dimension(800, 600);
+        scrollPane.setSize(scrollSize);
+        scrollPane.setPreferredSize(scrollSize);
         
         clockLabel.setAlignmentX(CENTER_ALIGNMENT);
 		descLabel.setAlignmentX(CENTER_ALIGNMENT);
@@ -263,11 +265,11 @@ public class Main extends JFrame {
 	}
 
 	private void setLabels() {
-		clockLabel.setText("CPU clock = " + LogicalComponent.globalClock);
+		clockLabel.setText("clock = " + LogicalComponent.globalClock);
 		int step = cnt.getIntVal();
-		cntLabel.setText("Tcpu = "+ Integer.toHexString(step));
+		cntLabel.setText("T = "+ Integer.toHexString(step));
 		pcLabel.setText("PC ="+pc.getIntVal());
-		memTimeLabel.setText("Mem cnt = "+ Integer.toHexString(memTime.getIntVal()));
+		memTimeLabel.setText("Mem time = "+ Integer.toHexString(memTime.getIntVal()));
 		descLabel.setText(desc.get(step));
 		stepLabel.setText(steps.get(step));
 	}
