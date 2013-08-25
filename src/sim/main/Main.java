@@ -37,8 +37,8 @@ public class Main extends JFrame {
 	private JLabel descLabel = new JLabel("! Čitanje instrukcije !", SwingConstants.CENTER);
 	private JLabel stepLabel = new JLabel("<html>brnotSTART, val00;", SwingConstants.CENTER);
 
-//	private Register cpuregs;
-//	private JDialog dialogRegs = new JDialog();
+	private Register cpuregs;
+	private JDialog dialogRegs = new JDialog();
 	private Memory guimem;
 	private JDialog dialogMem = new JDialog();
 	
@@ -58,7 +58,7 @@ public class Main extends JFrame {
 		start = components.get("exec2.start").getOut(0);
 		
 		guimem = new Memory((MEM) components.get("mem_oper.mem"));
-//		cpuregs = new Register(components);
+		cpuregs = new Register(components);
 		
 		LogicalComponent.initMemory = false;
 		LogicalComponent.initialise();
@@ -139,16 +139,16 @@ public class Main extends JFrame {
 		});
 		memory.setAlignmentX(CENTER_ALIGNMENT);
 		
-//		JButton registers = new JButton("Registri");
-//		registers.addActionListener(new ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent arg0) {
-//				dialogRegs.setVisible(true);
-//				schemeRenderer.repaint();
-//			}
-//		});
-//		registers.setAlignmentX(CENTER_ALIGNMENT);
+		JButton registers = new JButton("Registri");
+		registers.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				dialogRegs.setVisible(true);
+				schemeRenderer.repaint();
+			}
+		});
+		registers.setAlignmentX(CENTER_ALIGNMENT);
 
 		add("Center", scrollPane);
 		
@@ -203,7 +203,7 @@ public class Main extends JFrame {
 		east3.add(Box.createVerticalGlue());
 		east3.add(memory);
 		east3.add(Box.createVerticalGlue());
-//		east3.add(registers);
+		east3.add(registers);
 		east3.add(Box.createVerticalGlue());
 		
 		east.add(east3);
@@ -227,23 +227,23 @@ public class Main extends JFrame {
 		
 		setVisible(true);
 
-//		dialogRegs.setResizable(false);
-//		dialogRegs.setTitle("CPU registri");
-//		dialogRegs.setModal(true);
-//		dialogRegs.addWindowListener(new WindowAdapter() {
-//
-//			@Override
-//			public void windowClosing(WindowEvent arg0) {
-//				dialogRegs.setVisible(false);
-//				schemeRenderer.repaint();
-//			}
-//
-//		});
-//		cpuregs.setSadrzalacRegistara(dialogRegs);
-//		dialogRegs.add(cpuregs);
-//		dialogRegs.setSize(600, 600);
-//		dialogRegs.setLocation(100, 100);
-//		dialogRegs.setVisible(false);
+		dialogRegs.setResizable(false);
+		dialogRegs.setTitle("CPU registri");
+		dialogRegs.setModal(true);
+		dialogRegs.addWindowListener(new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				dialogRegs.setVisible(false);
+				schemeRenderer.repaint();
+			}
+
+		});
+		cpuregs.setSadrzalacRegistara(dialogRegs);
+		dialogRegs.add(cpuregs);
+		dialogRegs.setSize(600, 600);
+		dialogRegs.setLocation(100, 100);
+		dialogRegs.setVisible(false);
 
 		dialogMem.setResizable(false);
 		dialogMem.setTitle("Pregled Memorije");

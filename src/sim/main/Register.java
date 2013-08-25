@@ -42,10 +42,10 @@ public class Register extends JPanel implements ActionListener {
 		REG pc = (REG) components.get("fetch1.pc");
 		REG ir0 = (REG) components.get("fetch1.ir31_24");
 		REG ir1 = (REG) components.get("fetch1.ir23_16");
-		REG ir2 = (REG) components.get("fetch1.ir15_7");
+		REG ir2 = (REG) components.get("fetch1.ir15_8");
 		REG ir3 = (REG) components.get("fetch1.ir7_0");
 		REG sp = (REG) components.get("addr.sp");
-		REG gprar = (REG) components.get("adr.gprar");
+		REG gprar = (REG) components.get("addr.gprar");
 		REG ab = (REG) components.get("exec1.ab");
 		REG bb = (REG) components.get("exec1.bb");
 		REG aw = (REG) components.get("exec1.aw");
@@ -530,9 +530,9 @@ public class Register extends JPanel implements ActionListener {
 
 	public void paint(Graphics g) {
 		super.paint(g);
-		for (int i = 0; i < 81; i++) {
-			regPolja[i].setText(Integer.toHexString(allRegs[i].getVal()));
-		}
+//		for (int i = 0; i < 48; i++) {
+//			regPolja[i].setText(Integer.toHexString(allRegs[i].getVal()));
+//		}
 		
 		PSWbits[0].setText( Integer.toString( pswn.getBoolVal()?1:0 ) );
 		PSWbits[1].setText( Integer.toString( pswz.getBoolVal()?1:0 ) );
