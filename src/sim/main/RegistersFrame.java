@@ -10,7 +10,7 @@ import sim.components.*;
 
 
 @SuppressWarnings("serial")
-public class Register extends JPanel implements ActionListener {
+public class RegistersFrame extends JFrame implements ActionListener {
 
 	private JButton izmeni;
 	private JButton izadji;
@@ -31,8 +31,9 @@ public class Register extends JPanel implements ActionListener {
 		this.sadrzalacRegistara = sadrzalacRegistara;
 	}
 
-	public Register(HashMap<String, LogicalComponent> components) {
+	public RegistersFrame(HashMap<String, LogicalComponent> components) {
 
+		setTitle("Registri");
 		setLayout(new BorderLayout());
 		setBackground(Color.white);
 		allRegs = new REG[16];
@@ -316,7 +317,7 @@ public class Register extends JPanel implements ActionListener {
 		name.setHorizontalAlignment(4);
 		sesti.add(name);
 		PSWbits[0] = new JTextField();
-		PSWbits[0].setEnabled(false);
+//		PSWbits[0].setEnabled(false);
 		PSWbits[0].setColumns(3);
 		PSWbits[0].setText( Integer.toString( (pswn.getBoolVal()?1:0) ) );
 		temp = new JPanel();
@@ -329,7 +330,7 @@ public class Register extends JPanel implements ActionListener {
 		name.setHorizontalAlignment(4);
 		sesti.add(name);
 		PSWbits[1] = new JTextField();
-		PSWbits[1].setEnabled(false);
+//		PSWbits[1].setEnabled(false);
 		PSWbits[1].setColumns(3);
 		PSWbits[1].setText( Integer.toString( (pswz.getBoolVal()?1:0) ) );
 		temp = new JPanel();
@@ -342,7 +343,7 @@ public class Register extends JPanel implements ActionListener {
 		name.setHorizontalAlignment(4);
 		sesti.add(name);
 		PSWbits[2] = new JTextField();
-		PSWbits[2].setEnabled(false);
+//		PSWbits[2].setEnabled(false);
 		PSWbits[2].setColumns(3);
 		PSWbits[2].setText( Integer.toString( (pswc.getBoolVal()?1:0) ) );
 		temp = new JPanel();
@@ -355,7 +356,7 @@ public class Register extends JPanel implements ActionListener {
 		name.setHorizontalAlignment(4);
 		sesti.add(name);
 		PSWbits[3] = new JTextField();
-		PSWbits[3].setEnabled(false);
+//		PSWbits[3].setEnabled(false);
 		PSWbits[3].setColumns(3);
 		PSWbits[3].setText( Integer.toString( (pswv.getBoolVal()?1:0) ) );
 		temp = new JPanel();
@@ -368,7 +369,7 @@ public class Register extends JPanel implements ActionListener {
 		name.setHorizontalAlignment(4);
 		sesti.add(name);
 		PSWbits[4] = new JTextField();
-		PSWbits[4].setEnabled(false);
+//		PSWbits[4].setEnabled(false);
 		PSWbits[4].setColumns(3);
 		PSWbits[4].setText( Integer.toString( (pswi.getBoolVal()?1:0) ) );
 		temp = new JPanel();
@@ -381,7 +382,7 @@ public class Register extends JPanel implements ActionListener {
 		name.setHorizontalAlignment(4);
 		sesti.add(name);
 		PSWbits[5] = new JTextField();
-		PSWbits[5].setEnabled(false);
+//		PSWbits[5].setEnabled(false);
 		PSWbits[5].setColumns(3);
 		PSWbits[5].setText( Integer.toString( (pswl0.getBoolVal()?1:0) ) );
 		temp = new JPanel();
@@ -394,7 +395,7 @@ public class Register extends JPanel implements ActionListener {
 		name.setHorizontalAlignment(4);
 		sesti.add(name);
 		PSWbits[6] = new JTextField();
-		PSWbits[6].setEnabled(false);
+//		PSWbits[6].setEnabled(false);
 		PSWbits[6].setColumns(3);
 		PSWbits[6].setText( Integer.toString( (pswl1.getBoolVal()?1:0) ) );
 		temp = new JPanel();
@@ -425,6 +426,17 @@ public class Register extends JPanel implements ActionListener {
 		komande.add(this.izmeni);
 		komande.add(this.izadji);
 		add(komande, "South");
+		
+		addWindowListener(new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				setVisible(false);
+			}
+
+		});
+		setSize(500, 500);
+		setLocation(100, 100);
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
@@ -542,6 +554,11 @@ public class Register extends JPanel implements ActionListener {
 		PSWbits[5].setText( Integer.toString( pswl0.getBoolVal()?1:0 ) );
 		PSWbits[6].setText( Integer.toString( pswl1.getBoolVal()?1:0 ) );
 
+	}
+
+	public void updateRegisters() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

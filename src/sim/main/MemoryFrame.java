@@ -8,7 +8,7 @@ import javax.swing.*;
 import sim.components.*;
 
 @SuppressWarnings("serial")
-public class Memory extends JPanel implements ActionListener {
+public class MemoryFrame extends JFrame implements ActionListener {
 
 	private JButton read;
 	private JButton write;
@@ -22,23 +22,14 @@ public class Memory extends JPanel implements ActionListener {
 	private JTextField adr;
 	private JTextField val;
 	private MEM mem;
-	private JDialog sadrzalacMemorije;
 	private static int firstAddress = 0;
 
-	public JDialog getSadrzalacMemorije() {
-		return sadrzalacMemorije;
-	}
-
-	public void setSadrzalacMemorije(JDialog sadrzalacMemorije) {
-		this.sadrzalacMemorije = sadrzalacMemorije;
-	}
-
-	public Memory(MEM mem) {
+	public MemoryFrame(MEM mem) {
 
 		this.mem = mem;
-		setLayout(new BorderLayout());
-		setBackground(Color.white);
-		Color bgcolor = Color.white;
+		setTitle("Memorija");
+		Color bgcolor = Color.WHITE;
+		setBackground(bgcolor);
 		JPanel dataPanel = new JPanel(new GridLayout(10, 1));
 		dataPanel.setBackground(bgcolor);
 
@@ -130,6 +121,18 @@ public class Memory extends JPanel implements ActionListener {
 
 		add(BigCenter, "Center");
 		add(BigSouth, "South");
+		
+		setSize(400, 400);
+		setLocation(100, 100);
+		
+		addWindowListener(new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				setVisible(false);
+			}
+
+		});
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
@@ -263,10 +266,6 @@ public class Memory extends JPanel implements ActionListener {
 				greska.setVisible(true);
 			}
 		}
-
-		else {// ako je cancel
-			sadrzalacMemorije.setVisible(false);
-		}
 	}
 
 	private int proveriadresu(String text) {
@@ -319,25 +318,8 @@ public class Memory extends JPanel implements ActionListener {
 
 	}
 
-	public static void main(String[] args) {
-		Memory guimem = new Memory(new MEM(64 * 1024));
-		JDialog dialogMem = new JDialog();
-		dialogMem.setResizable(false);
-		dialogMem.setTitle("Pregled Memorije");
-		dialogMem.setModal(true);
-		dialogMem.addWindowListener(new WindowAdapter() {
-
-			public void windowClosing(WindowEvent arg0) {
-				// dialogMem.setVisible(false);
-			}
-
-		});
-		guimem.setSadrzalacMemorije(dialogMem);
-		dialogMem.add(guimem);
-		dialogMem.setSize(500, 300);
-		dialogMem.setLocation(100, 100);
-		dialogMem.setVisible(true);
-
+	public void updateMemory() {
+		// TODO Auto-generated method stub
 	}
 
 }

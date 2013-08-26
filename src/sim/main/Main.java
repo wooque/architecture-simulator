@@ -37,10 +37,8 @@ public class Main extends JFrame {
 	private JLabel descLabel = new JLabel("! Čitanje instrukcije !", SwingConstants.CENTER);
 	private JLabel stepLabel = new JLabel("<html>brnotSTART, val00;", SwingConstants.CENTER);
 
-	private Register cpuregs;
-	private JDialog dialogRegs = new JDialog();
-	private Memory guimem;
-	private JDialog dialogMem = new JDialog();
+	private RegistersFrame regsWindow;
+	private MemoryFrame memWindow;
 	
 	public Main() {
 		try {
@@ -57,8 +55,8 @@ public class Main extends JFrame {
 		memTime = components.get("mem_uprav.memacc").getOut(0);
 		start = components.get("exec2.start").getOut(0);
 		
-		guimem = new Memory((MEM) components.get("mem_oper.mem"));
-		cpuregs = new Register(components);
+		memWindow = new MemoryFrame((MEM) components.get("mem_oper.mem"));
+		regsWindow = new RegistersFrame(components);
 		
 		LogicalComponent.initMemory = false;
 		LogicalComponent.initialise();
@@ -133,8 +131,7 @@ public class Main extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				dialogMem.setVisible(true);
-				schemeRenderer.repaint();
+				memWindow.setVisible(true);
 			}
 		});
 		memory.setAlignmentX(CENTER_ALIGNMENT);
@@ -144,8 +141,7 @@ public class Main extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				dialogRegs.setVisible(true);
-				schemeRenderer.repaint();
+				regsWindow.setVisible(true);
 			}
 		});
 		registers.setAlignmentX(CENTER_ALIGNMENT);
@@ -220,48 +216,13 @@ public class Main extends JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
             	log.close();
-            	dialogMem.dispose();
+            	memWindow.dispose();
+            	regsWindow.dispose();
                 dispose();
             }
         });
 		
 		setVisible(true);
-
-		dialogRegs.setResizable(false);
-		dialogRegs.setTitle("CPU registri");
-		dialogRegs.setModal(true);
-		dialogRegs.addWindowListener(new WindowAdapter() {
-
-			@Override
-			public void windowClosing(WindowEvent arg0) {
-				dialogRegs.setVisible(false);
-				schemeRenderer.repaint();
-			}
-
-		});
-		cpuregs.setSadrzalacRegistara(dialogRegs);
-		dialogRegs.add(cpuregs);
-		dialogRegs.setSize(600, 600);
-		dialogRegs.setLocation(100, 100);
-		dialogRegs.setVisible(false);
-
-		dialogMem.setResizable(false);
-		dialogMem.setTitle("Pregled Memorije");
-		dialogMem.setModal(true);
-		dialogMem.addWindowListener(new WindowAdapter() {
-
-			@Override
-			public void windowClosing(WindowEvent arg0) {
-				dialogMem.setVisible(false);
-				schemeRenderer.repaint();
-			}
-
-		});
-		guimem.setSadrzalacMemorije(dialogMem);
-		dialogMem.add(guimem);
-		dialogMem.setSize(500, 300);
-		dialogMem.setLocation(100, 100);
-		dialogMem.setVisible(false);
 	}
 
 	private void setLabels() {
@@ -329,9 +290,16 @@ public class Main extends JFrame {
 		checkEnd();
 		setLabels();
 		schemeRenderer.updateScheme();
+		if(memWindow.isVisible()) {
+			memWindow.updateMemory();
+		}
+		if(regsWindow.isVisible()) {
+			regsWindow.updateRegisters();
+		}
 	}
 	
 	private void executeINS() {
+		// TODO optimise by removing unneeded repaint methods and use one updateScheme method
 		LogicalComponent.CLK();
 		schemeRenderer.repaint();
 		checkEnd();
@@ -344,15 +312,18 @@ public class Main extends JFrame {
 		}
 		checkEnd();
 		setLabels();
+		// TODO update memory and registers view
 	}
 	
 	private void executePRG() {
+		// TODO optimise by replacing repaint with one updateScheme 
 		while (start.getBoolVal() == true) {
 			LogicalComponent.CLK();
 			schemeRenderer.repaint();
 		}
 		setLabels();
 		checkEnd();
+		// TODO update memory and registers
 	}
 	
 	public static void main(String[] args) {
