@@ -285,45 +285,43 @@ public class Main extends JFrame {
         }
 	}
 	
-	private void executeCLK() {
-		LogicalComponent.CLK();
-		checkEnd();
-		setLabels();
+	private void updateView() {
 		schemeRenderer.updateScheme();
 		if(memWindow.isVisible()) {
-			memWindow.updateMemory();
+			memWindow.updateMemoryView();
 		}
 		if(regsWindow.isVisible()) {
 			regsWindow.updateRegisters();
 		}
 	}
 	
-	private void executeINS() {
-		// TODO optimise by removing unneeded repaint methods and use one updateScheme method
+	private void executeCLK() {
 		LogicalComponent.CLK();
-		schemeRenderer.repaint();
+		checkEnd();
+		setLabels();
+		updateView();
+	}
+	
+	private void executeINS() {
+		LogicalComponent.CLK();
 		checkEnd();
 		LogicalComponent.CLK();
-		schemeRenderer.repaint();
 		checkEnd();
 		while ((cnt.getIntVal() != 0) && (start.getBoolVal() == true)) {
 			LogicalComponent.CLK();
-			schemeRenderer.repaint();
 		}
 		checkEnd();
 		setLabels();
-		// TODO update memory and registers view
+		updateView();
 	}
 	
 	private void executePRG() {
-		// TODO optimise by replacing repaint with one updateScheme 
 		while (start.getBoolVal() == true) {
 			LogicalComponent.CLK();
-			schemeRenderer.repaint();
 		}
 		setLabels();
 		checkEnd();
-		// TODO update memory and registers
+		updateView();
 	}
 	
 	public static void main(String[] args) {
