@@ -53,12 +53,13 @@ public class DrawSignals extends JFrame {
         }
 
         private void moveMouse(MouseEvent e) {
-            zoomPanel.setZoomX(e.getX());
-            zoomPanel.setZoomY(e.getY());
+        	Point disp = guiRenderer.getDisplacement();
+            zoomPanel.setZoomX(e.getX() - disp.x);
+            zoomPanel.setZoomY(e.getY() - disp.y);
             zoomPanel.repaint();
             
             if (last != null) {
-                Point curr = new Point(e.getX(), e.getY());
+                Point curr = new Point(e.getX() - disp.x, e.getY() - disp.y);
                 ArrayList<Point> tempPoints = new ArrayList<Point>();
                 tempPoints.add(last);
                 tempPoints.add(curr);
@@ -82,16 +83,17 @@ public class DrawSignals extends JFrame {
         }
 
         private void leftClick(MouseEvent e) {
-                Point curr = new Point(e.getX(), e.getY());
-                line.add(curr);
-                if (last != null) {
-                    ArrayList<Point> tempPoints = new ArrayList<Point>();
-                    tempPoints.add(last);
-                    tempPoints.add(curr);
-                    guiScheme.addLine(new GuiLine(tempPoints, Pin.TRUE));
-                    guiRenderer.repaint();
-                }
-                last = curr;
+        	Point disp = guiRenderer.getDisplacement();
+            Point curr = new Point(e.getX() - disp.x, e.getY() - disp.y);
+            line.add(curr);
+            if (last != null) {
+                ArrayList<Point> tempPoints = new ArrayList<Point>();
+                tempPoints.add(last);
+                tempPoints.add(curr);
+                guiScheme.addLine(new GuiLine(tempPoints, Pin.TRUE));
+                guiRenderer.repaint();
+            }
+            last = curr;
         }
 
         private void rightClick() {

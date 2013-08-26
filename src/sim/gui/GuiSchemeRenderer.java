@@ -3,6 +3,7 @@ package sim.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
@@ -21,15 +22,12 @@ public class GuiSchemeRenderer extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		BufferedImage image = guiScheme.getImage();
-		int x = 0;
-		int y = 0;
+		Point disp = getDisplacement();
 		if(image != null) {
-			x = (getWidth() - image.getWidth())/2;
-			y = (getHeight() - image.getHeight())/2;
-			g.drawImage(image, x, y, null);
+			g.drawImage(image, disp.x, disp.y, null);
 		}
 		for(GuiLine gl: guiScheme.getLines()){
-			gl.draw(g, x, y);
+			gl.draw(g, disp.x, disp.y);
 		}
 		for(GuiLabel gl: guiScheme.getLabels()){
 			gl.draw(g);
@@ -38,15 +36,22 @@ public class GuiSchemeRenderer extends JPanel {
 	
 	public void updateScheme() {
 		Graphics g = getGraphics();
-		BufferedImage image = guiScheme.getImage();
-		int x = (getWidth() - image.getWidth())/2;
-		int y = (getHeight() - image.getHeight())/2;
+		Point disp = getDisplacement();
 		for(GuiLine gl: guiScheme.getLines()){
-			gl.update(g, x, y);
+			gl.update(g, disp.x, disp.y);
 		}
 		for(GuiLabel gl: guiScheme.getLabels()){
 			gl.update(g);
 		}
+	}
+	
+	public Point getDisplacement() {
+		Point disp = new Point(0, 0);
+		BufferedImage image = guiScheme.getImage();
+		if(image != null) {
+			disp.setLocation((getWidth() - image.getWidth())/2, (getHeight() - image.getHeight())/2);
+		}
+		return disp;
 	}
 	
 	public void switchScheme(GuiScheme other) {
