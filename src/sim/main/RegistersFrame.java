@@ -14,22 +14,10 @@ public class RegistersFrame extends JFrame implements ActionListener {
 
 	private JButton izmeni;
 	private JButton izadji;
-	private JDialog greska;
-	private JDialog potvrda;
-	private boolean error;
 	private JTextField[] regPolja;
 	private REG[] allRegs;
 	private Pin pswn, pswv, pswc, pswz, pswi, pswl0, pswl1;
-	private JDialog sadrzalacRegistara;
 	JTextField [] PSWbits = new JTextField[7];
-
-	public JDialog getSadrzalacRegistara() {
-		return sadrzalacRegistara;
-	}
-
-	public void setSadrzalacRegistara(JDialog sadrzalacRegistara) {
-		this.sadrzalacRegistara = sadrzalacRegistara;
-	}
 
 	public RegistersFrame(HashMap<String, LogicalComponent> components) {
 
@@ -443,78 +431,24 @@ public class RegistersFrame extends JFrame implements ActionListener {
 
 		int[] nizvrednosti = new int[81];
 		if (arg0.getActionCommand().equals("Change")) {
+			int val = 0;
 			for (int i = 0; i < 81; i++) {
-				int val = proverivred(regPolja[i].getText(), i);
-				if (error)
+				val = proverivred(regPolja[i].getText(), i);
+				if (val == -1)
 					break;
 				nizvrednosti[i] = val;
 			}
 
-			if (!error) {
+			if (val != -1) {
 				for (int i = 0; i < 81; i++) {
 					allRegs[i].setVal(nizvrednosti[i]);
 				}
-				potvrda = new JDialog();
-				potvrda.setSize(350, 100);
-				potvrda.setLocation(200, 200);
-				potvrda.setModal(true);
-				potvrda.setTitle("Potvrda");
-				JPanel osnovni = new JPanel(new GridLayout(2, 1));
-				JLabel lab = new JLabel(
-						"Promena sadrzaja registara je uspesno odradjena!");
-				lab.setHorizontalAlignment(0);
-				osnovni.add(lab);
-				JButton ok = new JButton("U redu");
-				ok.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						potvrda.setVisible(false);
-
-					}
-				});
-				JPanel tmp = new JPanel();
-				tmp.add(ok);
-				tmp.setBackground(Color.white);
-				osnovni.add(tmp);
-				osnovni.setBackground(Color.white);
-				potvrda.add(osnovni);
-				potvrda.setVisible(true);
+				JOptionPane.showMessageDialog(RegistersFrame.this, "Promena uspešna", "Promena registara", JOptionPane.INFORMATION_MESSAGE);
 
 			} else {
-				error = false;
-				greska = new JDialog();
-				greska.setSize(550, 150);
-				greska.setLocation(200, 200);
-				greska.setModal(true);
-				greska.setTitle("Greska!");
-				JPanel osnovni = new JPanel(new GridLayout(3, 1));
-				JLabel lab = new JLabel(
-						"Neka od unetih vrednosti nije dobra (ili prelazi velicinu registra ili je unet netacan hex. broj).");
-				lab.setHorizontalAlignment(0);
-				osnovni.add(lab);
-				JLabel lab1 = new JLabel(
-						"Zato se brisu sve tekuce izmene registara!");
-				lab1.setHorizontalAlignment(0);
-				osnovni.add(lab1);
-				JButton ok = new JButton("U redu");
-				ok.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						greska.setVisible(false);
-						sadrzalacRegistara.setVisible(false);// da se ugasi i
-																// pregled
-																// registara jer
-					} // ako se on ne ugasi onda ostaju da se vide te nevalidne
-						// vrednosti koje
-				}); // idu van opsega
-				JPanel tmp = new JPanel();
-				tmp.add(ok);
-				tmp.setBackground(Color.white);
-				osnovni.add(tmp);
-				osnovni.setBackground(Color.white);
-				greska.add(osnovni);
-				greska.setVisible(true);
+
+				JOptionPane.showMessageDialog(RegistersFrame.this, "Promena neuspešna. Neka od unetih vrednosti je nevalidna.", "Greška", JOptionPane.ERROR_MESSAGE);
 			}
-		} else {// ako je izadji
-			sadrzalacRegistara.setVisible(false);
 		}
 	}
 
@@ -522,9 +456,8 @@ public class RegistersFrame extends JFrame implements ActionListener {
 		int val;
 		try {
 			val = Integer.parseInt(text, 16);
-		} catch (Exception e) { // ZBOG NUMBER FORMAT EXCEPTION!
-			error = true;
-			return 0;
+		} catch (NumberFormatException nfe) {
+			return -1;
 		}
 
 		int validBits;
@@ -534,18 +467,17 @@ public class RegistersFrame extends JFrame implements ActionListener {
 			validBits = allRegs[i].getOut(0).getNumOfLines();
 		}
 		if ((int) Math.pow(2.0D, validBits) <= val) {
-			error = true;
+			return -1;
 		}
 
 		return val;
 	}
 
-	public void paint(Graphics g) {
-		super.paint(g);
-//		for (int i = 0; i < 48; i++) {
-//			regPolja[i].setText(Integer.toHexString(allRegs[i].getVal()));
-//		}
-		
+	public void updateRegisters() {
+	//	for (int i = 0; i < 48; i++) {
+	//		regPolja[i].setText(Integer.toHexString(allRegs[i].getVal()));
+	//	}
+	
 		PSWbits[0].setText( Integer.toString( pswn.getBoolVal()?1:0 ) );
 		PSWbits[1].setText( Integer.toString( pswz.getBoolVal()?1:0 ) );
 		PSWbits[2].setText( Integer.toString( pswc.getBoolVal()?1:0 ) );
@@ -553,12 +485,6 @@ public class RegistersFrame extends JFrame implements ActionListener {
 		PSWbits[4].setText( Integer.toString( pswi.getBoolVal()?1:0 ) );
 		PSWbits[5].setText( Integer.toString( pswl0.getBoolVal()?1:0 ) );
 		PSWbits[6].setText( Integer.toString( pswl1.getBoolVal()?1:0 ) );
-
-	}
-
-	public void updateRegisters() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
