@@ -36,9 +36,9 @@ public class Main extends JFrame {
 	private JLabel pcLabel = new JLabel("PC = 0");
 	private JLabel descLabel = new JLabel("! Čitanje instrukcije !", SwingConstants.CENTER);
 	private JLabel stepLabel = new JLabel("<html>brnotSTART, val00;", SwingConstants.CENTER);
-
 	private RegistersFrame regsWindow;
 	private MemoryFrame memWindow;
+	private int codeStart, codeSize;
 	
 	public Main() {
 		try {
@@ -250,6 +250,12 @@ public class Main extends JFrame {
 	}
 	
 	private void reset() {
+		MEM mem = ((MEM)components.get("mem_oper.mem"));
+		for(int i = 0; i < mem.getSize(); i++) {
+			if(i < codeStart || i >= codeStart + codeSize) {
+				mem.write(i, 0);
+			}
+		}
 		LogicalComponent.initMemory = false;
 		LogicalComponent.initialise();
 		setLabels();
@@ -265,17 +271,18 @@ public class Main extends JFrame {
             setTitle(chooser.getSelectedFile().getName());
 			Assembler asm = new Assembler(chooser.getSelectedFile().getPath(), log);
 			Object[] code = asm.getCode();
-			int start = asm.getStartOfCode();
+			codeStart = asm.getStartOfCode();
+			codeSize = code.length;
 			MEM mem = ((MEM)components.get("mem_oper.mem"));
 			for(int i = 0; i < mem.getSize(); i++) {
-				if(i >= start && i < start + code.length) {
-					mem.write(i, (Integer)code[i - start]);
+				if(i >= codeStart && i < codeStart + codeSize) {
+					mem.write(i, (Integer)code[i - codeStart]);
 				} else {
 					mem.write(i, 0);
 				}
 			}
 			REG pc = ((REG)components.get("fetch1.pc"));
-			pc.initVal(start);
+			pc.initVal(codeStart);
 			LogicalComponent.initMemory = false;
 			LogicalComponent.initialise();
 			setLabels();

@@ -52,5 +52,9 @@ public class Registers extends LogicalComponent {
 	public int getRegValue(int index) {
 		return regs[index];
 	}
+	
+	public void setRegValue(int index, int value) {
+		regs[index] = value;
+	}
 
 }
