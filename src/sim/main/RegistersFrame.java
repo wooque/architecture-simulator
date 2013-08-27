@@ -175,7 +175,7 @@ public class RegistersFrame extends JFrame{
 
 	public void updateRegisters() {
 		for (int i = 0; i < 32; i++) {
-			regsTextFields[i].setText(Integer.toHexString(components.get("addr.gpr").getOut(0).getIntVal()));
+			regsTextFields[i].setText(Integer.toHexString(((Registers) components.get("addr.gpr")).getRegValue(i)));
 		}
 		for (int i = 32; i < 55; i++) {
 			regsTextFields[i].setText(Integer.toHexString(components.get(registers[i - 32]).getOut(0).getIntVal()));
