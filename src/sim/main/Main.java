@@ -131,6 +131,7 @@ public class Main extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				memWindow.updateMemoryView();
 				memWindow.setVisible(true);
 			}
 		});
@@ -141,6 +142,7 @@ public class Main extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				memWindow.updateMemoryView();
 				regsWindow.setVisible(true);
 			}
 		});
