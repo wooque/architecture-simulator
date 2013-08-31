@@ -357,7 +357,7 @@ public class DrawSignals extends JFrame {
 				
 				String schemeFilename = null;
 				if(!getTitle().isEmpty()) {
-					 schemeFilename = getTitle().substring(getTitle().lastIndexOf('/') + 1);
+					 schemeFilename = getTitle().substring(getTitle().lastIndexOf('\\') + 1);
 				}
 				
 				while(confLine != null) {
