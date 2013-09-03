@@ -76,11 +76,15 @@ public class GuiConfigurator {
 						} else if(lineName.equals("false")) {
 							linePin = Pin.FALSE;
 						} else {
-							LogicalComponent logComp = components.get(lineName);
-							if(logComp == null) {
-								log.println("Non existent pin: "+lineName);
+							if(components != null) {
+								LogicalComponent logComp = components.get(lineName);
+								if(logComp == null) {
+									log.println("Non existent pin: "+lineName);
+								} else {
+									linePin = logComp.getOut(0);
+								}
 							} else {
-								linePin = logComp.getOut(0);
+								linePin = new Pin();
 							}
 						}
 						scheme.addLine(new GuiLine(lineSections, linePin));
