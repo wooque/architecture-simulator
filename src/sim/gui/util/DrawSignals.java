@@ -299,6 +299,9 @@ public class DrawSignals extends JFrame {
             guiScheme = allSchemes.get(imageName);
             if(guiScheme == null) {
             	guiScheme = new GuiScheme(imageName);
+            	if(allSchemes != null) {
+            		allSchemes.put(imageName, guiScheme);
+            	}
             } else {
 	            for(GuiLine gl: guiScheme.getLines()) {
             		if(!listModel.contains(gl.getName())) {
