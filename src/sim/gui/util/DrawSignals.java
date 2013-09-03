@@ -283,7 +283,21 @@ public class DrawSignals extends JFrame {
 			String filename = chooser.getSelectedFile().getPath();
 			confFilename.setText(filename);
 			allSchemes = new GuiConfigurator(null, filename, null).getGuiSchemes();
-			// TODO check if there is some ongoing scheme drawing 
+			if(guiScheme != null && guiScheme.getLines().size() > 0 && guiScheme.getLabels().size() > 0) {
+				allSchemes.put(getTitle().substring(getTitle().lastIndexOf('\\') + 1), guiScheme);
+			} else if(!getTitle().equals("")){
+				String schemeName = getTitle().substring(getTitle().lastIndexOf('\\') + 1);
+				guiScheme = allSchemes.get(schemeName);
+	            for(GuiLine gl: guiScheme.getLines()) {
+            		if(!listModel.contains(gl.getName())) {
+            			listModel.addElement(gl.getName());
+            		}
+	            }
+	            guiRenderer.switchScheme(guiScheme);
+	            zoomPanel.setImage(guiScheme.getImage());
+	            pack();
+			}
+			
 		}
     }
 
@@ -296,9 +310,11 @@ public class DrawSignals extends JFrame {
             setTitle(imagePath);
             listModel.clear();
             selected = null;
-            guiScheme = allSchemes.get(imageName);
+            if(allSchemes != null) {
+            	guiScheme = allSchemes.get(imageName);
+            }
             if(guiScheme == null) {
-            	guiScheme = new GuiScheme(imageName);
+            	guiScheme = new GuiScheme(imagePath);
             	if(allSchemes != null) {
             		allSchemes.put(imageName, guiScheme);
             	}
