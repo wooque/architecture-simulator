@@ -227,88 +227,44 @@ public class DrawSignals extends JFrame {
     private void saveConf() {
     	if(!confFilename.getText().isEmpty()) {
 			try {
-				File confFileIn = new File(confFilename.getText());
-				BufferedReader confIn = new BufferedReader(new FileReader(confFileIn));
-				File confFileOut = new File(confFilename.getText()+"temp");
-				PrintWriter confOut = new PrintWriter(new FileWriter(confFileOut), true);
-				
-				String confLine = confIn.readLine();
-				String mode = "coping";
-				String schemeName = getTitle().substring(getTitle().lastIndexOf('\\') + 1);
-				boolean saved = false;
-				
-				while(confLine != null || !saved) {
-					if(mode.equals("coping") && confLine != null) {
-						String[] tokens = confLine.split(",(\\s)*|(\\)){0,1}(\\s)+\\(|\\)");
-						if(tokens.length == 1 && tokens[0].equals(schemeName)) {
-							mode = "updating";
-						} else {
-							confOut.println(confLine);
-						}
-						confLine = confIn.readLine();
-					} else if (mode.equals("skipping") && confLine != null) {
-						String[] tokens = confLine.split(",(\\s)*|(\\)){0,1}(\\s)+\\(|\\)");
-						if(tokens.length == 1 && !tokens[0].isEmpty()) {
-							if(!tokens[0].equals(schemeName)) {
-								confOut.println(confLine);
-								mode = "coping";
-							}
-						}
-						confLine = confIn.readLine();
-					} else {
-						
-						HashMap<String, ArrayList<ArrayList<Point>>> linesToCommit = new HashMap<String, ArrayList<ArrayList<Point>>>();
-				        for (Line l : lines) {
-				        	if(linesToCommit.containsKey(l.name)) {
-				        		ArrayList<ArrayList<Point>> sections = linesToCommit.get(l.name);
-				        		sections.add(l.line);
-				        	} else {
-				        		ArrayList<ArrayList<Point>> sections = new ArrayList<ArrayList<Point>>();
-				        		sections.add(l.line);
-				        		linesToCommit.put(l.name, sections);
-				        	}
-				        }
-				
-				        String schemeToCommit = getTitle().substring(getTitle().lastIndexOf('\\') + 1);
-				        confOut.println(schemeToCommit);
-				        confOut.println();
-				        
-				        allLines.put(schemeToCommit, linesToCommit);
-				        
-				        for (Map.Entry<String, ArrayList<ArrayList<Point>>> entry : linesToCommit.entrySet()) {
-				        	String lineName = entry.getKey();
-				        	ArrayList<ArrayList<Point>> lineSections = entry.getValue();
-				        	confOut.printf("%-19s", lineName);
-				        	for(int i = 0; i < lineSections.size(); i++) {
-				        		if(i > 0) {
-				    				confOut.print("                   ");
-				    			}
-				        		for (Point point : lineSections.get(i)) {
-				        			
-				        			confOut.print(" ("+point.x+","+point.y+")");
-				        		}
-				        		confOut.println();
-				        	}
-				            
-				        }
-				        confOut.println();
-				        saved = true;
-				        if(confLine != null) {
-				        	confLine = confIn.readLine();
-				        }
-				        mode = "skipping";
-					}
+				PrintWriter confOut = new PrintWriter(new FileWriter(confFilename.getText()), true);
+				for(Map.Entry<String, GuiScheme> entry: allSchemes.entrySet()) {
+					String schemeName = entry.getKey();
+					GuiScheme scheme = entry.getValue();
+					
+			        confOut.println(schemeName);
+			        confOut.println();
+			        
+			        HashMap<String, ArrayList<GuiLine>> linesToCommit = new HashMap<String, ArrayList<GuiLine>>(); 
+			        
+			        for(GuiLine gl: scheme.getLines()) {
+			        	if(!linesToCommit.containsKey(gl.getName())) {
+			        		linesToCommit.put(gl.getName(), new ArrayList<GuiLine>());
+			        	}
+			        	linesToCommit.get(gl.getName()).add(gl);
+			        }
+			        
+			        for (Map.Entry<String, ArrayList<GuiLine>> lineEntry : linesToCommit.entrySet()) {
+			        	String lineName = lineEntry.getKey();
+			        	ArrayList<GuiLine> lineSections = lineEntry.getValue();
+			        	confOut.printf("%-19s", lineName);
+			        	boolean first = true;
+			        	for(GuiLine gl: lineSections) {
+			        		if(!first) {
+			    				confOut.print("                   ");
+			    			}
+			        		for (Point point : gl.getPoints()) {
+			        			confOut.print(" ("+point.x+","+point.y+")");
+			        		}
+			        		confOut.println();
+			        		first = false;
+			        	}
+			            
+			        }
 				}
-		        confIn.close();
+		        confOut.println();
 		        confOut.close();
-		        confFileIn.delete();
-		        boolean ret = confFileOut.renameTo(confFileIn);
-		        
-		        if(ret == false) {
-		        	JOptionPane.showMessageDialog(DrawSignals.this,	"Configuration saving failed", "Configuration saving failed", JOptionPane.ERROR_MESSAGE);
-		        } else {
-		        	JOptionPane.showMessageDialog(DrawSignals.this, "Configuration saved", "Configuration saved", JOptionPane.INFORMATION_MESSAGE);
-		        }
+		        JOptionPane.showMessageDialog(DrawSignals.this, "Configuration saved", "Configuration saved", JOptionPane.INFORMATION_MESSAGE);
 			} catch (FileNotFoundException e) {
 				System.out.println("Conf file not found!");
 			} catch (IOException e) {
@@ -354,72 +310,38 @@ public class DrawSignals extends JFrame {
 
     private void removeSelectedSignal() {
     	if(selected != null) {
-    		ArrayList<ArrayList<Point>> selectedLine = new ArrayList<ArrayList<Point>>();
-			for(int i = 0; i < lines.size();) {
-				Line line = lines.get(i);
-				if(line.name.equals(selected)) {
-					selectedLine.add(line.line);
-					lines.remove(i);
-				} else {
-					i++;
+			ArrayList<GuiLine> toRemove = new ArrayList<GuiLine>();
+			for(GuiLine gl: guiScheme.getLines()) {
+				if(gl.getName().equals(selected)) {
+					toRemove.add(gl);
 				}
 			}
+			for(GuiLine gl: toRemove) {
+				guiScheme.removeLine(gl);
+			}
+
 			listModel.removeElement(selected);
 			selected = null;
-			for(ArrayList<Point> section: selectedLine) {
-				Point last = null;
-				for(Point curr: section) {
-					if(last != null) {
-						for(int i = 0; i < guiScheme.getLines().size();) {
-							GuiLine gl = guiScheme.getLines().get(i);
-							// checking only first two points
-							// lines should not overlap
-							if(gl.getPoints().get(0) == last && gl.getPoints().get(1) == curr) {
-								guiScheme.removeLine(gl);
-							} else {
-								i++;
-							}
-						}
-					}
-					last = curr;
-				}
-			}
 			guiRenderer.repaint();
-    	}
+		}
     }
     
     private void removeAllSignals() {
-        if (lines.size() > 0) {
-            lines = new ArrayList<Line>();
-        }
-        selected = null;
-        listModel.clear();
+    	// TODO add method for clearing lines
         guiScheme.setLines(new ArrayList<GuiLine>());
+        listModel.clear();
+        selected = null;
         guiRenderer.repaint();
     }
     
     private void setPinForSelected(Pin in) {
 		if(selected != null) {
-			ArrayList<ArrayList<Point>> selectedLine = new ArrayList<ArrayList<Point>>();
-			for(Line line: lines) {
-				if(line.name.equals(selected)) {
-					selectedLine.add(line.line);
+			for(GuiLine gl: guiScheme.getLines()) {
+				if(gl.getName().equals(selected)) {
+					gl.setPin(in);
 				}
 			}
-			for(ArrayList<Point> section: selectedLine) {
-				Point last = null;
-				for(Point curr: section) {
-					if(last != null) {
-						for(GuiLine gl: guiScheme.getLines()) {
-							if(gl.getPoints().get(0) == last && gl.getPoints().get(1) == curr) {
-								gl.setPin(in);
-							}
-						}
-					}
-					last = curr;
-				}
-			}
-			guiRenderer.updateScheme();;
+			guiRenderer.updateScheme();
 		}
     }
     
