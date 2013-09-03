@@ -51,6 +51,7 @@ public class DrawSignals extends JFrame {
 	            }
 	            Point curr = new Point(e.getX() - disp.x, e.getY() - disp.y);
 	            guiLine.addPoint(curr);
+	            last = curr;
 	            guiRenderer.repaint();
             }
         }
@@ -74,6 +75,7 @@ public class DrawSignals extends JFrame {
         	if(guiLine == null) {
             	// TODO make constructor without ArrayList
             	guiLine = new GuiLine(new ArrayList<Point>(), Pin.TRUE);
+            	guiScheme.addLine(guiLine);
             } else {
             	last = curr;
             }
