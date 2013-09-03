@@ -88,7 +88,9 @@ public class GuiConfigurator {
 							}
 						}
 						// TODO replace linesection with GuiLine
-						scheme.addLine(new GuiLine(lineSections, linePin));
+						GuiLine newLine = new GuiLine(lineSections, linePin);
+						newLine.setName(lineName);
+						scheme.addLine(newLine);
 						lineSections = null;
 					}
 				}

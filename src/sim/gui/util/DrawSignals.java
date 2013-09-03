@@ -45,12 +45,14 @@ public class DrawSignals extends JFrame {
             zoomPanel.setZoomY(e.getY() - disp.y);
             zoomPanel.repaint();
             
-            if (last != null) {
-                guiLine.removePoint(last); 
+            if(guiLine != null) {
+	            if (last != null) {
+	                guiLine.removePoint(last); 
+	            }
+	            Point curr = new Point(e.getX() - disp.x, e.getY() - disp.y);
+	            guiLine.addPoint(curr);
+	            guiRenderer.repaint();
             }
-            Point curr = new Point(e.getX() - disp.x, e.getY() - disp.y);
-            guiLine.addPoint(curr);
-            guiRenderer.repaint();
         }
     	
         @Override
@@ -102,8 +104,7 @@ public class DrawSignals extends JFrame {
     private DrawSignals() {
         super("Draw Signals");
 
-        guiScheme = new GuiScheme("");
-        guiRenderer = new GuiSchemeRenderer(guiScheme);
+        guiRenderer = new GuiSchemeRenderer(null);
         SignalMouseAdapter signalMouseAdapter = new SignalMouseAdapter();
         guiRenderer.addMouseMotionListener(signalMouseAdapter);
         guiRenderer.addMouseListener(signalMouseAdapter);
@@ -112,7 +113,7 @@ public class DrawSignals extends JFrame {
         east.setLayout(new BoxLayout(east, BoxLayout.Y_AXIS));
 
         JPanel northeast = new JPanel();
-        zoomPanel = new ZoomPanel(guiScheme.getImage(), 10, 10, 10);
+        zoomPanel = new ZoomPanel(null, 10, 10, 10);
         northeast.add(zoomPanel);
         east.add(northeast);
 
@@ -291,7 +292,8 @@ public class DrawSignals extends JFrame {
         	String imagePath = chooser.getSelectedFile().getPath();
         	String imageName = imagePath.substring(imagePath.lastIndexOf('\\') + 1);
             setTitle(imagePath);
-            removeAllSignals();
+            listModel.clear();
+            selected = null;
             guiScheme = allSchemes.get(imageName);
             if(guiScheme == null) {
             	guiScheme = new GuiScheme(imageName);
