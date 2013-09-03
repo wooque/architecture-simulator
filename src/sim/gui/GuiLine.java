@@ -9,6 +9,7 @@ public class GuiLine {
 	
 	private ArrayList<Point> points;
 	private Color color;
+	private String name;
 	private Pin pin;
 
 	public GuiLine(ArrayList<Point> points, Pin pin) {
@@ -80,7 +81,27 @@ public class GuiLine {
 		this.pin = pin;
 	}
 
+	public void addPoint(Point p) {
+		points.add(p);
+	}
+	
+	public void removePoint(Point p) {
+		points.remove(p);
+	}
+	
+	public int size() {
+		return points.size();
+	}
+	
 	public ArrayList<Point> getPoints() {
 		return points;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

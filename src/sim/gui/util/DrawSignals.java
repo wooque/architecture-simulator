@@ -17,28 +17,15 @@ import sim.gui.*;
 public class DrawSignals extends JFrame {
 
     private GuiSchemeRenderer guiRenderer;
+    private HashMap<String, GuiScheme> allSchemes;
     private GuiScheme guiScheme;
     private GuiLine guiLine;
     private ZoomPanel zoomPanel;
-    private ArrayList<Point> line;
-    private ArrayList<Line> lines;
     private JList<String> listOfLines;
     private DefaultListModel<String> listModel;
     private String selected;
     private Point last;
     private JLabel confFilename;
-	private HashMap<String, HashMap<String, ArrayList<ArrayList<Point>>>> allLines;
-
-    private class Line {
-
-        final ArrayList<Point> line;
-        final String name;
-
-        Line(ArrayList<Point> line, String name) {
-            this.line = line;
-            this.name = name;
-        }
-    }
 
     private class SignalMouseAdapter extends MouseAdapter{
     	
@@ -59,15 +46,11 @@ public class DrawSignals extends JFrame {
             zoomPanel.repaint();
             
             if (last != null) {
-                Point curr = new Point(e.getX() - disp.x, e.getY() - disp.y);
-                ArrayList<Point> tempPoints = new ArrayList<Point>();
-                tempPoints.add(last);
-                tempPoints.add(curr);
-                guiScheme.removeLine(guiLine);
-                guiLine = new GuiLine(tempPoints, Pin.TRUE);
-                guiScheme.addLine(guiLine);
-                guiRenderer.repaint();
+                guiLine.removePoint(last); 
             }
+            Point curr = new Point(e.getX() - disp.x, e.getY() - disp.y);
+            guiLine.addPoint(curr);
+            guiRenderer.repaint();
         }
     	
         @Override
@@ -85,44 +68,39 @@ public class DrawSignals extends JFrame {
         private void leftClick(MouseEvent e) {
         	Point disp = guiRenderer.getDisplacement();
             Point curr = new Point(e.getX() - disp.x, e.getY() - disp.y);
-            line.add(curr);
-            if (last != null) {
-                ArrayList<Point> tempPoints = new ArrayList<Point>();
-                tempPoints.add(last);
-                tempPoints.add(curr);
-                guiScheme.addLine(new GuiLine(tempPoints, Pin.TRUE));
-                guiRenderer.repaint();
+            
+        	if(guiLine == null) {
+            	// TODO make constructor without ArrayList
+            	guiLine = new GuiLine(new ArrayList<Point>(), Pin.TRUE);
+            } else {
+            	last = curr;
             }
-            last = curr;
+        	guiLine.addPoint(curr);
         }
 
         private void rightClick() {
-            guiScheme.removeLine(guiLine);
-            guiRenderer.repaint();
+            guiLine.removePoint(last);
             last = null;
-            if (line.size() > 1) {
+            if (guiLine.size() < 2) {
+            	guiScheme.removeLine(guiLine);
+            	guiLine = null;
+            } else {
                 String s = (String) JOptionPane.showInputDialog(DrawSignals.this, "Signal Name:", "New signal", JOptionPane.PLAIN_MESSAGE, null, null, null);
-                if (s == null) {
-                    return;
+                if (s != null) {
+	                guiLine.setName(s);
+	                if(!listModel.contains(s)) {
+	                	listModel.addElement(s);
+	                }
+	                guiLine.setPin(Pin.FALSE);
+	                guiLine = null;
                 }
-                lines.add(new Line(line, s));
-                if(!listModel.contains(s)) {
-                	listModel.addElement(s);
-                }
-                for (GuiLine gl : guiScheme.getLines()) {
-                    gl.setPin(Pin.FALSE);
-                }
-                guiRenderer.repaint();
             }
-            line = new ArrayList<Point>();
+            guiRenderer.repaint();
         }
     }
 
     private DrawSignals() {
         super("Draw Signals");
-
-        line = new ArrayList<Point>();
-        lines = new ArrayList<Line>();
 
         guiScheme = new GuiScheme("");
         guiRenderer = new GuiSchemeRenderer(guiScheme);
@@ -343,93 +321,10 @@ public class DrawSignals extends JFrame {
     	JFileChooser chooser = new JFileChooser("conf");
 		int retVal = chooser.showOpenDialog(DrawSignals.this);
 		if(retVal == JFileChooser.APPROVE_OPTION) {
-			confFilename.setText(chooser.getSelectedFile().getPath());
-			try {
-				BufferedReader confFileReader = new BufferedReader(new FileReader(confFilename.getText()));
-				
-				String confLine = confFileReader.readLine();
-				
-				String lineName = null;
-				ArrayList<ArrayList<Point>> lineSections = null;
-				String schemeName = null;
-				HashMap<String, ArrayList<ArrayList<Point>>> schemeLines = null;
-				allLines = new HashMap<String, HashMap<String, ArrayList<ArrayList<Point>>>>();
-				
-				String schemeFilename = null;
-				if(!getTitle().isEmpty()) {
-					 schemeFilename = getTitle().substring(getTitle().lastIndexOf('\\') + 1);
-				}
-				
-				while(confLine != null) {
-					
-					String[] tokens = confLine.split(",(\\s)*|(\\)){0,1}(\\s)*\\(|\\)");
-					
-					if(!(tokens.length == 1 && tokens[0].isEmpty()) 
-						&& !((tokens[0].length() > 1) && tokens[0].substring(0,2).equals("//"))) {
-						if(tokens.length == 1  
-							&& ((tokens[0].charAt(0) >= 'a' && tokens[0].charAt(0) <= 'z')
-								|| (tokens[0].charAt(0) >= 'A' && tokens[0].charAt(0) <= 'Z'))) {
-							
-							if(lineSections != null) {
-								schemeLines.put(lineName, lineSections);
-							}
-							if(schemeLines != null) {
-								allLines.put(schemeName, schemeLines);
-							}
-							schemeName = tokens[0];
-							schemeLines = new HashMap<String, ArrayList<ArrayList<Point>>>();
-							lineName = null;
-							lineSections = null;
-						} else {
-							
-							int i = 0;
-							if(tokens[0].isEmpty()) {
-								// workaround for String.split() method not recognizing if delimiter is on begining
-								i = 1;
-							} else if((tokens[0].charAt(0) >= 'a' && tokens[0].charAt(0) <= 'z')
-								|| (tokens[0].charAt(0) >= 'A' && tokens[0].charAt(0) <= 'Z')) {
-								
-								if(lineSections != null) {
-									schemeLines.put(lineName, lineSections);
-								}
-								lineName = tokens[0];
-								lineSections = new ArrayList<ArrayList<Point>>();
-								i = 1;
-							}
-							
-							ArrayList<Point> section = new ArrayList<Point>();
-							for(; i < tokens.length; i+=2) {
-								int x = Integer.parseInt(tokens[i]);
-								int y = Integer.parseInt(tokens[i + 1]);
-								section.add(new Point(x, y));
-							}
-							lineSections.add(section);
-							if(schemeName.equals(schemeFilename)) {
-								lines.add(new Line(section, lineName));
-				                if(!listModel.contains(lineName)) {
-				                	listModel.addElement(lineName);
-				                }
-								guiScheme.addLine(new GuiLine(section, Pin.FALSE));
-							}
-						}
-					}
-					confLine = confFileReader.readLine();
-				}
-				
-				if(lineSections != null) {
-					schemeLines.put(lineName, lineSections);
-				}
-				
-				if(schemeLines != null) {
-					allLines.put(schemeName, schemeLines);
-				}
-				confFileReader.close();
-				guiRenderer.repaint();
-			} catch (FileNotFoundException e) {
-				System.out.println("Conf file not found!");
-			} catch (IOException e) {
-				System.out.println("Conf file corrupted!");
-			}
+			String filename = chooser.getSelectedFile().getPath();
+			confFilename.setText(filename);
+			allSchemes = new GuiConfigurator(null, filename, null).getGuiSchemes();
+			// TODO check if there is some ongoing scheme drawing 
 		}
     }
 
@@ -437,33 +332,22 @@ public class DrawSignals extends JFrame {
         JFileChooser chooser = new JFileChooser("images");
         int returnVal = chooser.showOpenDialog(DrawSignals.this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            setTitle(chooser.getSelectedFile().getPath());
-            
-            guiScheme.setImage(chooser.getSelectedFile().getPath());
-            guiRenderer.switchScheme(guiScheme);
-            zoomPanel.setImage(guiScheme.getImage());
-            
+        	String imagePath = chooser.getSelectedFile().getPath();
+        	String imageName = imagePath.substring(imagePath.lastIndexOf('\\') + 1);
+            setTitle(imagePath);
             removeAllSignals();
-
-            if(allLines != null) {
-            	String schemeName = getTitle().substring(getTitle().lastIndexOf('\\') + 1);
-	            HashMap<String, ArrayList<ArrayList<Point>>> schemeLines = allLines.get(schemeName);
-	            
-	            if(schemeLines != null) {
-		            for(Map.Entry<String, ArrayList<ArrayList<Point>>> entry: schemeLines.entrySet()) {
-		            	String lineName = entry.getKey();
-		            	ArrayList<ArrayList<Point>> lineSections = entry.getValue();
-		            	
-		            	for(ArrayList<Point> section: lineSections) {
-		            		lines.add(new Line(section, lineName));
-		            		if(!listModel.contains(lineName)) {
-		            			listModel.addElement(lineName);
-		            		}
-		            		guiScheme.addLine(new GuiLine(section, Pin.FALSE));
-		            	}
-		            }
+            guiScheme = allSchemes.get(imageName);
+            if(guiScheme == null) {
+            	guiScheme = new GuiScheme(imageName);
+            } else {
+	            for(GuiLine gl: guiScheme.getLines()) {
+            		if(!listModel.contains(gl.getName())) {
+            			listModel.addElement(gl.getName());
+            		}
 	            }
             }
+            guiRenderer.switchScheme(guiScheme);
+            zoomPanel.setImage(guiScheme.getImage());
             pack();
         }
     }

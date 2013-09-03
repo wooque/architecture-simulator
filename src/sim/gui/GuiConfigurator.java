@@ -87,6 +87,7 @@ public class GuiConfigurator {
 								linePin = new Pin();
 							}
 						}
+						// TODO replace linesection with GuiLine
 						scheme.addLine(new GuiLine(lineSections, linePin));
 						lineSections = null;
 					}
