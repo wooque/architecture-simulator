@@ -230,7 +230,7 @@ public class DrawSignals extends JFrame {
     private void saveConf() {
     	if(!confFilename.getText().isEmpty()) {
 			try {
-				PrintWriter confOut = new PrintWriter(new FileWriter(confFilename.getText()), true);
+				PrintWriter confOut = new PrintWriter(new FileWriter("conf/testing_ground.conf"), true);
 				for(Map.Entry<String, GuiScheme> entry: allSchemes.entrySet()) {
 					String schemeName = entry.getKey();
 					GuiScheme scheme = entry.getValue();
