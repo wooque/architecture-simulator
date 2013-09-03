@@ -30,7 +30,7 @@ public class GuiSchemeRenderer extends JPanel {
 			gl.draw(g, disp.x, disp.y);
 		}
 		for(GuiLabel gl: guiScheme.getLabels()){
-			gl.draw(g);
+			gl.draw(g, disp.x, disp.y);
 		}
 	}
 	
@@ -41,7 +41,7 @@ public class GuiSchemeRenderer extends JPanel {
 			gl.update(g, disp.x, disp.y);
 		}
 		for(GuiLabel gl: guiScheme.getLabels()){
-			gl.update(g);
+			gl.update(g, disp.x, disp.y);
 		}
 	}
 	

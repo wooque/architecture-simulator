@@ -27,7 +27,7 @@ public class DrawSignals extends JFrame {
     private String selected;
     private Point last;
     private JLabel confFilename;
-	HashMap<String, HashMap<String, ArrayList<ArrayList<Point>>>> allLines;
+	private HashMap<String, HashMap<String, ArrayList<ArrayList<Point>>>> allLines;
 
     private class Line {
 
@@ -444,7 +444,7 @@ public class DrawSignals extends JFrame {
             zoomPanel.setImage(guiScheme.getImage());
             
             removeAllSignals();
-            
+
             if(allLines != null) {
             	String schemeName = getTitle().substring(getTitle().lastIndexOf('\\') + 1);
 	            HashMap<String, ArrayList<ArrayList<Point>>> schemeLines = allLines.get(schemeName);

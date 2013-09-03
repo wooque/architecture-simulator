@@ -20,21 +20,20 @@ public class GuiLabel {
 		}
 	}
 	
-	public void update(Graphics g) {
-		draw(g, false);
+	public void update(Graphics g, int dispx, int dispy) {
+		draw(g, dispx, dispy, false);
 	}
 	
-	public void draw(Graphics g) {
-		draw(g, true);
+	public void draw(Graphics g, int dispx, int dispy) {
+		draw(g, dispx, dispy, true);
 	}
 
-	public void draw(Graphics g, boolean forceDraw) {
+	public void draw(Graphics g, int dispx, int dispy, boolean forceDraw) {
 		if (updateLabel() || forceDraw) {
 			Graphics2D g2d = (Graphics2D) g;
 			g2d.setColor(Color.BLACK);
-			//g2d.setFont(new Font("Arial", Font.BOLD, 12));
-			g2d.setFont(g2d.getFont().deriveFont(Font.BOLD).deriveFont(12));
-			g2d.drawString(label, x, y);
+			g2d.setFont(new Font("Arial", Font.BOLD, 12));
+			g2d.drawString(label, x + dispx, y + dispy);
 		}
 	}
 
