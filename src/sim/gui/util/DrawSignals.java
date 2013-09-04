@@ -458,20 +458,21 @@ public class DrawSignals extends JFrame {
 	}
 
 	protected void highlightLabel(ListSelectionEvent e) {
-    	setSelectedLabelColor(Color.BLACK);
+    	setSelectedLabelPin(Pin.FALSE);
 		selectedLabel = (String) listOfLabels.getSelectedValue();
-		setSelectedLabelColor(Color.GREEN);
+		setSelectedLabelPin(Pin.HIGHZ);
 	}
 
-    private void setSelectedLabelColor(Color color) {
+    private void setSelectedLabelPin(Pin pin) {
 		if(selectedLabel != null) {
 			for(GuiLabel gl: guiScheme.getLabels()) {
 				if(gl.getName().equals(selectedLabel)) {
-					gl.setColor(color);
+					gl.setPin(pin);
+					gl.setColor(pin == Pin.FALSE? Color.BLACK: Color.GREEN);
 					break;
 				}
 			}
-			guiRenderer.updateScheme();
+			guiRenderer.repaint();
 		}
 	}
 

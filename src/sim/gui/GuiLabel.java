@@ -13,14 +13,10 @@ public class GuiLabel {
 	private int x;
 	private int y;
 
-	public GuiLabel(int x, int y, Pin pin) {
+	public GuiLabel(int x, int y) {
 		this.x = x;
 		this.y = y;
 		this.color = Color.BLACK;
-		if(pin != null) {
-			this.pin = pin;
-			updateLabel();
-		}
 	}
 	
 	public void update(Graphics g, int dispx, int dispy) {

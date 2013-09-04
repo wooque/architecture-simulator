@@ -56,7 +56,10 @@ public class GuiConfigurator {
 						if(tokens[0].trim().equals("label")) {
 							int x = Integer.parseInt(tokens[1]);
 							int y = Integer.parseInt(tokens[2]);
-							scheme.addLabel(new GuiLabel(x, y, lastLine.getPin()));
+							GuiLabel label = new GuiLabel(x, y);
+							label.setPin(lastLine.getPin());
+							label.setName(lastLine.getName());
+							scheme.addLabel(label);
 						} else {
 						
 							int i = 0;
