@@ -6,6 +6,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -230,7 +231,7 @@ public class DrawSignals extends JFrame {
     private void saveConf() {
     	if(!confFilename.getText().isEmpty()) {
 			try {
-				PrintWriter confOut = new PrintWriter(new FileWriter("conf/testing_ground.conf"), true);
+				PrintWriter confOut = new PrintWriter(new FileWriter(confFilename.getText()), true);
 				for(Map.Entry<String, GuiScheme> entry: allSchemes.entrySet()) {
 					String schemeName = entry.getKey();
 					GuiScheme scheme = entry.getValue();
@@ -238,7 +239,7 @@ public class DrawSignals extends JFrame {
 			        confOut.println(schemeName);
 			        confOut.println();
 			        
-			        HashMap<String, ArrayList<GuiLine>> linesToCommit = new HashMap<String, ArrayList<GuiLine>>(); 
+			        TreeMap<String, ArrayList<GuiLine>> linesToCommit = new TreeMap<String, ArrayList<GuiLine>>(); 
 			        
 			        for(GuiLine gl: scheme.getLines()) {
 			        	if(!linesToCommit.containsKey(gl.getName())) {
@@ -250,6 +251,7 @@ public class DrawSignals extends JFrame {
 			        for (Map.Entry<String, ArrayList<GuiLine>> lineEntry : linesToCommit.entrySet()) {
 			        	String lineName = lineEntry.getKey();
 			        	ArrayList<GuiLine> lineSections = lineEntry.getValue();
+			        	
 			        	confOut.printf("%-19s", lineName);
 			        	boolean first = true;
 			        	for(GuiLine gl: lineSections) {
@@ -262,10 +264,9 @@ public class DrawSignals extends JFrame {
 			        		confOut.println();
 			        		first = false;
 			        	}
-			            
 			        }
+			        confOut.println();
 				}
-		        confOut.println();
 		        confOut.close();
 		        JOptionPane.showMessageDialog(DrawSignals.this, "Configuration saved", "Configuration saved", JOptionPane.INFORMATION_MESSAGE);
 			} catch (FileNotFoundException e) {
@@ -283,21 +284,21 @@ public class DrawSignals extends JFrame {
 			String filename = chooser.getSelectedFile().getPath();
 			confFilename.setText(filename);
 			allSchemes = new GuiConfigurator(null, filename, null).getGuiSchemes();
-			if(guiScheme != null && guiScheme.getLines().size() > 0 && guiScheme.getLabels().size() > 0) {
-				allSchemes.put(getTitle().substring(getTitle().lastIndexOf('\\') + 1), guiScheme);
-			} else if(!getTitle().equals("")){
-				String schemeName = getTitle().substring(getTitle().lastIndexOf('\\') + 1);
-				guiScheme = allSchemes.get(schemeName);
-	            for(GuiLine gl: guiScheme.getLines()) {
-            		if(!listModel.contains(gl.getName())) {
-            			listModel.addElement(gl.getName());
-            		}
-	            }
-	            guiRenderer.switchScheme(guiScheme);
-	            zoomPanel.setImage(guiScheme.getImage());
-	            pack();
+			if(guiScheme != null) {
+				if (guiScheme.getLines().size() > 0 && guiScheme.getLabels().size() > 0) {
+					allSchemes.put(getTitle(), guiScheme);
+				} else {
+					guiScheme = allSchemes.get(getTitle());
+		            for(GuiLine gl: guiScheme.getLines()) {
+	            		if(!listModel.contains(gl.getName())) {
+	            			listModel.addElement(gl.getName());
+	            		}
+		            }
+		            guiRenderer.switchScheme(guiScheme);
+		            zoomPanel.setImage(guiScheme.getImage());
+		            pack();
+				}
 			}
-			
 		}
     }
 
@@ -306,8 +307,8 @@ public class DrawSignals extends JFrame {
         int returnVal = chooser.showOpenDialog(DrawSignals.this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
         	String imagePath = chooser.getSelectedFile().getPath();
-        	String imageName = imagePath.substring(imagePath.lastIndexOf('\\') + 1);
-            setTitle(imagePath);
+        	String imageName = chooser.getSelectedFile().getName();
+            setTitle(imageName);
             listModel.clear();
             selected = null;
             if(allSchemes != null) {
@@ -319,7 +320,7 @@ public class DrawSignals extends JFrame {
             		allSchemes.put(imageName, guiScheme);
             	}
             } else {
-	            for(GuiLine gl: guiScheme.getLines()) {
+            	for(GuiLine gl: guiScheme.getLines()) {
             		if(!listModel.contains(gl.getName())) {
             			listModel.addElement(gl.getName());
             		}
