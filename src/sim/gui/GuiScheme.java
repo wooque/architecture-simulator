@@ -37,16 +37,8 @@ public class GuiScheme{
 		return lines;
 	}
 
-	public void setLines(ArrayList<GuiLine> lines) {
-		this.lines = lines;
-	}
-
 	public ArrayList<GuiLabel> getLabels() {
 		return labels;
-	}
-
-	public void setLabels(ArrayList<GuiLabel> labels) {
-		this.labels = labels;
 	}
 	
 	public void addLine(GuiLine line) {
@@ -64,4 +56,12 @@ public class GuiScheme{
 	public void removeLabel(GuiLabel label) {
 		labels.remove(label);
 	}
-}
+	
+	public void clearLines() {
+		lines.clear();
+	}
+	
+	public void clearLabels() {
+		labels.clear();
+	}
+ }

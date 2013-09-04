@@ -74,8 +74,8 @@ public class DrawSignals extends JFrame {
             Point curr = new Point(e.getX() - disp.x, e.getY() - disp.y);
             
         	if(guiLine == null) {
-            	// TODO make constructor without ArrayList
-            	guiLine = new GuiLine(new ArrayList<Point>(), Pin.TRUE);
+            	guiLine = new GuiLine();
+            	guiLine.setPin(Pin.TRUE);
             	guiScheme.addLine(guiLine);
             } else {
             	last = curr;
@@ -351,8 +351,7 @@ public class DrawSignals extends JFrame {
     }
     
     private void removeAllSignals() {
-    	// TODO add method for clearing lines
-        guiScheme.setLines(new ArrayList<GuiLine>());
+        guiScheme.clearLines();
         listModel.clear();
         selected = null;
         guiRenderer.repaint();

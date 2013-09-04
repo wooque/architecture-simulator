@@ -2,7 +2,6 @@ package sim.gui;
 
 import java.awt.Point;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -30,8 +29,8 @@ public class GuiConfigurator {
 			
 			String confLine = confFileReader.readLine();
 			
-			String lineName = null;
-			ArrayList<Point> lineSections = null;
+			GuiLine lastLine = null;
+			GuiLine line = null;
 			String schemeName = null;
 			GuiScheme scheme = null;
 			
@@ -50,48 +49,54 @@ public class GuiConfigurator {
 						}
 						schemeName = tokens[0];
 						scheme = new GuiScheme("images/"+tokens[0]);
-						lineName = null;
+						line = null;
+						lastLine = null;
 					} else {
 						
 						int i = 0;
+						line = new GuiLine();
 						if(tokens[0].isEmpty()) {
 							// workaround for String.split() method not recognizing if delimiter is on begining
 							i = 1;
 						} else if((tokens[0].charAt(0) >= 'a' && tokens[0].charAt(0) <= 'z')
 							|| (tokens[0].charAt(0) >= 'A' && tokens[0].charAt(0) <= 'Z')) {
 							
-							lineName = tokens[0];
+							line.setName(tokens[0]);
 							i = 1;
 						}
 						
-						lineSections = new ArrayList<Point>();
 						for(; i < tokens.length; i+=2) {
 							int x = Integer.parseInt(tokens[i]);
 							int y = Integer.parseInt(tokens[i + 1]);
-							lineSections.add(new Point(x, y));
+							line.addPoint(new Point(x, y));
 						}
-						Pin linePin = null;
-						if(lineName.equals("true")) {
-							linePin = Pin.TRUE;
-						} else if(lineName.equals("false")) {
-							linePin = Pin.FALSE;
+						
+						if(line.getName() == null) {
+							line.setName(lastLine.getName());
+							line.setPin(lastLine.getPin());
 						} else {
-							if(components != null) {
-								LogicalComponent logComp = components.get(lineName);
-								if(logComp == null) {
-									log.println("Non existent pin: "+lineName);
-								} else {
-									linePin = logComp.getOut(0);
-								}
+							Pin linePin = null;
+							if(line.getName().equals("true")) {
+								linePin = Pin.TRUE;
+							} else if(line.getName().equals("false")) {
+								linePin = Pin.FALSE;
 							} else {
-								linePin = new Pin();
+								if(components != null) {
+									LogicalComponent logComp = components.get(line.getName());
+									if(logComp == null) {
+										log.println("Non existent pin: "+line.getName());
+									} else {
+										linePin = logComp.getOut(0);
+									}
+								} else {
+									linePin = new Pin();
+								}
 							}
+							line.setPin(linePin);
 						}
-						// TODO replace linesection with GuiLine
-						GuiLine newLine = new GuiLine(lineSections, linePin);
-						newLine.setName(lineName);
-						scheme.addLine(newLine);
-						lineSections = null;
+						scheme.addLine(line);
+						lastLine = line;
+						line = null;
 					}
 				}
 				confLine = confFileReader.readLine();
@@ -100,7 +105,6 @@ public class GuiConfigurator {
 			if(scheme != null) {
 				guiSchemes.put(schemeName, scheme);
 			}
-			
 			
 			confFileReader.close();
 			

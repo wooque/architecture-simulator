@@ -12,12 +12,8 @@ public class GuiLine {
 	private String name;
 	private Pin pin;
 
-	public GuiLine(ArrayList<Point> points, Pin pin) {
-		this.points = points;
-		if(pin != null) {
-			this.pin = pin;
-			updateColor();
-		}
+	public GuiLine() {
+		this.points = new ArrayList<Point>();
 	}
 	
 	public void update(Graphics g, int x, int y) {
@@ -89,12 +85,12 @@ public class GuiLine {
 		points.remove(p);
 	}
 	
-	public int size() {
-		return points.size();
-	}
-	
 	public ArrayList<Point> getPoints() {
 		return points;
+	}
+	
+	public int size() {
+		return points.size();
 	}
 
 	public String getName() {
