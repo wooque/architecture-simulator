@@ -1,5 +1,6 @@
 package sim.gui.util;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.*;
 import java.io.*;
@@ -27,6 +28,7 @@ public class DrawSignals extends JFrame {
     private JList<String> listOfLabels;
     private DefaultListModel<String> labelModel;
     private String selectedLine;
+    private String selectedLabel;
     private Point last;
     private JLabel confFilename;
 
@@ -338,6 +340,11 @@ public class DrawSignals extends JFrame {
 	            			lineModel.addElement(gl.getName());
 	            		}
 		            }
+	            	for(GuiLabel gl: guiScheme.getLabels()) {
+	            		if(!labelModel.contains(gl.getName())) {
+	            			labelModel.addElement(gl.getName());
+	            		}
+	            	}
 		            guiRenderer.switchScheme(guiScheme);
 		            zoomPanel.setImage(guiScheme.getImage());
 		            pack();
@@ -353,8 +360,12 @@ public class DrawSignals extends JFrame {
         	String imagePath = chooser.getSelectedFile().getPath();
         	String imageName = chooser.getSelectedFile().getName();
             setTitle(imageName);
+            
             lineModel.clear();
             selectedLine = null;
+            labelModel.clear();
+            selectedLabel = null;
+            
             if(allSchemes != null) {
             	guiScheme = allSchemes.get(imageName);
             }
@@ -369,6 +380,11 @@ public class DrawSignals extends JFrame {
             			lineModel.addElement(gl.getName());
             		}
 	            }
+            	for(GuiLabel gl: guiScheme.getLabels()) {
+            		if(!labelModel.contains(gl.getName())) {
+            			labelModel.addElement(gl.getName());
+            		}
+            	}
             }
             guiRenderer.switchScheme(guiScheme);
             zoomPanel.setImage(guiScheme.getImage());
@@ -401,7 +417,7 @@ public class DrawSignals extends JFrame {
         guiRenderer.repaint();
     }
     
-    private void setPinForSelected(Pin in) {
+    private void setSelectedLinePin(Pin in) {
 		if(selectedLine != null) {
 			for(GuiLine gl: guiScheme.getLines()) {
 				if(gl.getName().equals(selectedLine)) {
@@ -413,24 +429,53 @@ public class DrawSignals extends JFrame {
     }
     
     private void highlightLine(ListSelectionEvent e) {
-    	setPinForSelected(Pin.FALSE);
+    	setSelectedLinePin(Pin.FALSE);
 		selectedLine = (String) listOfLines.getSelectedValue();
-		setPinForSelected(Pin.HIGHZ);
+		setSelectedLinePin(Pin.HIGHZ);
     }
 
     protected void removeAllLabels() {
-		
+        guiScheme.clearLabels();
+        labelModel.clear();
+        selectedLabel = null;
+        guiRenderer.repaint();
 	}
 
 	protected void removeSelectedLabel() {
-		
+    	if(selectedLabel != null) {
+			GuiLabel toRemove = null;
+			for(GuiLabel gl: guiScheme.getLabels()) {
+				if(gl.getName().equals(selectedLabel)) {
+					toRemove = gl;
+					break;
+				}
+			}
+			guiScheme.removeLabel(toRemove);
+			labelModel.removeElement(selectedLabel);
+			selectedLabel = null;
+			guiRenderer.repaint();
+		}
 	}
 
 	protected void highlightLabel(ListSelectionEvent e) {
-		
+    	setSelectedLabelColor(Color.BLACK);
+		selectedLabel = (String) listOfLabels.getSelectedValue();
+		setSelectedLabelColor(Color.GREEN);
 	}
 
-    public static void main(String[] args) {
+    private void setSelectedLabelColor(Color color) {
+		if(selectedLabel != null) {
+			for(GuiLabel gl: guiScheme.getLabels()) {
+				if(gl.getName().equals(selectedLabel)) {
+					gl.setColor(color);
+					break;
+				}
+			}
+			guiRenderer.updateScheme();
+		}
+	}
+
+	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {

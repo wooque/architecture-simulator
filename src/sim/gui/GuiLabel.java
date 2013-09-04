@@ -7,6 +7,7 @@ import sim.components.Pin;
 public class GuiLabel {
 
 	private String label;
+	private Color color;
 	private String name;
 	private Pin pin;
 	private int x;
@@ -15,6 +16,7 @@ public class GuiLabel {
 	public GuiLabel(int x, int y, Pin pin) {
 		this.x = x;
 		this.y = y;
+		this.color = Color.BLACK;
 		if(pin != null) {
 			this.pin = pin;
 			updateLabel();
@@ -32,7 +34,7 @@ public class GuiLabel {
 	public void draw(Graphics g, int dispx, int dispy, boolean forceDraw) {
 		if (updateLabel() || forceDraw) {
 			Graphics2D g2d = (Graphics2D) g;
-			g2d.setColor(Color.BLACK);
+			g2d.setColor(color);
 			g2d.setFont(new Font("Arial", Font.BOLD, 12));
 			g2d.drawString(label, x + dispx, y + dispy);
 		}
@@ -68,5 +70,13 @@ public class GuiLabel {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
 	}
 }
