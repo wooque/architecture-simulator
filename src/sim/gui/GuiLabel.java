@@ -7,6 +7,7 @@ import sim.components.Pin;
 public class GuiLabel {
 
 	private String label;
+	private String name;
 	private Pin pin;
 	private int x;
 	private int y;
@@ -59,5 +60,13 @@ public class GuiLabel {
 
 	public void setPin(Pin pin) {
 		this.pin = pin;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

@@ -36,7 +36,7 @@ public class GuiConfigurator {
 			
 			while(confLine != null) {
 				
-				String[] tokens = confLine.split(",(\\s)*|(\\)){0,1}(\\s)*\\(|\\)");
+				String[] tokens = confLine.split(",(\\s)*|\\)(\\s)*\\(|(\\s)*\\(|\\)");
 				
 				if(!(tokens.length == 1 && tokens[0].isEmpty()) 
 					&& !((tokens[0].length() > 1) && tokens[0].substring(0,2).equals("//"))) {
@@ -53,50 +53,57 @@ public class GuiConfigurator {
 						lastLine = null;
 					} else {
 						
-						int i = 0;
-						line = new GuiLine();
-						if(tokens[0].isEmpty()) {
-							// workaround for String.split() method not recognizing if delimiter is on begining
-							i = 1;
-						} else if((tokens[0].charAt(0) >= 'a' && tokens[0].charAt(0) <= 'z')
-							|| (tokens[0].charAt(0) >= 'A' && tokens[0].charAt(0) <= 'Z')) {
-							
-							line.setName(tokens[0]);
-							i = 1;
-						}
-						
-						for(; i < tokens.length; i+=2) {
-							int x = Integer.parseInt(tokens[i]);
-							int y = Integer.parseInt(tokens[i + 1]);
-							line.addPoint(new Point(x, y));
-						}
-						
-						if(line.getName() == null) {
-							line.setName(lastLine.getName());
-							line.setPin(lastLine.getPin());
+						if(tokens[0].trim().equals("label")) {
+							int x = Integer.parseInt(tokens[1]);
+							int y = Integer.parseInt(tokens[2]);
+							scheme.addLabel(new GuiLabel(x, y, lastLine.getPin()));
 						} else {
-							Pin linePin = null;
-							if(line.getName().equals("true")) {
-								linePin = Pin.TRUE;
-							} else if(line.getName().equals("false")) {
-								linePin = Pin.FALSE;
-							} else {
-								if(components != null) {
-									LogicalComponent logComp = components.get(line.getName());
-									if(logComp == null) {
-										log.println("Non existent pin: "+line.getName());
-									} else {
-										linePin = logComp.getOut(0);
-									}
-								} else {
-									linePin = new Pin();
-								}
+						
+							int i = 0;
+							line = new GuiLine();
+							if(tokens[0].isEmpty()) {
+								// workaround for String.split() method not recognizing if delimiter is on begining
+								i = 1;
+							} else if((tokens[0].charAt(0) >= 'a' && tokens[0].charAt(0) <= 'z')
+								|| (tokens[0].charAt(0) >= 'A' && tokens[0].charAt(0) <= 'Z')) {
+								
+								line.setName(tokens[0]);
+								i = 1;
 							}
-							line.setPin(linePin);
+							
+							for(; i < tokens.length; i+=2) {
+								int x = Integer.parseInt(tokens[i]);
+								int y = Integer.parseInt(tokens[i + 1]);
+								line.addPoint(new Point(x, y));
+							}
+							
+							if(line.getName() == null) {
+								line.setName(lastLine.getName());
+								line.setPin(lastLine.getPin());
+							} else {
+								Pin linePin = null;
+								if(line.getName().equals("true")) {
+									linePin = Pin.TRUE;
+								} else if(line.getName().equals("false")) {
+									linePin = Pin.FALSE;
+								} else {
+									if(components != null) {
+										LogicalComponent logComp = components.get(line.getName());
+										if(logComp == null) {
+											log.println("Non existent pin: "+line.getName());
+										} else {
+											linePin = logComp.getOut(0);
+										}
+									} else {
+										linePin = new Pin();
+									}
+								}
+								line.setPin(linePin);
+							}
+							scheme.addLine(line);
+							lastLine = line;
+							line = null;
 						}
-						scheme.addLine(line);
-						lastLine = line;
-						line = null;
 					}
 				}
 				confLine = confFileReader.readLine();

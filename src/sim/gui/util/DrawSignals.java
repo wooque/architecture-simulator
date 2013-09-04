@@ -23,8 +23,10 @@ public class DrawSignals extends JFrame {
     private GuiLine guiLine;
     private ZoomPanel zoomPanel;
     private JList<String> listOfLines;
-    private DefaultListModel<String> listModel;
-    private String selected;
+    private DefaultListModel<String> lineModel;
+    private JList<String> listOfLabels;
+    private DefaultListModel<String> labelModel;
+    private String selectedLine;
     private Point last;
     private JLabel confFilename;
 
@@ -93,8 +95,8 @@ public class DrawSignals extends JFrame {
                 String s = (String) JOptionPane.showInputDialog(DrawSignals.this, "Signal Name:", "New signal", JOptionPane.PLAIN_MESSAGE, null, null, null);
                 if (s != null) {
 	                guiLine.setName(s);
-	                if(!listModel.contains(s)) {
-	                	listModel.addElement(s);
+	                if(!lineModel.contains(s)) {
+	                	lineModel.addElement(s);
 	                }
 	                guiLine.setPin(Pin.FALSE);
 	                guiLine = null;
@@ -151,8 +153,8 @@ public class DrawSignals extends JFrame {
 
         southeast.add(Box.createVerticalGlue());
         listOfLines = new JList<String>();
-        listModel = new DefaultListModel<String>();
-        listOfLines.setModel(listModel);
+        lineModel = new DefaultListModel<String>();
+        listOfLines.setModel(lineModel);
         listOfLines.addListSelectionListener(new ListSelectionListener() {
 			
 			@Override
@@ -192,6 +194,48 @@ public class DrawSignals extends JFrame {
         southeast.add(removeSignalPanel);
         
         southeast.add(Box.createVerticalGlue());
+        listOfLabels = new JList<String>();
+        labelModel = new DefaultListModel<String>();
+        listOfLabels.setModel(labelModel);
+        listOfLabels.addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				highlightLabel(e);
+			}
+		});
+        listOfLabels.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listOfLabels.setLayoutOrientation(JList.VERTICAL);
+        JScrollPane labelsScrollPane = new JScrollPane(listOfLines);
+        labelsScrollPane.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        southeast.add(labelsScrollPane);
+        
+        southeast.add(Box.createVerticalGlue());
+        JPanel removeLabelPanel = new JPanel();
+        
+        JButton removeSelectedLabelButton = new JButton("Clear selected");
+        removeSelectedLabelButton.setAlignmentX(CENTER_ALIGNMENT);
+        removeSelectedLabelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeSelectedLabel();
+            }
+        });
+        removeLabelPanel.add(removeSelectedLabelButton);
+        
+        JButton removeAlllabelssButton = new JButton("Clear all lines");
+        removeAlllabelssButton.setAlignmentX(CENTER_ALIGNMENT);
+        removeAlllabelssButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeAllLabels();
+            }
+        });
+        removeLabelPanel.add(removeAlllabelssButton);
+        
+        southeast.add(removeLabelPanel);
+        
+        southeast.add(Box.createVerticalGlue());
         confFilename = new JLabel();
         confFilename.setAlignmentX(CENTER_ALIGNMENT);
         southeast.add(confFilename);
@@ -228,7 +272,7 @@ public class DrawSignals extends JFrame {
         setVisible(true);
     }
 
-    private void saveConf() {
+	private void saveConf() {
     	if(!confFilename.getText().isEmpty()) {
 			try {
 				PrintWriter confOut = new PrintWriter(new FileWriter(confFilename.getText()), true);
@@ -290,8 +334,8 @@ public class DrawSignals extends JFrame {
 				} else {
 					guiScheme = allSchemes.get(getTitle());
 		            for(GuiLine gl: guiScheme.getLines()) {
-	            		if(!listModel.contains(gl.getName())) {
-	            			listModel.addElement(gl.getName());
+	            		if(!lineModel.contains(gl.getName())) {
+	            			lineModel.addElement(gl.getName());
 	            		}
 		            }
 		            guiRenderer.switchScheme(guiScheme);
@@ -309,8 +353,8 @@ public class DrawSignals extends JFrame {
         	String imagePath = chooser.getSelectedFile().getPath();
         	String imageName = chooser.getSelectedFile().getName();
             setTitle(imageName);
-            listModel.clear();
-            selected = null;
+            lineModel.clear();
+            selectedLine = null;
             if(allSchemes != null) {
             	guiScheme = allSchemes.get(imageName);
             }
@@ -321,8 +365,8 @@ public class DrawSignals extends JFrame {
             	}
             } else {
             	for(GuiLine gl: guiScheme.getLines()) {
-            		if(!listModel.contains(gl.getName())) {
-            			listModel.addElement(gl.getName());
+            		if(!lineModel.contains(gl.getName())) {
+            			lineModel.addElement(gl.getName());
             		}
 	            }
             }
@@ -333,10 +377,10 @@ public class DrawSignals extends JFrame {
     }
 
     private void removeSelectedSignal() {
-    	if(selected != null) {
+    	if(selectedLine != null) {
 			ArrayList<GuiLine> toRemove = new ArrayList<GuiLine>();
 			for(GuiLine gl: guiScheme.getLines()) {
-				if(gl.getName().equals(selected)) {
+				if(gl.getName().equals(selectedLine)) {
 					toRemove.add(gl);
 				}
 			}
@@ -344,23 +388,23 @@ public class DrawSignals extends JFrame {
 				guiScheme.removeLine(gl);
 			}
 
-			listModel.removeElement(selected);
-			selected = null;
+			lineModel.removeElement(selectedLine);
+			selectedLine = null;
 			guiRenderer.repaint();
 		}
     }
     
     private void removeAllSignals() {
         guiScheme.clearLines();
-        listModel.clear();
-        selected = null;
+        lineModel.clear();
+        selectedLine = null;
         guiRenderer.repaint();
     }
     
     private void setPinForSelected(Pin in) {
-		if(selected != null) {
+		if(selectedLine != null) {
 			for(GuiLine gl: guiScheme.getLines()) {
-				if(gl.getName().equals(selected)) {
+				if(gl.getName().equals(selectedLine)) {
 					gl.setPin(in);
 				}
 			}
@@ -370,9 +414,21 @@ public class DrawSignals extends JFrame {
     
     private void highlightLine(ListSelectionEvent e) {
     	setPinForSelected(Pin.FALSE);
-		selected = (String) listOfLines.getSelectedValue();
+		selectedLine = (String) listOfLines.getSelectedValue();
 		setPinForSelected(Pin.HIGHZ);
     }
+
+    protected void removeAllLabels() {
+		
+	}
+
+	protected void removeSelectedLabel() {
+		
+	}
+
+	protected void highlightLabel(ListSelectionEvent e) {
+		
+	}
 
     public static void main(String[] args) {
 		try {
