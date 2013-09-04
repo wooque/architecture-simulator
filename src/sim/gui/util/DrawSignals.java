@@ -208,7 +208,7 @@ public class DrawSignals extends JFrame {
 		});
         listOfLabels.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listOfLabels.setLayoutOrientation(JList.VERTICAL);
-        JScrollPane labelsScrollPane = new JScrollPane(listOfLines);
+        JScrollPane labelsScrollPane = new JScrollPane(listOfLabels);
         labelsScrollPane.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         southeast.add(labelsScrollPane);
         
@@ -225,7 +225,7 @@ public class DrawSignals extends JFrame {
         });
         removeLabelPanel.add(removeSelectedLabelButton);
         
-        JButton removeAlllabelssButton = new JButton("Clear all lines");
+        JButton removeAlllabelssButton = new JButton("Clear all labels");
         removeAlllabelssButton.setAlignmentX(CENTER_ALIGNMENT);
         removeAlllabelssButton.addActionListener(new ActionListener() {
             @Override
