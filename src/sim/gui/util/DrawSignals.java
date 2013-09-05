@@ -68,7 +68,7 @@ public class DrawSignals extends JFrame {
                     leftClick(e);
                     break;
                 case MouseEvent.BUTTON3:
-                    rightClick();
+                    rightClick(e);
                     break;
             }
         }
@@ -87,23 +87,35 @@ public class DrawSignals extends JFrame {
         	guiLine.addPoint(curr);
         }
 
-        private void rightClick() {
-            guiLine.removePoint(last);
-            last = null;
-            if (guiLine.size() < 2) {
-            	guiScheme.removeLine(guiLine);
-            	guiLine = null;
-            } else {
-                String s = (String) JOptionPane.showInputDialog(DrawSignals.this, "Signal Name:", "New signal", JOptionPane.PLAIN_MESSAGE, null, null, null);
-                if (s != null) {
-	                guiLine.setName(s);
-	                if(!lineModel.contains(s)) {
-	                	lineModel.addElement(s);
+        private void rightClick(MouseEvent e) {
+        	if(last != null) {
+	            guiLine.removePoint(last);
+	            last = null;
+	            if (guiLine.size() < 2) {
+	            	guiScheme.removeLine(guiLine);
+	            	guiLine = null;
+	            } else {
+	                String s = (String) JOptionPane.showInputDialog(DrawSignals.this, "Signal Name:", "New signal", JOptionPane.PLAIN_MESSAGE, null, null, null);
+	                if (s != null) {
+		                guiLine.setName(s);
+		                if(!lineModel.contains(s)) {
+		                	lineModel.addElement(s);
+		                }
+		                guiLine.setPin(Pin.FALSE);
+		                guiLine = null;
 	                }
-	                guiLine.setPin(Pin.FALSE);
-	                guiLine = null;
+	            }
+        	} else {
+        		String s = (String) JOptionPane.showInputDialog(DrawSignals.this, "Signal Name:", "New label", JOptionPane.PLAIN_MESSAGE, null, null, null);
+                if (s != null) {
+                	Point disp = guiRenderer.getDisplacement();
+                	GuiLabel label = new GuiLabel(e.getX() - disp.x, e.getY() - disp.y);
+	                label.setName(s);
+	                label.setPin(Pin.FALSE);
+	                labelModel.addElement(s);
+	                guiScheme.addLabel(label);
                 }
-            }
+        	}
             guiRenderer.repaint();
         }
     }
