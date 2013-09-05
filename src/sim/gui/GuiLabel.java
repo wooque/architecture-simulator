@@ -52,6 +52,14 @@ public class GuiLabel {
 		}
 	}
 
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
 	public Pin getPin() {
 		return pin;
 	}

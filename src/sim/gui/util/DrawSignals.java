@@ -286,12 +286,16 @@ public class DrawSignals extends JFrame {
 			        confOut.println();
 			        
 			        TreeMap<String, ArrayList<GuiLine>> linesToCommit = new TreeMap<String, ArrayList<GuiLine>>(); 
+			        TreeMap<String, GuiLabel> labelsToCommit = new TreeMap<String, GuiLabel>();
 			        
 			        for(GuiLine gl: scheme.getLines()) {
 			        	if(!linesToCommit.containsKey(gl.getName())) {
 			        		linesToCommit.put(gl.getName(), new ArrayList<GuiLine>());
 			        	}
 			        	linesToCommit.get(gl.getName()).add(gl);
+			        }
+			        for(GuiLabel gl: scheme.getLabels()) {
+			        	labelsToCommit.put(gl.getName(), gl);
 			        }
 			        
 			        for (Map.Entry<String, ArrayList<GuiLine>> lineEntry : linesToCommit.entrySet()) {
@@ -309,6 +313,10 @@ public class DrawSignals extends JFrame {
 			        		}
 			        		confOut.println();
 			        		first = false;
+			        	}
+			        	if(labelsToCommit.containsKey(lineName)) {
+			        		GuiLabel label = labelsToCommit.get(lineName);
+			        		confOut.println("                    label("+label.getX()+","+label.getY()+")");
 			        	}
 			        }
 			        confOut.println();
