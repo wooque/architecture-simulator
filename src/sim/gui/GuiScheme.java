@@ -12,6 +12,7 @@ public class GuiScheme{
 	private BufferedImage image;
 	private ArrayList<GuiLine> lines;
 	private ArrayList<GuiLabel> labels;
+	private ArrayList<GuiHyperlink> hyperlinks;
 	
 	public GuiScheme(String filename){
 		setImage(filename);
@@ -41,6 +42,10 @@ public class GuiScheme{
 		return labels;
 	}
 	
+	public ArrayList<GuiHyperlink> getHyperlinks() {
+		return hyperlinks;
+	}
+	
 	public void addLine(GuiLine line) {
 		lines.add(line);
 	}
@@ -57,11 +62,23 @@ public class GuiScheme{
 		labels.remove(label);
 	}
 	
+	public void addHyperlink(GuiHyperlink hyperlink) {
+		hyperlinks.add(hyperlink);
+	}
+	
+	public void removeHyperlinks(GuiHyperlink hyperlink) {
+		hyperlinks.remove(hyperlink);
+	}
+	
 	public void clearLines() {
 		lines.clear();
 	}
 	
 	public void clearLabels() {
 		labels.clear();
+	}
+
+	public void clearHyperlinks() {
+		hyperlinks.clear();
 	}
  }
