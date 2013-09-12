@@ -89,6 +89,8 @@ public class GuiConfigurator {
 									linePin = Pin.TRUE;
 								} else if(line.getName().equals("false")) {
 									linePin = Pin.FALSE;
+								} else if(line.getName().equals("zero")) {
+									linePin = Pin.ZERO;
 								} else {
 									if(components != null) {
 										LogicalComponent logComp = components.get(line.getName());

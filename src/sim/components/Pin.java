@@ -8,6 +8,7 @@ public class Pin { // Izmene:prvi konstruktor Pin ne prima argumente jer to
 	public static final Pin TRUE = new Pin(true);
 	public static final Pin FALSE = new Pin(false);
 	public static final Pin HIGHZ = new Pin();
+	public static final Pin ZERO = new Pin(0, 8);
 	private int intVal;
 	private boolean boolVal;
 	private int tempIntVal;

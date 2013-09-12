@@ -448,6 +448,8 @@ public class Configurator {
 										parentComp = DummyPin.TRUE;
 									} else if (pinName.equals("false")) {
 										parentComp = DummyPin.FALSE;
+									} else if (pinName.equals("zero")) {
+										parentComp = DummyPin.ZERO;
 									} else {
 										if (pinName.indexOf(".") == -1) {
 											pinName = schemeName + "." + pinName;
