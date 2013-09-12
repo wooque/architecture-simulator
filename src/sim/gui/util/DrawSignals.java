@@ -350,25 +350,30 @@ public class DrawSignals extends JFrame {
 			String filename = chooser.getSelectedFile().getPath();
 			confFilename.setText(filename);
 			allSchemes = new GuiConfigurator(null, filename, null).getGuiSchemes();
-			if(guiScheme != null) {
-				if (guiScheme.getLines().size() > 0 && guiScheme.getLabels().size() > 0) {
-					allSchemes.put(getTitle(), guiScheme);
-				} else {
-					guiScheme = allSchemes.get(getTitle());
-		            for(GuiLine gl: guiScheme.getLines()) {
-	            		if(!lineModel.contains(gl.getName())) {
-	            			lineModel.addElement(gl.getName());
-	            		}
-		            }
-	            	for(GuiLabel gl: guiScheme.getLabels()) {
-	            		if(!labelModel.contains(gl.getName())) {
-	            			labelModel.addElement(gl.getName());
-	            		}
-	            	}
-		            guiRenderer.switchScheme(guiScheme);
-		            zoomPanel.setImage(guiScheme.getImage());
-		            pack();
-				}
+			GuiScheme oldScheme = guiScheme;
+			guiScheme = allSchemes.get(getTitle());
+			if (guiScheme == null) {
+				guiScheme = oldScheme;
+				allSchemes.put(getTitle(), guiScheme);
+			} else {
+	            lineModel.clear();
+	            selectedLine = null;
+	            labelModel.clear();
+	            selectedLabel = null;
+	            
+	            for(GuiLine gl: guiScheme.getLines()) {
+            		if(!lineModel.contains(gl.getName())) {
+            			lineModel.addElement(gl.getName());
+            		}
+	            }
+            	for(GuiLabel gl: guiScheme.getLabels()) {
+            		if(!labelModel.contains(gl.getName())) {
+            			labelModel.addElement(gl.getName());
+            		}
+            	}
+	            guiRenderer.switchScheme(guiScheme);
+	            zoomPanel.setImage(guiScheme.getImage());
+	            validate();
 			}
 		}
     }
@@ -385,6 +390,7 @@ public class DrawSignals extends JFrame {
             selectedLine = null;
             labelModel.clear();
             selectedLabel = null;
+            guiScheme = null;
             
             if(allSchemes != null) {
             	guiScheme = allSchemes.get(imageName);
@@ -408,7 +414,7 @@ public class DrawSignals extends JFrame {
             }
             guiRenderer.switchScheme(guiScheme);
             zoomPanel.setImage(guiScheme.getImage());
-            pack();
+            validate();
         }
     }
 
@@ -497,11 +503,11 @@ public class DrawSignals extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
         new DrawSignals();
     }
 }
