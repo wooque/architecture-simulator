@@ -65,7 +65,7 @@ public class Main extends JFrame {
 		steps = stepLoader.getSteps();
 		desc = stepLoader.getDesc();
 		
-		schemeRenderer = new GuiSchemeRenderer(schemes.get("adr_1.png"));
+		schemeRenderer = new GuiSchemeRenderer(schemes.get("adr_1.gif"));
 		Menu menuItems = new Menu(schemes, schemeRenderer, "conf/menu.conf", log);
 		JScrollPane scrollPane = new JScrollPane(schemeRenderer);
 		Dimension scrollSize = new Dimension(800, 600);
