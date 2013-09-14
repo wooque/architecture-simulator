@@ -142,7 +142,7 @@ public class Main extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				memWindow.updateMemoryView();
+				regsWindow.updateRegistersView();
 				regsWindow.setVisible(true);
 			}
 		});
@@ -300,7 +300,7 @@ public class Main extends JFrame {
 			memWindow.updateMemoryView();
 		}
 		if(regsWindow.isVisible()) {
-			regsWindow.updateRegisters();
+			regsWindow.updateRegistersView();
 		}
 	}
 	

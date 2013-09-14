@@ -173,7 +173,7 @@ public class RegistersFrame extends JFrame{
 		}
 	}
 
-	public void updateRegisters() {
+	public void updateRegistersView() {
 		for (int i = 0; i < 32; i++) {
 			regsTextFields[i].setText(Integer.toHexString(((Registers) components.get("addr.gpr")).getRegValue(i)));
 		}

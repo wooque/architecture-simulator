@@ -615,7 +615,7 @@ public class Configurator {
 		}
 	}
 	
-	public HashMap<String, LogicalComponent> getComponents() {
+	public LinkedHashMap<String, LogicalComponent> getComponents() {
 		return components;
 	}
 

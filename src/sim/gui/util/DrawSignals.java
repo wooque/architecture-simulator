@@ -6,12 +6,15 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.*;
 import javax.swing.event.*;
 
+import sim.Configurator;
+import sim.components.LogicalComponent;
 import sim.components.Pin;
 import sim.gui.*;
 
@@ -20,6 +23,7 @@ public class DrawSignals extends JFrame {
 
     private GuiSchemeRenderer guiRenderer;
     private HashMap<String, GuiScheme> allSchemes;
+    private LinkedHashMap<String, LogicalComponent> components;
     private GuiScheme guiScheme;
     private GuiLine guiLine;
     private ZoomPanel zoomPanel;
@@ -97,25 +101,33 @@ public class DrawSignals extends JFrame {
 	            } else {
 	                String s = (String) JOptionPane.showInputDialog(DrawSignals.this, "Signal Name:", "New signal", JOptionPane.PLAIN_MESSAGE, null, null, null);
 	                if (s != null) {
-		                guiLine.setName(s);
-		                if(!lineModel.contains(s)) {
-		                	lineModel.addElement(s);
-		                }
-		                guiLine.setPin(Pin.FALSE);
-		                guiLine = null;
+	                	if(components != null && !components.containsKey(s)) {
+	                		JOptionPane.showMessageDialog(DrawSignals.this, "Signal does not exist", "Signal does not exist", JOptionPane.ERROR_MESSAGE);
+	                	} else {
+			                guiLine.setName(s);
+			                if(!lineModel.contains(s)) {
+			                	lineModel.addElement(s);
+			                }
+			                guiLine.setPin(Pin.FALSE);
+			                guiLine = null;
+	                	}
 	                }
 	            }
         	} else {
         		String s = (String) JOptionPane.showInputDialog(DrawSignals.this, "Signal Name:", "New label", JOptionPane.PLAIN_MESSAGE, null, null, null);
                 if (s != null) {
-                	Point disp = guiRenderer.getDisplacement();
-                	GuiLabel label = new GuiLabel(e.getX() - disp.x, e.getY() - disp.y);
-	                label.setName(s);
-	                label.setPin(Pin.FALSE);
-	                if(!labelModel.contains(s)) {
-	                	labelModel.addElement(s);
+                	if(components != null && !components.containsKey(s)) {
+                		JOptionPane.showMessageDialog(DrawSignals.this, "Signal does not exist", "Signal does not exist", JOptionPane.ERROR_MESSAGE);
+                	} else {
+	                	Point disp = guiRenderer.getDisplacement();
+	                	GuiLabel label = new GuiLabel(e.getX() - disp.x, e.getY() - disp.y);
+		                label.setName(s);
+		                label.setPin(Pin.FALSE);
+		                if(!labelModel.contains(s)) {
+		                	labelModel.addElement(s);
+		                }
+		                guiScheme.addLabel(label);
 	                }
-	                guiScheme.addLabel(label);
                 }
         	}
             guiRenderer.repaint();
@@ -356,7 +368,9 @@ public class DrawSignals extends JFrame {
 		if(retVal == JFileChooser.APPROVE_OPTION) {
 			String filename = chooser.getSelectedFile().getPath();
 			confFilename.setText(filename);
-			allSchemes = new GuiConfigurator(null, filename, null).getGuiSchemes();
+			// TODO schemes.conf is hardcoded, put schems.conf filename in gui.conf for example
+			components = new Configurator("conf/schemes.conf", null).getComponents();
+			allSchemes = new GuiConfigurator(components, filename, null).getGuiSchemes();
 			GuiScheme oldScheme = guiScheme;
 			guiScheme = allSchemes.get(getTitle());
 			if (guiScheme == null) {

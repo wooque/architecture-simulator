@@ -334,6 +334,7 @@ public class Assembler {
 						unpacked.typeOfAddressing = 6;
 						int limit = token.indexOf(")");
 						unpacked.low = Integer.parseInt(token.substring(limit + 1));
+						unpacked.high = unpacked.low < 0? 0xFF: 0;
 						location += 4;
 						
 					// indirect memory addressing
