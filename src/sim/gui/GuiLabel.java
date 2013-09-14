@@ -49,7 +49,17 @@ public class GuiLabel {
 				return false;
 			}
 		} else if (label == null || !label.equals(Integer.toHexString(pin.getIntVal()))) {
-			label = "000"+Integer.toHexString(pin.getIntVal()).toUpperCase();
+			label = Integer.toHexString(pin.getIntVal()).toUpperCase();
+			
+			int leadingZeros = pin.getNumOfLines() / 4 + (pin.getNumOfLines() % 4 > 0? 1: 0) - label.length();
+			
+			StringBuilder str = new StringBuilder();
+			for(int i = 0; i < leadingZeros; i++) {
+				str.append("0");
+			}
+			str.append(label);
+			
+			label = str.toString();
 			return true;
 		} else {
 			return false;
