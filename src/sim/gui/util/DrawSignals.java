@@ -359,7 +359,9 @@ public class DrawSignals extends JFrame {
 			guiScheme = allSchemes.get(getTitle());
 			if (guiScheme == null) {
 				guiScheme = oldScheme;
-				allSchemes.put(getTitle(), guiScheme);
+				if(!getTitle().equals("Draw Signals")) {
+					allSchemes.put(getTitle(), guiScheme);
+				}
 			} else {
 	            lineModel.clear();
 	            selectedLine = null;
