@@ -209,7 +209,7 @@ public class Main extends JFrame {
 		add("East", east);
 
 		validate();
-		size = new Dimension(scrollPane.getWidth() + menuItems.getWidth() + east.getWidth(), scrollPane.getHeight());
+		size = new Dimension(scrollPane.getWidth() + menuItems.getWidth() + east.getWidth() + 215, scrollPane.getHeight() + 120);
 		setSize(size);
 		setPreferredSize(size);
 		

@@ -9,7 +9,7 @@ public class IntToBools extends LogicalComponent {
 
 	public void func() {
 		int mval = in[0].getIntVal();
-		if (mval > 0) { // Int>0
+		if (mval >= 0) { // Int>=0
 			for (int j = 0; j < out.length; j++) {
 				int mod = mval % 2;
 				mval /= 2;
