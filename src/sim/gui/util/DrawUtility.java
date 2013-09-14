@@ -19,7 +19,7 @@ import sim.components.Pin;
 import sim.gui.*;
 
 @SuppressWarnings("serial")
-public class DrawSignals extends JFrame {
+public class DrawUtility extends JFrame {
 
     private GuiSchemeRenderer guiRenderer;
     private HashMap<String, GuiScheme> allSchemes;
@@ -99,10 +99,10 @@ public class DrawSignals extends JFrame {
 	            	guiScheme.removeLine(guiLine);
 	            	guiLine = null;
 	            } else {
-	                String s = (String) JOptionPane.showInputDialog(DrawSignals.this, "Signal Name:", "New signal", JOptionPane.PLAIN_MESSAGE, null, null, null);
+	                String s = (String) JOptionPane.showInputDialog(DrawUtility.this, "Signal Name:", "New signal", JOptionPane.PLAIN_MESSAGE, null, null, null);
 	                if (s != null) {
 	                	if(components != null && !components.containsKey(s)) {
-	                		JOptionPane.showMessageDialog(DrawSignals.this, "Signal does not exist", "Signal does not exist", JOptionPane.ERROR_MESSAGE);
+	                		JOptionPane.showMessageDialog(DrawUtility.this, "Signal does not exist", "Signal does not exist", JOptionPane.ERROR_MESSAGE);
 	                	} else {
 			                guiLine.setName(s);
 			                if(!lineModel.contains(s)) {
@@ -114,10 +114,10 @@ public class DrawSignals extends JFrame {
 	                }
 	            }
         	} else {
-        		String s = (String) JOptionPane.showInputDialog(DrawSignals.this, "Signal Name:", "New label", JOptionPane.PLAIN_MESSAGE, null, null, null);
+        		String s = (String) JOptionPane.showInputDialog(DrawUtility.this, "Signal Name:", "New label", JOptionPane.PLAIN_MESSAGE, null, null, null);
                 if (s != null) {
                 	if(components != null && !components.containsKey(s)) {
-                		JOptionPane.showMessageDialog(DrawSignals.this, "Signal does not exist", "Signal does not exist", JOptionPane.ERROR_MESSAGE);
+                		JOptionPane.showMessageDialog(DrawUtility.this, "Signal does not exist", "Signal does not exist", JOptionPane.ERROR_MESSAGE);
                 	} else {
 	                	Point disp = guiRenderer.getDisplacement();
 	                	GuiLabel label = new GuiLabel(e.getX() - disp.x, e.getY() - disp.y);
@@ -134,7 +134,7 @@ public class DrawSignals extends JFrame {
         }
     }
 
-    private DrawSignals() {
+    private DrawUtility() {
         super("Draw Signals");
 
         guiRenderer = new GuiSchemeRenderer(null);
@@ -353,7 +353,7 @@ public class DrawSignals extends JFrame {
 			        confOut.println();
 				}
 		        confOut.close();
-		        JOptionPane.showMessageDialog(DrawSignals.this, "Configuration saved", "Configuration saved", JOptionPane.INFORMATION_MESSAGE);
+		        JOptionPane.showMessageDialog(DrawUtility.this, "Configuration saved", "Configuration saved", JOptionPane.INFORMATION_MESSAGE);
 			} catch (FileNotFoundException e) {
 				System.out.println("Conf file not found!");
 			} catch (IOException e) {
@@ -364,7 +364,7 @@ public class DrawSignals extends JFrame {
     
     private void loadConf() {
     	JFileChooser chooser = new JFileChooser("conf");
-		int retVal = chooser.showOpenDialog(DrawSignals.this);
+		int retVal = chooser.showOpenDialog(DrawUtility.this);
 		if(retVal == JFileChooser.APPROVE_OPTION) {
 			String filename = chooser.getSelectedFile().getPath();
 			confFilename.setText(filename);
@@ -403,7 +403,7 @@ public class DrawSignals extends JFrame {
 
     private void loadImage() {
         JFileChooser chooser = new JFileChooser("images");
-        int returnVal = chooser.showOpenDialog(DrawSignals.this);
+        int returnVal = chooser.showOpenDialog(DrawUtility.this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
         	String imagePath = chooser.getSelectedFile().getPath();
         	String imageName = chooser.getSelectedFile().getName();
@@ -533,6 +533,6 @@ public class DrawSignals extends JFrame {
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
-        new DrawSignals();
+        new DrawUtility();
     }
 }
