@@ -23,7 +23,7 @@ public class Menu extends JList<String>{
 		log.println();
 		
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(menuConfFilename));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(menuConfFilename), "UTF-8"));
 			
 			String line = reader.readLine();
 

@@ -112,7 +112,9 @@ public class DrawSignals extends JFrame {
                 	GuiLabel label = new GuiLabel(e.getX() - disp.x, e.getY() - disp.y);
 	                label.setName(s);
 	                label.setPin(Pin.FALSE);
-	                labelModel.addElement(s);
+	                if(!labelModel.contains(s)) {
+	                	labelModel.addElement(s);
+	                }
 	                guiScheme.addLabel(label);
                 }
         	}

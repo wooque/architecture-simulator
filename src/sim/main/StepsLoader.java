@@ -23,7 +23,7 @@ public class StepsLoader {
 		log.println();
 		
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(stepsConfFile));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(stepsConfFile), "UTF-8"));
 			String line = reader.readLine();
 			
 			while(line != null) {
