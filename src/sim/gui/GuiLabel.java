@@ -12,6 +12,7 @@ public class GuiLabel {
 	private Pin pin;
 	private int x;
 	private int y;
+	private boolean changed;
 
 	public GuiLabel(int x, int y) {
 		this.x = x;
@@ -33,6 +34,9 @@ public class GuiLabel {
 			g2d.setColor(color);
 			g2d.setFont(new Font("Arial", Font.BOLD, 12));
 			g2d.drawString(label, x + dispx, y + dispy);
+			changed = true;
+		} else {
+			changed = false;
 		}
 	}
 
@@ -82,5 +86,9 @@ public class GuiLabel {
 
 	public void setColor(Color color) {
 		this.color = color;
+	}
+
+	public boolean isChanged() {
+		return changed;
 	}
 }

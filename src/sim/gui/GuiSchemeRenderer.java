@@ -40,11 +40,21 @@ public class GuiSchemeRenderer extends JPanel {
 		if(guiScheme != null) {
 			Graphics g = getGraphics();
 			Point disp = getDisplacement();
-			for(GuiLine gl: guiScheme.getLines()){
+			
+			boolean isChanged = false;
+			for(GuiLabel gl: guiScheme.getLabels()){
+				if(gl.isChanged()) {
+					isChanged = true;
+				}
 				gl.update(g, disp.x, disp.y);
 			}
-			for(GuiLabel gl: guiScheme.getLabels()){
-				gl.update(g, disp.x, disp.y);
+			
+			if(isChanged) {
+				repaint();
+			} else {
+				for(GuiLine gl: guiScheme.getLines()){
+					gl.update(g, disp.x, disp.y);
+				}
 			}
 		}
 	}
