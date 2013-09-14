@@ -298,7 +298,7 @@ public class DrawSignals extends JFrame {
 			        confOut.println();
 			        
 			        TreeMap<String, ArrayList<GuiLine>> linesToCommit = new TreeMap<String, ArrayList<GuiLine>>(); 
-			        TreeMap<String, GuiLabel> labelsToCommit = new TreeMap<String, GuiLabel>();
+			        TreeMap<String, ArrayList<GuiLabel>> labelsToCommit = new TreeMap<String, ArrayList<GuiLabel>>();
 			        
 			        for(GuiLine gl: scheme.getLines()) {
 			        	if(!linesToCommit.containsKey(gl.getName())) {
@@ -307,7 +307,10 @@ public class DrawSignals extends JFrame {
 			        	linesToCommit.get(gl.getName()).add(gl);
 			        }
 			        for(GuiLabel gl: scheme.getLabels()) {
-			        	labelsToCommit.put(gl.getName(), gl);
+			        	if(!labelsToCommit.containsKey(gl.getName())) {
+			        		labelsToCommit.put(gl.getName(), new ArrayList<GuiLabel>());
+			        	}
+			        	labelsToCommit.get(gl.getName()).add(gl);
 			        }
 			        
 			        for (Map.Entry<String, ArrayList<GuiLine>> lineEntry : linesToCommit.entrySet()) {
@@ -327,8 +330,10 @@ public class DrawSignals extends JFrame {
 			        		first = false;
 			        	}
 			        	if(labelsToCommit.containsKey(lineName)) {
-			        		GuiLabel label = labelsToCommit.get(lineName);
-			        		confOut.println("                    label("+label.getX()+","+label.getY()+")");
+			        		ArrayList<GuiLabel> labels = labelsToCommit.get(lineName);
+			        		for(GuiLabel label: labels) {
+			        			confOut.println("                    label("+label.getX()+","+label.getY()+")");
+			        		}
 			        	}
 			        }
 			        confOut.println();
@@ -469,14 +474,17 @@ public class DrawSignals extends JFrame {
 
 	protected void removeSelectedLabel() {
     	if(selectedLabel != null) {
-			GuiLabel toRemove = null;
+			ArrayList<GuiLabel> toRemove = new ArrayList<GuiLabel>();
 			for(GuiLabel gl: guiScheme.getLabels()) {
 				if(gl.getName().equals(selectedLabel)) {
-					toRemove = gl;
-					break;
+					toRemove.add(gl);
 				}
 			}
-			guiScheme.removeLabel(toRemove);
+			
+			for(GuiLabel label: toRemove) {
+				guiScheme.removeLabel(label);
+			}
+			
 			labelModel.removeElement(selectedLabel);
 			selectedLabel = null;
 			guiRenderer.repaint();
@@ -495,7 +503,6 @@ public class DrawSignals extends JFrame {
 				if(gl.getName().equals(selectedLabel)) {
 					gl.setPin(pin);
 					gl.setColor(pin == Pin.FALSE? Color.BLACK: Color.GREEN);
-					break;
 				}
 			}
 			guiRenderer.repaint();
