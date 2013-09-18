@@ -176,7 +176,7 @@ public class Main extends JFrame {
 		
 		JPanel east1 = new JPanel();
 		east1.setLayout(new GridLayout(4, 1));
-		east1.setBorder(BorderFactory.createTitledBorder("Info"));
+		east1.setBorder(BorderFactory.createTitledBorder("Status"));
 		east1.add(clockLabel);
 		east1.add(cntLabel);
 		east1.add(pcLabel);
