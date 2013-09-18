@@ -291,7 +291,7 @@ public class Main extends JFrame {
 			setLabels();
 			enableButtons();
 			schemeRenderer.repaint();
-			JOptionPane.showMessageDialog(Main.this, "Program ucitan u memoriju", "Ucitavanje programa", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(Main.this, "Program učitan u memoriju", "Učitavanje programa", JOptionPane.INFORMATION_MESSAGE);
         }
 	}
 	
