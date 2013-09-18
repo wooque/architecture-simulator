@@ -30,10 +30,10 @@ public class Main extends JFrame {
 	private JButton clk = new JButton("CLK+");
 	private JButton ins = new JButton("INS+");
 	private JButton prg = new JButton("PRG+");
-	private JLabel clockLabel = new JLabel("clock = 0");
-	private JLabel cntLabel = new JLabel("T = 0");
-	private JLabel memTimeLabel = new JLabel("MEM time = 0");
-	private JLabel pcLabel = new JLabel("PC = 0");
+	private JLabel clockLabel = new JLabel("CLK = 0", SwingConstants.CENTER);
+	private JLabel cntLabel = new JLabel("T = 0", SwingConstants.CENTER);
+	private JLabel memTimeLabel = new JLabel("MEM time = 0", SwingConstants.CENTER);
+	private JLabel pcLabel = new JLabel("PC = 0", SwingConstants.CENTER);
 	private JLabel descLabel = new JLabel("! Čitanje instrukcije !", SwingConstants.CENTER);
 	private JLabel stepLabel = new JLabel("<html>brnotSTART, val00;", SwingConstants.CENTER);
 	private RegistersFrame regsWindow;
@@ -151,67 +151,68 @@ public class Main extends JFrame {
 		add("Center", scrollPane);
 		
 		JPanel west = new JPanel();
-		west.add(menuItems);
+		west.setLayout(new BoxLayout(west, BoxLayout.Y_AXIS));
+		
+		JPanel west1 = new JPanel();
+		west1.setLayout(new BoxLayout(west1, BoxLayout.Y_AXIS));
+		west1.setBorder(BorderFactory.createTitledBorder("Navigacija"));
+		west1.add(menuItems);
+		west.add(west1);
+		
+		west.add(Box.createVerticalGlue());
+		
+		JPanel west2 = new JPanel();
+		west2.setLayout(new GridLayout(2, 1, 5, 5));
+		west2.setBorder(BorderFactory.createTitledBorder("Program"));
+		west2.add(load);
+		west2.add(reset);
+		west.add(west2);
+		
 		add("West", west);
 		
 		JPanel east = new JPanel();
-		Dimension size = new Dimension(200, 700);
-		east.setSize(size);
-		east.setPreferredSize(size);
-		east.setMinimumSize(size);
-		east.setLayout(new GridLayout(5, 1));
-		
+		east.setLayout(new BoxLayout(east, BoxLayout.Y_AXIS));
+		east.setPreferredSize(new Dimension(175, 700));
 		
 		JPanel east1 = new JPanel();
-		east1.setLayout(new BoxLayout(east1, BoxLayout.Y_AXIS));
-		east1.add(Box.createVerticalGlue());
+		east1.setLayout(new GridLayout(4, 1));
+		east1.setBorder(BorderFactory.createTitledBorder("Info"));
 		east1.add(clockLabel);
-		east1.add(Box.createVerticalGlue());
 		east1.add(cntLabel);
-		east1.add(Box.createVerticalGlue());
-		east1.add(memTimeLabel);
-		east1.add(Box.createVerticalGlue());
 		east1.add(pcLabel);
-		east1.add(Box.createVerticalGlue());
-		east1.add(descLabel);
-		east1.add(Box.createVerticalGlue());
-		east1.add(stepLabel);
-		east1.add(Box.createVerticalGlue());
+		east1.add(memTimeLabel);
 		east.add(east1);
 		
 		JPanel east2 = new JPanel();
-		east2.setLayout(new BoxLayout(east2, BoxLayout.Y_AXIS));
-		east2.add(Box.createVerticalGlue());
-		east2.add(clk);
-		east2.add(Box.createVerticalGlue());
-		east2.add(ins);
-		east2.add(Box.createVerticalGlue());
-		east2.add(prg);
-		east2.add(Box.createVerticalGlue());
+		
+		east2.setLayout(new GridLayout(2, 1));
+		east2.setPreferredSize(new Dimension(175, 100));
+		east2.setBorder(BorderFactory.createTitledBorder("Mikroprogram"));
+		east2.add(descLabel);
+		east2.add(stepLabel);
 		east.add(east2);
 		
-		east.add(new JPanel());
-		
 		JPanel east3 = new JPanel();
-		east3.setLayout(new BoxLayout(east3, BoxLayout.Y_AXIS));
-		east3.add(Box.createVerticalGlue());
-		east3.add(load);
-		east3.add(Box.createVerticalGlue());
-		east3.add(reset);
-		east3.add(Box.createVerticalGlue());
-		east3.add(memory);
-		east3.add(Box.createVerticalGlue());
-		east3.add(registers);
-		east3.add(Box.createVerticalGlue());
-		
+		east3.setLayout(new GridLayout(3, 1, 5, 5));
+		east3.setBorder(BorderFactory.createTitledBorder("Kontrole"));
+		east3.add(clk);
+		east3.add(ins);
+		east3.add(prg);
 		east.add(east3);
+		
+		east.add(Box.createVerticalGlue());
+		
+		JPanel east4 = new JPanel();
+		east4.setLayout(new GridLayout(2, 1, 5, 5));
+		east4.setBorder(BorderFactory.createTitledBorder("Pregled"));
+		east4.add(memory);
+		east4.add(registers);
+		east.add(east4);
 		
 		add("East", east);
 
 		validate();
-		size = new Dimension(scrollPane.getWidth() + menuItems.getWidth() + east.getWidth() + 215, scrollPane.getHeight() + 120);
-		setSize(size);
-		setPreferredSize(size);
+		setSize(new Dimension(scrollPane.getWidth() + west.getWidth() + east.getWidth() + 400, scrollPane.getHeight() + 100));
 		
         addWindowListener(new WindowAdapter() {
 
@@ -228,11 +229,11 @@ public class Main extends JFrame {
 	}
 
 	private void setLabels() {
-		clockLabel.setText("clock = " + LogicalComponent.globalClock);
+		clockLabel.setText("CLK = " + LogicalComponent.globalClock);
 		int step = cnt.getIntVal();
 		cntLabel.setText("T = "+ Integer.toHexString(step));
 		pcLabel.setText("PC ="+pc.getIntVal());
-		memTimeLabel.setText("Mem time = "+ Integer.toHexString(memTime.getIntVal()));
+		memTimeLabel.setText("MEM time = "+ Integer.toHexString(memTime.getIntVal()));
 		descLabel.setText(desc.get(step));
 		stepLabel.setText(steps.get(step));
 	}
