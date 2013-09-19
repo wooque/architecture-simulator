@@ -187,7 +187,7 @@ public class Main extends JFrame {
 		
 		east2.setLayout(new GridLayout(2, 1));
 		east2.setPreferredSize(new Dimension(175, 100));
-		east2.setBorder(BorderFactory.createTitledBorder("Mikroprogram"));
+		east2.setBorder(BorderFactory.createTitledBorder("Mikrokod"));
 		east2.add(descLabel);
 		east2.add(stepLabel);
 		east.add(east2);

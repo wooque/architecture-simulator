@@ -100,7 +100,7 @@ public class RegistersFrame extends JFrame{
 		JPanel buttons = new JPanel();
 		buttons.setBackground(bgColor);
 
-		JButton changeValues = new JButton("Change");
+		JButton changeValues = new JButton("Izmeni");
 		changeValues.addActionListener(new ActionListener() {
 			
 			@Override
