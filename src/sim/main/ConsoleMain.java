@@ -11,6 +11,7 @@ public class ConsoleMain {
 		
 		if(args.length != 4) {
 			System.out.println("Wrong number of arguments");
+			return;
 		}
 		
 		int numOfCLKs = 0;
@@ -18,9 +19,11 @@ public class ConsoleMain {
 			numOfCLKs = Integer.parseInt(args[2]);
 		} catch (NumberFormatException nfe) {
 			System.out.println("Number of clocks is not valid!");
+			return;
 		}
 		if(numOfCLKs <= 0) {
 			System.out.println("Number of clocks is not valid!");
+			return;
 		}
 		
 		long begin = System.currentTimeMillis();
