@@ -96,6 +96,7 @@ public class GuiConfigurator {
 										LogicalComponent logComp = components.get(line.getName());
 										if(logComp == null) {
 											log.println("Non existent pin: "+line.getName());
+											linePin = Pin.FALSE;
 										} else {
 											linePin = logComp.getOut(0);
 										}

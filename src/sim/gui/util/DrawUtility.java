@@ -360,7 +360,7 @@ public class DrawUtility extends JFrame {
 				System.out.println("Conf file corrupted!");
 			}
     	}
-    }
+	}
     
     private void loadConf() {
     	JFileChooser chooser = new JFileChooser("conf");
